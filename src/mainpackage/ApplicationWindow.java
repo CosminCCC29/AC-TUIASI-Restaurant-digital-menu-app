@@ -131,6 +131,8 @@ public class ApplicationWindow extends javax.swing.JFrame {
 
     private void clientButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clientButtonActionPerformed
         // TODO add your handling code here:
+        ClientWindow.startClientWindow();
+        ApplicationWindow.getApplicationWindow().setVisible(false);
     }//GEN-LAST:event_clientButtonActionPerformed
 
     private void resizeImages()
