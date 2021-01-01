@@ -1,13 +1,10 @@
 package mainpackage;
 
-import EventHandlingPackage.AppActionListener;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Image;
-import javax.swing.ImageIcon;
-import mainpackage.Panels.BauturiPanel;
-import mainpackage.Panels.PizzaPanel;
-import mainpackage.Panels.SupePanel;
+import mainpackage.ClientWindowPanels.BauturiPanel;
+import mainpackage.ClientWindowPanels.PizzaPanel;
+import mainpackage.ClientWindowPanels.SupePanel;
 
 public class ClientWindow extends javax.swing.JFrame {
 

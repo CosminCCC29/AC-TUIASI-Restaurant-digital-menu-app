@@ -1,7 +1,7 @@
 package mainpackage;
 
 import Database.DataBaseConnection;
-import EventHandlingPackage.AppActionListener;
+import EventHandling.AppActionListener;
 
 public final class ApplicationWindow extends javax.swing.JFrame {
 
