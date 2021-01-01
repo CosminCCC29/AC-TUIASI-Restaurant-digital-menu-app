@@ -5,7 +5,10 @@
         <group>
             <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/mainpackage/AdminWindow.java</file>
             <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/mainpackage/ClientWindow.java</file>
+            <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/Entities/Meniuri.java</file>
             <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/mainpackage/Main.java</file>
+            <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/res/Script-uri/Schema%20baza%20de%20date.PNG</file>
+            <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/Database/DataBaseConnection.java</file>
             <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/mainpackage/ApplicationWindow.java</file>
             <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/Entities/Administratori.java</file>
         </group>

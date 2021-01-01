@@ -45,7 +45,7 @@ public class ApplicationWindow extends javax.swing.JFrame {
 
         logoLabel.setBackground(new java.awt.Color(255, 255, 255));
         logoLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        logoLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Logo Restaurant.jpg"))); // NOI18N
+        logoLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Poze/Logo Restaurant.jpg"))); // NOI18N
         logoLabel.setVerifyInputWhenFocusTarget(false);
         mainPanel.add(logoLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 40, 490, 400));
 
@@ -85,6 +85,7 @@ public class ApplicationWindow extends javax.swing.JFrame {
         mainButtonsPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         adminButton.setBackground(new java.awt.Color(255, 255, 255));
+        adminButton.setFont(new java.awt.Font("Segoe UI Historic", 0, 11)); // NOI18N
         adminButton.setText("Admin");
         adminButton.setPreferredSize(new java.awt.Dimension(60, 20));
         adminButton.addActionListener(new java.awt.event.ActionListener() {
@@ -95,6 +96,7 @@ public class ApplicationWindow extends javax.swing.JFrame {
         mainButtonsPanel.add(adminButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 70, 130, 40));
 
         clientButton.setBackground(new java.awt.Color(255, 255, 255));
+        clientButton.setFont(new java.awt.Font("Segoe UI Historic", 0, 11)); // NOI18N
         clientButton.setText("Client");
         clientButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -135,7 +137,7 @@ public class ApplicationWindow extends javax.swing.JFrame {
 
     private void resizeImages()
     {
-        ImageIcon img = new ImageIcon(new ImageIcon(getClass().getResource("/Logo Restaurant.jpg")).getImage().getScaledInstance(this.logoLabel.getWidth(), this.logoLabel.getHeight(), Image.SCALE_SMOOTH));
+        ImageIcon img = new ImageIcon(new ImageIcon(getClass().getResource("/Poze/Logo Restaurant.jpg")).getImage().getScaledInstance(this.logoLabel.getWidth(), this.logoLabel.getHeight(), Image.SCALE_SMOOTH));
         this.logoLabel.setIcon(img);
     }
 

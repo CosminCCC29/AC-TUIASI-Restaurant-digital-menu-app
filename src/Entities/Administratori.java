@@ -6,14 +6,18 @@
 package Entities;
 
 import java.io.Serializable;
+import java.util.Collection;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -28,6 +32,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "Administratori.findByNumePrenumeCont", query = "SELECT a FROM Administratori a WHERE a.numePrenumeCont = :numePrenumeCont")
     , @NamedQuery(name = "Administratori.findByParolaCont", query = "SELECT a FROM Administratori a WHERE a.parolaCont = :parolaCont")})
 public class Administratori implements Serializable {
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "administratoriIdAdmin")
+    private Collection<Meniuri> meniuriCollection;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -101,6 +108,15 @@ public class Administratori implements Serializable {
     @Override
     public String toString() {
         return "Entities.Administratori[ idAdmin=" + idAdmin + " ]";
+    }
+
+    @XmlTransient
+    public Collection<Meniuri> getMeniuriCollection() {
+        return meniuriCollection;
+    }
+
+    public void setMeniuriCollection(Collection<Meniuri> meniuriCollection) {
+        this.meniuriCollection = meniuriCollection;
     }
     
 }

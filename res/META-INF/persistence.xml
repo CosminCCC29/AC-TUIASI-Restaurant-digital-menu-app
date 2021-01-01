@@ -4,6 +4,7 @@
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>mainpackage.Administratori</class>
     <class>Entities.Administratori</class>
+    <class>Entities.Meniuri</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
       <property name="javax.persistence.jdbc.user" value="cosmin29"/>
