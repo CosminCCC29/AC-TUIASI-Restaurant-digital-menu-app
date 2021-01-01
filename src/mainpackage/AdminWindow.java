@@ -2,7 +2,7 @@ package mainpackage;
 
 public class AdminWindow extends javax.swing.JFrame {
 
-    private ApplicationWindow appWindow;
+    private final ApplicationWindow appWindow;
 
     public AdminWindow(ApplicationWindow appWindow) {
 
@@ -14,7 +14,7 @@ public class AdminWindow extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        adminMainPanel = new mainpackage.AdminWindowPanels.AdminMainPanel();
+        adminMainPanel = new mainpackage.AdminWindowPanels.AdminMainPanel(appWindow);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Fereastra Admin");
@@ -24,6 +24,6 @@ public class AdminWindow extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private mainpackage.AdminWindowPanels.AdminMainPanel adminMainPanel;
+    public mainpackage.AdminWindowPanels.AdminMainPanel adminMainPanel;
     // End of variables declaration//GEN-END:variables
 };

@@ -2,6 +2,7 @@ package mainpackage;
 
 import Database.DataBaseConnection;
 import EventHandling.AppActionListener;
+import java.awt.event.WindowAdapter;
 
 public final class ApplicationWindow extends javax.swing.JFrame {
 
@@ -17,7 +18,7 @@ public final class ApplicationWindow extends javax.swing.JFrame {
         
         adminWindow = null;
         clientWindow = null;
-        
+  
         initComponents();
         initActionListeners();
     }
@@ -120,7 +121,7 @@ public final class ApplicationWindow extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    public void initActionListeners()
+    private void initActionListeners()
     {
         adminButton.addActionListener(appActionListener.getButtonClickListener());
         clientButton.addActionListener(appActionListener.getButtonClickListener());
