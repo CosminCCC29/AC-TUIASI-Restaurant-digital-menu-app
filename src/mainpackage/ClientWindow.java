@@ -1,5 +1,6 @@
 package mainpackage;
 
+import EventHandlingPackage.AppActionListener;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
@@ -10,15 +11,18 @@ import mainpackage.Panels.SupePanel;
 
 public class ClientWindow extends javax.swing.JFrame {
 
-    private static ClientWindow clientWindow = null;
+    private ApplicationWindow appWindow;
     
     GridBagLayout layout = new GridBagLayout();
     PizzaPanel p1;
     SupePanel p2;
     BauturiPanel p3;
     
-    public ClientWindow() {
+    public ClientWindow(ApplicationWindow appWindow) {
+        
+        this.appWindow = appWindow;
         initComponents();
+        
         p1 = new PizzaPanel();
         p2 = new SupePanel();
         p3 = new BauturiPanel();
@@ -37,12 +41,6 @@ public class ClientWindow extends javax.swing.JFrame {
         p2.setVisible(false);
         p3.setVisible(false);
     }
-    
-    /*private void resizeImages()
-    {
-        ImageIcon img = new ImageIcon(new ImageIcon(getClass().getResource("/Logo Restaurant.jpg")).getImage().getScaledInstance(this.logoLabel.getWidth(), this.logoLabel.getHeight(), Image.SCALE_SMOOTH));
-        this.logoLabel.setIcon(img);
-    }*/
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -159,26 +157,6 @@ public class ClientWindow extends javax.swing.JFrame {
         p2.setVisible(false);
         p3.setVisible(true);
     }//GEN-LAST:event_btnClientPanel3ActionPerformed
-
-    public static void startClientWindow() {
-
-        if(clientWindow == null)
-        {
-            java.awt.EventQueue.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    clientWindow = new ClientWindow();
-                    clientWindow.setVisible(true);
-                }
-            });
-        }
-    }
-    
-    public static ClientWindow getClientWindow()
-    {
-        return clientWindow;
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel CtgPanel;

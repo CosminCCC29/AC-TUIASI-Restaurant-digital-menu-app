@@ -1,12 +1,15 @@
 package mainpackage;
 
+import EventHandlingPackage.AppActionListener;
 import java.awt.*;
 
 public class AdminWindow extends javax.swing.JFrame {
 
-    private static AdminWindow adminWindow = null;
-
-    public AdminWindow() {
+    private ApplicationWindow appWindow;
+    
+    public AdminWindow(ApplicationWindow appWindow) {
+        
+        this.appWindow = appWindow;
         initComponents();
     }
 
@@ -21,23 +24,23 @@ public class AdminWindow extends javax.swing.JFrame {
         adminLoginPanel = new javax.swing.JPanel();
         idAdminTextField = new javax.swing.JTextField();
         numeContTextField = new javax.swing.JTextField();
-        parolaContTextField = new javax.swing.JTextField();
+        parolaContTextField = new javax.swing.JPasswordField();
         idAdminLabel = new javax.swing.JLabel();
         numeContLabel = new javax.swing.JLabel();
         parolaContLabel = new javax.swing.JLabel();
         loginButton = new javax.swing.JButton();
         createNewAccountButton = new javax.swing.JButton();
         createAccountPanel = new javax.swing.JPanel();
-        idAdminCATextField = new javax.swing.JTextField();
         idAdminCALabel = new javax.swing.JLabel();
         numeContCALabel = new javax.swing.JLabel();
-        numeContCATextField = new javax.swing.JTextField();
         parolaContCAtLabel = new javax.swing.JLabel();
-        parolaContCATextField = new javax.swing.JTextField();
+        parolaContCAtLabel1 = new javax.swing.JLabel();
+        idAdminCATextField = new javax.swing.JTextField();
+        numeContCATextField = new javax.swing.JTextField();
+        parolaContCATextField = new javax.swing.JPasswordField();
+        repParolaContCATextField1 = new javax.swing.JPasswordField();
         backCAButton = new javax.swing.JButton();
         createAccountButton = new javax.swing.JButton();
-        parolaContCAtLabel1 = new javax.swing.JLabel();
-        parolaContCATextField1 = new javax.swing.JTextField();
         adminMenuPanel = new javax.swing.JSplitPane();
         leftSideAdminPanel = new javax.swing.JPanel();
         menusAdminButton = new javax.swing.JButton();
@@ -79,13 +82,6 @@ public class AdminWindow extends javax.swing.JFrame {
         idAdminTextField.setFont(new java.awt.Font("Segoe UI Historic", 0, 11)); // NOI18N
 
         numeContTextField.setFont(new java.awt.Font("Segoe UI Historic", 0, 11)); // NOI18N
-        numeContTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                numeContTextFieldActionPerformed(evt);
-            }
-        });
-
-        parolaContTextField.setFont(new java.awt.Font("Segoe UI Historic", 0, 11)); // NOI18N
 
         idAdminLabel.setFont(new java.awt.Font("Segoe UI Historic", 0, 11)); // NOI18N
         idAdminLabel.setForeground(new java.awt.Color(255, 255, 255));
@@ -101,19 +97,9 @@ public class AdminWindow extends javax.swing.JFrame {
 
         loginButton.setFont(new java.awt.Font("Segoe UI Historic", 0, 11)); // NOI18N
         loginButton.setText("Logare");
-        loginButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                loginButtonActionPerformed(evt);
-            }
-        });
 
         createNewAccountButton.setFont(new java.awt.Font("Segoe UI Historic", 0, 11)); // NOI18N
         createNewAccountButton.setText("Creare cont nou");
-        createNewAccountButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                createNewAccountButtonActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout adminLoginPanelLayout = new javax.swing.GroupLayout(adminLoginPanel);
         adminLoginPanel.setLayout(adminLoginPanelLayout);
@@ -129,9 +115,9 @@ public class AdminWindow extends javax.swing.JFrame {
                             .addComponent(parolaContLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(adminLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(idAdminTextField)
+                            .addComponent(idAdminTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE)
                             .addComponent(numeContTextField)
-                            .addComponent(parolaContTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(parolaContTextField)))
                     .addGroup(adminLoginPanelLayout.createSequentialGroup()
                         .addGap(35, 35, 35)
                         .addGroup(adminLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -151,9 +137,11 @@ public class AdminWindow extends javax.swing.JFrame {
                     .addComponent(numeContTextField)
                     .addComponent(numeContLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(adminLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(parolaContTextField)
-                    .addComponent(parolaContLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(adminLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(parolaContLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(adminLoginPanelLayout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addComponent(parolaContTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addComponent(loginButton, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -166,46 +154,27 @@ public class AdminWindow extends javax.swing.JFrame {
         createAccountPanel.setBackground(new java.awt.Color(102, 51, 0));
         createAccountPanel.setForeground(new java.awt.Color(102, 0, 51));
 
-        idAdminCATextField.setFont(new java.awt.Font("Segoe UI Historic", 0, 11)); // NOI18N
-
         idAdminCALabel.setFont(new java.awt.Font("Segoe UI Historic", 0, 11)); // NOI18N
         idAdminCALabel.setText("ID ADMIN:");
 
         numeContCALabel.setFont(new java.awt.Font("Segoe UI Historic", 0, 11)); // NOI18N
         numeContCALabel.setText("NUME CONT:");
 
-        numeContCATextField.setFont(new java.awt.Font("Segoe UI Historic", 0, 11)); // NOI18N
-        numeContCATextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                numeContCATextFieldActionPerformed(evt);
-            }
-        });
-
         parolaContCAtLabel.setFont(new java.awt.Font("Segoe UI Historic", 0, 11)); // NOI18N
         parolaContCAtLabel.setText("PAROLA:");
-
-        parolaContCATextField.setFont(new java.awt.Font("Segoe UI Historic", 0, 11)); // NOI18N
-
-        backCAButton.setFont(new java.awt.Font("Segoe UI Historic", 0, 11)); // NOI18N
-        backCAButton.setText("Înapoi");
-        backCAButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                backCAButtonActionPerformed(evt);
-            }
-        });
-
-        createAccountButton.setFont(new java.awt.Font("Segoe UI Historic", 0, 11)); // NOI18N
-        createAccountButton.setText("Creare cont");
-        createAccountButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                createAccountButtonActionPerformed(evt);
-            }
-        });
 
         parolaContCAtLabel1.setFont(new java.awt.Font("Segoe UI Historic", 0, 11)); // NOI18N
         parolaContCAtLabel1.setText("REPETA PAROLA:");
 
-        parolaContCATextField1.setFont(new java.awt.Font("Segoe UI Historic", 0, 11)); // NOI18N
+        idAdminCATextField.setFont(new java.awt.Font("Segoe UI Historic", 0, 11)); // NOI18N
+
+        numeContCATextField.setFont(new java.awt.Font("Segoe UI Historic", 0, 11)); // NOI18N
+
+        backCAButton.setFont(new java.awt.Font("Segoe UI Historic", 0, 11)); // NOI18N
+        backCAButton.setText("Înapoi");
+
+        createAccountButton.setFont(new java.awt.Font("Segoe UI Historic", 0, 11)); // NOI18N
+        createAccountButton.setText("Creare cont");
 
         javax.swing.GroupLayout createAccountPanelLayout = new javax.swing.GroupLayout(createAccountPanel);
         createAccountPanel.setLayout(createAccountPanelLayout);
@@ -226,10 +195,10 @@ public class AdminWindow extends javax.swing.JFrame {
                                 .addGap(10, 10, 10)))
                         .addGap(32, 32, 32)
                         .addGroup(createAccountPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(idAdminCATextField)
+                            .addComponent(idAdminCATextField, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE)
                             .addComponent(numeContCATextField)
-                            .addComponent(parolaContCATextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(parolaContCATextField1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(parolaContCATextField, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(repParolaContCATextField1, javax.swing.GroupLayout.Alignment.LEADING)))
                     .addGroup(createAccountPanelLayout.createSequentialGroup()
                         .addGap(59, 59, 59)
                         .addGroup(createAccountPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -249,13 +218,15 @@ public class AdminWindow extends javax.swing.JFrame {
                     .addComponent(numeContCATextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(numeContCALabel, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(createAccountPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(parolaContCATextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(parolaContCAtLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(createAccountPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(parolaContCAtLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(createAccountPanelLayout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addComponent(parolaContCATextField, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(createAccountPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(parolaContCATextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(parolaContCAtLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(createAccountPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(parolaContCAtLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(repParolaContCATextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(createAccountButton, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -532,52 +503,6 @@ public class AdminWindow extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
-        CardLayout cardLayout = (CardLayout) adminMainPanel.getLayout();
-        cardLayout.show(adminMainPanel, "card2");
-    }//GEN-LAST:event_loginButtonActionPerformed
-
-    private void createNewAccountButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createNewAccountButtonActionPerformed
-        CardLayout cardLayout = (CardLayout) loginPanels.getLayout();
-        cardLayout.show(loginPanels, "card2");
-    }//GEN-LAST:event_createNewAccountButtonActionPerformed
-
-    private void numeContTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_numeContTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_numeContTextFieldActionPerformed
-
-    private void numeContCATextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_numeContCATextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_numeContCATextFieldActionPerformed
-
-    private void backCAButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backCAButtonActionPerformed
-        CardLayout cardLayout = (CardLayout) loginPanels.getLayout();
-        cardLayout.show(loginPanels, "card1");
-    }//GEN-LAST:event_backCAButtonActionPerformed
-
-    private void createAccountButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createAccountButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_createAccountButtonActionPerformed
-
-    public static void startAdminWindow() {
-
-        if (adminWindow == null) {
-
-            java.awt.EventQueue.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    adminWindow = new AdminWindow();
-                    adminWindow.setVisible(true);
-                }
-            });
-        }
-    }
-
-    public static AdminWindow getApplicationWindow() {
-        return adminWindow;
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel adminLoginPanel;
     private javax.swing.JPanel adminMainPanel;
@@ -612,18 +537,18 @@ public class AdminWindow extends javax.swing.JFrame {
     private javax.swing.JTextField numeContTextField;
     private javax.swing.JButton ordersAdminButton;
     private javax.swing.JPanel ordersAdminPanel;
-    private javax.swing.JTextField parolaContCATextField;
-    private javax.swing.JTextField parolaContCATextField1;
+    private javax.swing.JPasswordField parolaContCATextField;
     private javax.swing.JLabel parolaContCAtLabel;
     private javax.swing.JLabel parolaContCAtLabel1;
     private javax.swing.JLabel parolaContLabel;
-    private javax.swing.JTextField parolaContTextField;
+    private javax.swing.JPasswordField parolaContTextField;
     private javax.swing.JButton productTypeAdminButton;
     private javax.swing.JPanel productTypeAdminPanel;
     private javax.swing.JButton productsAdminButton;
     private javax.swing.JPanel productsAdminPanel;
     private javax.swing.JButton recipesAdminButton;
     private javax.swing.JPanel recipesAdminPanel;
+    private javax.swing.JPasswordField repParolaContCATextField1;
     private javax.swing.JPanel rightSideAdminPanel;
     // End of variables declaration//GEN-END:variables
 };

@@ -26,7 +26,7 @@ public class DataBaseConnection {
     private Connection conn;
     
     public DataBaseConnection() {
-
+        
         conn = null;
         
         try {
@@ -44,7 +44,7 @@ public class DataBaseConnection {
         }
     }
 
-    public DataBaseConnection(String serverName, String serverPort, String sid, String username, String password) {
+    private DataBaseConnection(String serverName, String serverPort, String sid, String username, String password) {
         
         conn = null;
         
@@ -65,8 +65,7 @@ public class DataBaseConnection {
         }
     }
 
-    
-    public Connection getConnection() {
+    public Connection getConnection() {   
         return conn;
     }
     

@@ -109,9 +109,9 @@
                                       </Group>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                          <Component id="idAdminTextField" alignment="1" max="32767" attributes="0"/>
+                                          <Component id="idAdminTextField" alignment="1" pref="114" max="32767" attributes="0"/>
                                           <Component id="numeContTextField" alignment="1" max="32767" attributes="0"/>
-                                          <Component id="parolaContTextField" alignment="0" min="-2" pref="114" max="-2" attributes="0"/>
+                                          <Component id="parolaContTextField" max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
@@ -140,9 +140,12 @@
                                   <Component id="numeContLabel" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="parolaContTextField" max="32767" attributes="0"/>
-                                  <Component id="parolaContLabel" max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="parolaContLabel" min="-2" pref="21" max="-2" attributes="0"/>
+                                  <Group type="102" attributes="0">
+                                      <EmptySpace min="1" pref="1" max="-2" attributes="0"/>
+                                      <Component id="parolaContTextField" min="-2" pref="20" max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="loginButton" min="-2" pref="48" max="-2" attributes="0"/>
@@ -167,16 +170,8 @@
                           <Font name="Segoe UI Historic" size="11" style="0"/>
                         </Property>
                       </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="numeContTextFieldActionPerformed"/>
-                      </Events>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="parolaContTextField">
-                      <Properties>
-                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                          <Font name="Segoe UI Historic" size="11" style="0"/>
-                        </Property>
-                      </Properties>
+                    <Component class="javax.swing.JPasswordField" name="parolaContTextField">
                     </Component>
                     <Component class="javax.swing.JLabel" name="idAdminLabel">
                       <Properties>
@@ -218,9 +213,6 @@
                         </Property>
                         <Property name="text" type="java.lang.String" value="Logare"/>
                       </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="loginButtonActionPerformed"/>
-                      </Events>
                     </Component>
                     <Component class="javax.swing.JButton" name="createNewAccountButton">
                       <Properties>
@@ -229,9 +221,6 @@
                         </Property>
                         <Property name="text" type="java.lang.String" value="Creare cont nou"/>
                       </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="createNewAccountButtonActionPerformed"/>
-                      </Events>
                     </Component>
                   </SubComponents>
                 </Container>
@@ -272,10 +261,10 @@
                                       </Group>
                                       <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                          <Component id="idAdminCATextField" alignment="1" max="32767" attributes="0"/>
+                                          <Component id="idAdminCATextField" alignment="1" pref="114" max="32767" attributes="0"/>
                                           <Component id="numeContCATextField" alignment="1" max="32767" attributes="0"/>
-                                          <Component id="parolaContCATextField" alignment="0" min="-2" pref="114" max="-2" attributes="0"/>
-                                          <Component id="parolaContCATextField1" alignment="0" min="-2" pref="114" max="-2" attributes="0"/>
+                                          <Component id="parolaContCATextField" alignment="0" max="32767" attributes="0"/>
+                                          <Component id="repParolaContCATextField1" alignment="0" max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
@@ -304,14 +293,17 @@
                                   <Component id="numeContCALabel" alignment="3" min="-2" pref="21" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="parolaContCATextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="parolaContCAtLabel" alignment="3" min="-2" pref="21" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="parolaContCAtLabel" min="-2" pref="21" max="-2" attributes="0"/>
+                                  <Group type="102" attributes="0">
+                                      <EmptySpace min="1" pref="1" max="-2" attributes="0"/>
+                                      <Component id="parolaContCATextField" min="-2" pref="20" max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="parolaContCATextField1" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="parolaContCAtLabel1" alignment="3" min="-2" pref="21" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="parolaContCAtLabel1" min="-2" pref="21" max="-2" attributes="0"/>
+                                  <Component id="repParolaContCATextField1" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="createAccountButton" min="-2" pref="48" max="-2" attributes="0"/>
@@ -323,13 +315,6 @@
                     </DimensionLayout>
                   </Layout>
                   <SubComponents>
-                    <Component class="javax.swing.JTextField" name="idAdminCATextField">
-                      <Properties>
-                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                          <Font name="Segoe UI Historic" size="11" style="0"/>
-                        </Property>
-                      </Properties>
-                    </Component>
                     <Component class="javax.swing.JLabel" name="idAdminCALabel">
                       <Properties>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
@@ -346,16 +331,6 @@
                         <Property name="text" type="java.lang.String" value="NUME CONT:"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="numeContCATextField">
-                      <Properties>
-                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                          <Font name="Segoe UI Historic" size="11" style="0"/>
-                        </Property>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="numeContCATextFieldActionPerformed"/>
-                      </Events>
-                    </Component>
                     <Component class="javax.swing.JLabel" name="parolaContCAtLabel">
                       <Properties>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
@@ -363,35 +338,6 @@
                         </Property>
                         <Property name="text" type="java.lang.String" value="PAROLA:"/>
                       </Properties>
-                    </Component>
-                    <Component class="javax.swing.JTextField" name="parolaContCATextField">
-                      <Properties>
-                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                          <Font name="Segoe UI Historic" size="11" style="0"/>
-                        </Property>
-                      </Properties>
-                    </Component>
-                    <Component class="javax.swing.JButton" name="backCAButton">
-                      <Properties>
-                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                          <Font name="Segoe UI Historic" size="11" style="0"/>
-                        </Property>
-                        <Property name="text" type="java.lang.String" value="&#xce;napoi"/>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="backCAButtonActionPerformed"/>
-                      </Events>
-                    </Component>
-                    <Component class="javax.swing.JButton" name="createAccountButton">
-                      <Properties>
-                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                          <Font name="Segoe UI Historic" size="11" style="0"/>
-                        </Property>
-                        <Property name="text" type="java.lang.String" value="Creare cont"/>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="createAccountButtonActionPerformed"/>
-                      </Events>
                     </Component>
                     <Component class="javax.swing.JLabel" name="parolaContCAtLabel1">
                       <Properties>
@@ -401,11 +347,38 @@
                         <Property name="text" type="java.lang.String" value="REPETA PAROLA:"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="parolaContCATextField1">
+                    <Component class="javax.swing.JTextField" name="idAdminCATextField">
                       <Properties>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Segoe UI Historic" size="11" style="0"/>
                         </Property>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JTextField" name="numeContCATextField">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Segoe UI Historic" size="11" style="0"/>
+                        </Property>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JPasswordField" name="parolaContCATextField">
+                    </Component>
+                    <Component class="javax.swing.JPasswordField" name="repParolaContCATextField1">
+                    </Component>
+                    <Component class="javax.swing.JButton" name="backCAButton">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Segoe UI Historic" size="11" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="&#xce;napoi"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JButton" name="createAccountButton">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Segoe UI Historic" size="11" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="Creare cont"/>
                       </Properties>
                     </Component>
                   </SubComponents>

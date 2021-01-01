@@ -1,20 +1,25 @@
 package mainpackage;
 
-import java.awt.*;
-import javax.swing.*;
+import Database.DataBaseConnection;
+import EventHandlingPackage.AppActionListener;
 
-public class ApplicationWindow extends javax.swing.JFrame {
+public final class ApplicationWindow extends javax.swing.JFrame {
 
-    private static ApplicationWindow applicationWindow;
-    
-    
-    private final static int WINDOWWIDTH = 1280;
-    private final static int WINDOWHEIGHT = 720;
+    private AdminWindow adminWindow;
+    private ClientWindow clientWindow;
+    private final AppActionListener appActionListener;
+    private final DataBaseConnection dataBaseConnection;
     
     public ApplicationWindow() {
-        applicationWindow = null;
+        
+        dataBaseConnection = new DataBaseConnection();
+        appActionListener = new AppActionListener(this);
+        
+        adminWindow = null;
+        clientWindow = null;
+        
         initComponents();
-        resizeImages();
+        initActionListeners();
     }
 
     @SuppressWarnings("unchecked")
@@ -88,21 +93,11 @@ public class ApplicationWindow extends javax.swing.JFrame {
         adminButton.setFont(new java.awt.Font("Segoe UI Historic", 0, 11)); // NOI18N
         adminButton.setText("Admin");
         adminButton.setPreferredSize(new java.awt.Dimension(60, 20));
-        adminButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                adminButtonActionPerformed(evt);
-            }
-        });
         mainButtonsPanel.add(adminButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 70, 130, 40));
 
         clientButton.setBackground(new java.awt.Color(255, 255, 255));
         clientButton.setFont(new java.awt.Font("Segoe UI Historic", 0, 11)); // NOI18N
         clientButton.setText("Client");
-        clientButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                clientButtonActionPerformed(evt);
-            }
-        });
         mainButtonsPanel.add(clientButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 160, 130, 40));
 
         mainPanel.add(mainButtonsPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 450, -1, -1));
@@ -125,36 +120,42 @@ public class ApplicationWindow extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void adminButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adminButtonActionPerformed
-        
-        AdminWindow.startAdminWindow();
-        ApplicationWindow.getApplicationWindow().setVisible(false);
-    }//GEN-LAST:event_adminButtonActionPerformed
-
-    private void clientButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clientButtonActionPerformed
-        // TODO add your handling code here:
-        ClientWindow.startClientWindow();
-        ApplicationWindow.getApplicationWindow().setVisible(false);
-    }//GEN-LAST:event_clientButtonActionPerformed
-
-    private void resizeImages()
+    public void initActionListeners()
     {
-        ImageIcon img = new ImageIcon(new ImageIcon(getClass().getResource("/Poze/Logo Restaurant.jpg")).getImage().getScaledInstance(this.logoLabel.getWidth(), this.logoLabel.getHeight(), Image.SCALE_SMOOTH));
-        this.logoLabel.setIcon(img);
+        adminButton.addActionListener(appActionListener.getButtonClickListener());
+        clientButton.addActionListener(appActionListener.getButtonClickListener());
     }
-
-    public static void startApplicationWindow()
-    {
-        if(applicationWindow == null)
+    
+    public void startAdminWindow() {
+        if(adminWindow == null)
         {
-            applicationWindow = new ApplicationWindow();
-            applicationWindow.setVisible(true);
+            adminWindow = new AdminWindow(this);
+            adminWindow.setVisible(true);
         }
     }
     
-    public static ApplicationWindow getApplicationWindow()
-    {
-            return applicationWindow;
+    public void startClientWindow() {
+        if(clientWindow == null)
+        {
+            clientWindow = new ClientWindow(this);
+            clientWindow.setVisible(true);
+        }
+    }
+    
+    public AppActionListener appActionListener() {
+        return appActionListener;
+    }
+    
+    public DataBaseConnection dataBaseConnection() {
+        return dataBaseConnection;
+    }
+    
+    public AdminWindow getAdminWindow() {
+        return adminWindow;
+    }
+    
+    public ClientWindow getClientWindow() {
+        return clientWindow;
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
