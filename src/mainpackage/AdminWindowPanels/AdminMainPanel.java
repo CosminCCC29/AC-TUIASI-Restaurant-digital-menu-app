@@ -29,20 +29,20 @@ public class AdminMainPanel extends javax.swing.JPanel {
 
     private void initActionListeners()
     {        
-        loginButton.addActionListener(appWindow.appActionListener().getButtonClickListener());
-        backCAButton.addActionListener(appWindow.appActionListener().getButtonClickListener());
-        createNewAccountButton.addActionListener(appWindow.appActionListener().getButtonClickListener());
-        createAccountButton.addActionListener(appWindow.appActionListener().getButtonClickListener());
-        menusAdminButton.addActionListener(appWindow.appActionListener().getButtonClickListener());
-        categoriesAdminButton.addActionListener(appWindow.appActionListener().getButtonClickListener());
-        productsAdminButton.addActionListener(appWindow.appActionListener().getButtonClickListener());
-        ingredientsAdminButton.addActionListener(appWindow.appActionListener().getButtonClickListener());
-        menusCategoriesAdminButton.addActionListener(appWindow.appActionListener().getButtonClickListener());
-        categoriesProductsAdminButton.addActionListener(appWindow.appActionListener().getButtonClickListener());
+        loginButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+        backCAButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+        createNewAccountButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+        createAccountButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+        menusAdminButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+        categoriesAdminButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+        productsAdminButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+        ingredientsAdminButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+        menusCategoriesAdminButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+        categoriesProductsAdminButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
         
-        recipesAdminButton.addActionListener(appWindow.appActionListener().getButtonClickListener());
-        productTypeAdminButton.addActionListener(appWindow.appActionListener().getButtonClickListener());
-        ordersAdminButton.addActionListener(appWindow.appActionListener().getButtonClickListener());
+        recipesAdminButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+        productTypeAdminButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+        ordersAdminButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
         
         
     }
@@ -92,9 +92,8 @@ public class AdminMainPanel extends javax.swing.JPanel {
         ordersAdminButton = new javax.swing.JButton();
         rightSideAdminPanel = new javax.swing.JPanel();
         defaultPanel = new javax.swing.JPanel();
-        menusAdminPanel = new mainpackage.AdminWindowPanels.MenusAdminPanel();
-        manusTables = new javax.swing.JTable();
-        categoriesAdminPanel1 = new mainpackage.AdminWindowPanels.CategoriesAdminPanel();
+        menusAdminPanel = new mainpackage.AdminWindowPanels.MenusAdminPanel(appWindow);
+        categoriesAdminPanel = new mainpackage.AdminWindowPanels.CategoriesAdminPanel();
         menusCategoriesAdminPanel = new mainpackage.AdminWindowPanels.MenusCategoriesAdminPanel();
         productsAdminPanel = new mainpackage.AdminWindowPanels.ProductsAdminPanel();
         categoriesProductsAdminPanel = new mainpackage.AdminWindowPanels.CategoriesProductsAdminPanel();
@@ -299,7 +298,6 @@ public class AdminMainPanel extends javax.swing.JPanel {
         leftSideAdminPanel.setBackground(new java.awt.Color(102, 51, 0));
         leftSideAdminPanel.setLayout(new java.awt.GridBagLayout());
 
-        menusAdminButton.setBackground(new java.awt.Color(204, 204, 204));
         menusAdminButton.setText("Meniuri");
         menusAdminButton.setActionCommand("ButonMeniuAdmin");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -412,7 +410,7 @@ public class AdminMainPanel extends javax.swing.JPanel {
         defaultPanel.setLayout(defaultPanelLayout);
         defaultPanelLayout.setHorizontalGroup(
             defaultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1085, Short.MAX_VALUE)
+            .addGap(0, 1067, Short.MAX_VALUE)
         );
         defaultPanelLayout.setVerticalGroup(
             defaultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -420,62 +418,20 @@ public class AdminMainPanel extends javax.swing.JPanel {
         );
 
         rightSideAdminPanel.add(defaultPanel, "defaultCard");
-
-        manusTables.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "nr_meniu", "nume_meniu", "data_creare", "detalii_suplimentare"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Short.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
-
-        javax.swing.GroupLayout menusAdminPanelLayout = new javax.swing.GroupLayout(menusAdminPanel);
-        menusAdminPanel.setLayout(menusAdminPanelLayout);
-        menusAdminPanelLayout.setHorizontalGroup(
-            menusAdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1085, Short.MAX_VALUE)
-            .addGroup(menusAdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(menusAdminPanelLayout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(manusTables, javax.swing.GroupLayout.PREFERRED_SIZE, 1063, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
-        );
-        menusAdminPanelLayout.setVerticalGroup(
-            menusAdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 740, Short.MAX_VALUE)
-            .addGroup(menusAdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(menusAdminPanelLayout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(manusTables, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
-        );
-
         rightSideAdminPanel.add(menusAdminPanel, "Meniuri");
 
-        javax.swing.GroupLayout categoriesAdminPanel1Layout = new javax.swing.GroupLayout(categoriesAdminPanel1);
-        categoriesAdminPanel1.setLayout(categoriesAdminPanel1Layout);
-        categoriesAdminPanel1Layout.setHorizontalGroup(
-            categoriesAdminPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout categoriesAdminPanelLayout = new javax.swing.GroupLayout(categoriesAdminPanel);
+        categoriesAdminPanel.setLayout(categoriesAdminPanelLayout);
+        categoriesAdminPanelLayout.setHorizontalGroup(
+            categoriesAdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 1085, Short.MAX_VALUE)
         );
-        categoriesAdminPanel1Layout.setVerticalGroup(
-            categoriesAdminPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        categoriesAdminPanelLayout.setVerticalGroup(
+            categoriesAdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 740, Short.MAX_VALUE)
         );
 
-        rightSideAdminPanel.add(categoriesAdminPanel1, "Categorii");
+        rightSideAdminPanel.add(categoriesAdminPanel, "Categorii");
 
         javax.swing.GroupLayout menusCategoriesAdminPanelLayout = new javax.swing.GroupLayout(menusCategoriesAdminPanel);
         menusCategoriesAdminPanel.setLayout(menusCategoriesAdminPanelLayout);
@@ -583,9 +539,9 @@ public class AdminMainPanel extends javax.swing.JPanel {
     private javax.swing.JSplitPane adminMenuPanel;
     private javax.swing.JButton backCAButton;
     private javax.swing.JButton categoriesAdminButton;
-    private mainpackage.AdminWindowPanels.CategoriesAdminPanel categoriesAdminPanel1;
+    public mainpackage.AdminWindowPanels.CategoriesAdminPanel categoriesAdminPanel;
     private javax.swing.JButton categoriesProductsAdminButton;
-    private mainpackage.AdminWindowPanels.CategoriesProductsAdminPanel categoriesProductsAdminPanel;
+    public mainpackage.AdminWindowPanels.CategoriesProductsAdminPanel categoriesProductsAdminPanel;
     private javax.swing.JButton createAccountButton;
     private javax.swing.JPanel createAccountPanel;
     private javax.swing.JButton createNewAccountButton;
@@ -595,16 +551,15 @@ public class AdminMainPanel extends javax.swing.JPanel {
     private javax.swing.JLabel idAdminLabel;
     private javax.swing.JTextField idAdminTextField;
     private javax.swing.JButton ingredientsAdminButton;
-    private mainpackage.AdminWindowPanels.IngredientsAdminPanel ingredientsAdminPanel;
+    public mainpackage.AdminWindowPanels.IngredientsAdminPanel ingredientsAdminPanel;
     private javax.swing.JPanel leftSideAdminPanel;
     private javax.swing.JButton loginButton;
     private javax.swing.JPanel loginMainPanel;
     public javax.swing.JPanel loginPanels;
-    private javax.swing.JTable manusTables;
     private javax.swing.JButton menusAdminButton;
-    private mainpackage.AdminWindowPanels.MenusAdminPanel menusAdminPanel;
+    public mainpackage.AdminWindowPanels.MenusAdminPanel menusAdminPanel;
     private javax.swing.JButton menusCategoriesAdminButton;
-    private mainpackage.AdminWindowPanels.MenusCategoriesAdminPanel menusCategoriesAdminPanel;
+    public mainpackage.AdminWindowPanels.MenusCategoriesAdminPanel menusCategoriesAdminPanel;
     private javax.swing.JLabel numeContCALabel;
     private javax.swing.JTextField numeContCATextField;
     private javax.swing.JLabel numeContLabel;
@@ -617,11 +572,11 @@ public class AdminMainPanel extends javax.swing.JPanel {
     private javax.swing.JLabel parolaContLabel;
     private javax.swing.JPasswordField parolaContTextField;
     private javax.swing.JButton productTypeAdminButton;
-    private mainpackage.AdminWindowPanels.ProductTypeAdminPanel productTypeAdminPanel;
+    public mainpackage.AdminWindowPanels.ProductTypeAdminPanel productTypeAdminPanel;
     private javax.swing.JButton productsAdminButton;
-    private mainpackage.AdminWindowPanels.ProductsAdminPanel productsAdminPanel;
+    public mainpackage.AdminWindowPanels.ProductsAdminPanel productsAdminPanel;
     private javax.swing.JButton recipesAdminButton;
-    private mainpackage.AdminWindowPanels.RecipesAdminPanel recipesAdminPanel;
+    public mainpackage.AdminWindowPanels.RecipesAdminPanel recipesAdminPanel;
     private javax.swing.JPasswordField repParolaContCATextField1;
     public javax.swing.JPanel rightSideAdminPanel;
     // End of variables declaration//GEN-END:variables

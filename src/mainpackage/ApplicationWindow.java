@@ -143,11 +143,11 @@ public final class ApplicationWindow extends javax.swing.JFrame {
         }
     }
     
-    public AppActionListener appActionListener() {
+    public AppActionListener getAppActionListener() {
         return appActionListener;
     }
     
-    public DataBaseConnection dataBaseConnection() {
+    public DataBaseConnection getDataBaseConnection() {
         return dataBaseConnection;
     }
     

@@ -17,10 +17,10 @@ import mainpackage.ApplicationWindow;
  */
 public class ButtonClickListener implements ActionListener {
 
-    private final ApplicationWindow applicationWindow;
+    private final ApplicationWindow appWindow;
 
     ButtonClickListener(ApplicationWindow applicationWindow) {
-        this.applicationWindow = applicationWindow;
+        this.appWindow = applicationWindow;
     }
 
     @Override
@@ -32,39 +32,44 @@ public class ButtonClickListener implements ActionListener {
         switch (command) {
             //////////////////////////// Meniu principal ////////////////////////////
             case "Admin":
-                applicationWindow.setVisible(false);
-                applicationWindow.startAdminWindow();
+                appWindow.setVisible(false);
+                appWindow.startAdminWindow();
                 break;
 
             case "Client":
-                applicationWindow.setVisible(false);
-                applicationWindow.startClientWindow();
+                appWindow.setVisible(false);
+                appWindow.startClientWindow();
                 break;
 
             //////////////////////////// Meniu logare ////////////////////////////
             case "Creare cont nou":
-                cardLayout = (CardLayout) applicationWindow.getAdminWindow().adminMainPanel.loginPanels.getLayout();
-                cardLayout.show(applicationWindow.getAdminWindow().adminMainPanel.loginPanels, "card2");
+                cardLayout = (CardLayout) appWindow.getAdminWindow().adminMainPanel.loginPanels.getLayout();
+                cardLayout.show(appWindow.getAdminWindow().adminMainPanel.loginPanels, "card2");
                 break;
 
             case "Înapoi":
-                cardLayout = (CardLayout) applicationWindow.getAdminWindow().adminMainPanel.loginPanels.getLayout();
-                cardLayout.show(applicationWindow.getAdminWindow().adminMainPanel.loginPanels, "card1");
+                cardLayout = (CardLayout) appWindow.getAdminWindow().adminMainPanel.loginPanels.getLayout();
+                cardLayout.show(appWindow.getAdminWindow().adminMainPanel.loginPanels, "card1");
                 break;
 
             case "Logare":
-                cardLayout = (CardLayout) applicationWindow.getAdminWindow().adminMainPanel.getLayout();
-                cardLayout.show(applicationWindow.getAdminWindow().adminMainPanel, "card2");
+                cardLayout = (CardLayout) appWindow.getAdminWindow().adminMainPanel.getLayout();
+                cardLayout.show(appWindow.getAdminWindow().adminMainPanel, "card2");
                 break;
 
             case "ButonMeniuAdmin":
-
-                cardLayout = (CardLayout) applicationWindow.getAdminWindow().adminMainPanel.rightSideAdminPanel.getLayout();
+                cardLayout = (CardLayout) appWindow.getAdminWindow().adminMainPanel.rightSideAdminPanel.getLayout();
                 javax.swing.JButton tmpJButton = (javax.swing.JButton)e.getSource();
-                cardLayout.show(applicationWindow.getAdminWindow().adminMainPanel.rightSideAdminPanel, tmpJButton.getText());
-                    
+                cardLayout.show(appWindow.getAdminWindow().adminMainPanel.rightSideAdminPanel, tmpJButton.getText());
                 break;
+                
+            case "ButoaneMeniuriAdmin":
+                appWindow.getAdminWindow().adminMainPanel.menusAdminPanel.startAction(e);
+                break;
+                
+
         }
+
     }
 
 }
