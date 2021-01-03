@@ -2,13 +2,6 @@ package mainpackage;
 
 import Database.DataBaseConnection;
 import EventHandling.AppActionListener;
-import java.awt.event.WindowAdapter;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public final class ApplicationWindow extends javax.swing.JFrame {
 
@@ -139,6 +132,10 @@ public final class ApplicationWindow extends javax.swing.JFrame {
             adminWindow = new AdminWindow(this);
             adminWindow.setVisible(true);
         }
+        else
+        {
+            adminWindow.setVisible(true);
+        }
     }
     
     public void startClientWindow() {
@@ -147,14 +144,9 @@ public final class ApplicationWindow extends javax.swing.JFrame {
             clientWindow = new ClientWindow(this);
             clientWindow.setVisible(true);
         }
-    }
-    
-    public void stopClientWindow()
-    {
-        if(clientWindow != null)
-        {   
-            clientWindow.setVisible(false);
-            clientWindow = null;
+        else
+        {
+            clientWindow.setVisible(true);
         }
     }
     

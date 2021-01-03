@@ -18,29 +18,19 @@ import mainpackage.ClientWindow;
  */
 public class ButtonClickListener implements ActionListener {
 
-    //adaugat de mine acum
-    private ClientWindow clientWindow;
-    //
+    private ApplicationWindow appWindow;
     
-    private ApplicationWindow applicationWindow;
-    private CardLayout cardLayout;
-    
-    ButtonClickListener(ApplicationWindow applicationWindow)
+    ButtonClickListener(ApplicationWindow appWindow)
     {
-        this.applicationWindow = applicationWindow;
-    }
-    
-    //adaugat de mine acum
-    ButtonClickListener(ClientWindow clientWindow)
-    {
-        this.clientWindow = clientWindow;
+        this.appWindow = appWindow;
     }
     
     @Override
     public void actionPerformed(ActionEvent e) {
 
         String command = e.getActionCommand();
-       
+        CardLayout cardLayout;
+        
         switch(command)
         {
             case "Admin":
@@ -79,17 +69,17 @@ public class ButtonClickListener implements ActionListener {
                 appWindow.getAdminWindow().adminMainPanel.menusAdminPanel.startAction(e);
                 break;
                 
-            case "Geeks":
-                applicationWindow.clientWindow.startAction(e);
+            case "SchimbarePanouMeniuClient":
+                appWindow.clientWindow.startAction(e);
                 break;
             case "Back":
-                applicationWindow.clientWindow.BackFunction();
+                appWindow.clientWindow.BackFunction();
                 break;
             case "vizualize":
-                applicationWindow.clientWindow.vizualizeOrder(e);
+                appWindow.clientWindow.vizualizeOrder(e);
                 break;
             case "Add":
-                applicationWindow.clientWindow.addProducts(e);
+                appWindow.clientWindow.addProducts(e);
                 break;
         }
 
