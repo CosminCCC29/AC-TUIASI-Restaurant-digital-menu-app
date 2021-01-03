@@ -7,13 +7,14 @@ package EventHandling;
 
 import javafx.application.Application;
 import mainpackage.ApplicationWindow;
+import mainpackage.ClientWindow;
 
 /**
  *
  * @author cosmi
  */
 public class AppActionListener {
-    
+
     private final ApplicationWindow applicationWindow;
     private final ButtonClickListener buttonClickListener;
     
