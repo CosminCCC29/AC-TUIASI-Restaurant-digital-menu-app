@@ -44,7 +44,7 @@ public class DataBaseConnection {
         }
     }
 
-    private DataBaseConnection(String serverName, String serverPort, String sid, String username, String password) {
+    public DataBaseConnection(String serverName, String serverPort, String sid, String username, String password) {
         
         conn = null;
         

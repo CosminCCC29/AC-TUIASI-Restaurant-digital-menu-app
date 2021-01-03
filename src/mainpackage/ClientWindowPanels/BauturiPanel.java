@@ -33,20 +33,25 @@ public class BauturiPanel extends javax.swing.JPanel {
         setBackground(new java.awt.Color(0, 255, 255));
 
         addbtn.setText("Add");
+        addbtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addbtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout product1Layout = new javax.swing.GroupLayout(product1);
         product1.setLayout(product1Layout);
         product1Layout.setHorizontalGroup(
             product1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, product1Layout.createSequentialGroup()
-                .addContainerGap(133, Short.MAX_VALUE)
+            .addGroup(product1Layout.createSequentialGroup()
+                .addContainerGap(435, Short.MAX_VALUE)
                 .addComponent(addbtn)
                 .addContainerGap())
         );
         product1Layout.setVerticalGroup(
             product1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, product1Layout.createSequentialGroup()
-                .addContainerGap(66, Short.MAX_VALUE)
+                .addContainerGap(239, Short.MAX_VALUE)
                 .addComponent(addbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -58,16 +63,20 @@ public class BauturiPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(245, 245, 245)
                 .addComponent(product1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(793, Short.MAX_VALUE))
+                .addContainerGap(491, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(140, 140, 140)
                 .addComponent(product1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(416, Short.MAX_VALUE))
+                .addContainerGap(243, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void addbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addbtnActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_addbtnActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

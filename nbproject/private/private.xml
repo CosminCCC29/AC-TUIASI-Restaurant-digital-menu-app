@@ -3,6 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
             <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/mainpackage/AdminWindowPanels/ProductTypeAdminPanel.java</file>
             <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/mainpackage/Main.java</file>
             <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/mainpackage/AdminWindowPanels/CategoriesProductsAdminPanel.java</file>
@@ -27,6 +28,20 @@
             <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/Database/DataBaseConnection.java</file>
             <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/Entities/Administratori.java</file>
             <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/mainpackage/AdminWindowPanels/MenusAdminPanel.java</file>
+=======
+            <file>file:/F:/Anul%203/Restaurant-digital-menu-app/res/Script-uri/Schema%20baza%20de%20date.PNG</file>
+            <file>file:/F:/Anul%203/Restaurant-digital-menu-app/src/EventHandling/AppActionListener.java</file>
+            <file>file:/F:/Anul%203/Restaurant-digital-menu-app/src/Entities/Meniuri.java</file>
+            <file>file:/F:/Anul%203/Restaurant-digital-menu-app/src/mainpackage/Main.java</file>
+            <file>file:/F:/Anul%203/Restaurant-digital-menu-app/src/mainpackage/AdminWindowPanels/AdminMainPanel.java</file>
+            <file>file:/F:/Anul%203/Restaurant-digital-menu-app/src/mainpackage/ClientWindow.java</file>
+            <file>file:/F:/Anul%203/Restaurant-digital-menu-app/src/mainpackage/AdminWindow.java</file>
+            <file>file:/F:/Anul%203/Restaurant-digital-menu-app/src/Entities/Administratori.java</file>
+            <file>file:/F:/Anul%203/Restaurant-digital-menu-app/src/mainpackage/ClientWindowPanels/BauturiPanel.java</file>
+            <file>file:/F:/Anul%203/Restaurant-digital-menu-app/src/EventHandling/ButtonClickListener.java</file>
+            <file>file:/F:/Anul%203/Restaurant-digital-menu-app/src/mainpackage/ApplicationWindow.java</file>
+            <file>file:/F:/Anul%203/Restaurant-digital-menu-app/src/Database/DataBaseConnection.java</file>
+>>>>>>> 3171f56f17c6396d367c7b065208e98307035e59
         </group>
     </open-files>
 </project-private>

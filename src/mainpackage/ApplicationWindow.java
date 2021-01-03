@@ -3,17 +3,23 @@ package mainpackage;
 import Database.DataBaseConnection;
 import EventHandling.AppActionListener;
 import java.awt.event.WindowAdapter;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public final class ApplicationWindow extends javax.swing.JFrame {
 
     private AdminWindow adminWindow;
-    private ClientWindow clientWindow;
+    public ClientWindow clientWindow;
     private final AppActionListener appActionListener;
     private final DataBaseConnection dataBaseConnection;
     
     public ApplicationWindow() {
         
-        dataBaseConnection = new DataBaseConnection();
+        dataBaseConnection = new DataBaseConnection("bd-dc.cs.tuiasi.ro","1539","orcl","bd137","bd137");
         appActionListener = new AppActionListener(this);
         
         adminWindow = null;
@@ -140,6 +146,15 @@ public final class ApplicationWindow extends javax.swing.JFrame {
         {
             clientWindow = new ClientWindow(this);
             clientWindow.setVisible(true);
+        }
+    }
+    
+    public void stopClientWindow()
+    {
+        if(clientWindow != null)
+        {   
+            clientWindow.setVisible(false);
+            clientWindow = null;
         }
     }
     
