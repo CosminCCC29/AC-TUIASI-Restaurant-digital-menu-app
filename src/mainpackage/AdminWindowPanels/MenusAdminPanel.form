@@ -21,15 +21,26 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="menusScrollPanel" alignment="0" pref="1065" max="32767" attributes="0"/>
+          <Component id="menusScrollPanel" alignment="0" max="32767" attributes="0"/>
           <Component id="menusPanel" alignment="0" max="32767" attributes="0"/>
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+              <Component id="filterLabel" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="filterTextField" min="-2" pref="1045" max="-2" attributes="0"/>
+          </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <Component id="menusScrollPanel" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="filterTextField" alignment="3" min="-2" pref="22" max="-2" attributes="0"/>
+                  <Component id="filterLabel" alignment="3" min="-2" pref="17" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
+              <Component id="menusScrollPanel" min="-2" pref="399" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="menusPanel" min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -177,10 +188,7 @@
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="saveButton" min="-2" pref="197" max="-2" attributes="0"/>
-                                  <Component id="deleteBoxesButton" min="-2" pref="197" max="-2" attributes="0"/>
-                              </Group>
+                              <Component id="deleteBoxesButton" min="-2" pref="197" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace min="-2" pref="87" max="-2" attributes="0"/>
@@ -202,9 +210,7 @@
                           <Component id="detaliiSuplimentareLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="deleteBoxesButton" alignment="3" min="-2" pref="59" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="49" max="32767" attributes="0"/>
-                      <Component id="saveButton" min="-2" pref="59" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
+                      <EmptySpace pref="142" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -236,15 +242,19 @@
                 <Property name="actionCommand" type="java.lang.String" value="ButoaneMeniuriAdmin"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="saveButton">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Salveaza modificarile"/>
-                <Property name="actionCommand" type="java.lang.String" value="ButoaneMeniuriAdmin"/>
-              </Properties>
-            </Component>
           </SubComponents>
         </Container>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.JTextField" name="filterTextField">
+      <Events>
+        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="filterTextFieldKeyReleased"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="filterLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Filter:"/>
+      </Properties>
+    </Component>
   </SubComponents>
 </Form>
