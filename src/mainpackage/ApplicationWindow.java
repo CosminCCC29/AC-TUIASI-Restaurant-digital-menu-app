@@ -2,6 +2,9 @@ package mainpackage;
 
 import Database.DataBaseConnection;
 import EventHandling.AppActionListener;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 public final class ApplicationWindow extends javax.swing.JFrame {
 
@@ -9,15 +12,29 @@ public final class ApplicationWindow extends javax.swing.JFrame {
     public ClientWindow clientWindow;
     private final AppActionListener appActionListener;
     private final DataBaseConnection dataBaseConnection;
-    
+    private String currentMenu;
+
     public ApplicationWindow() {
-        
-        dataBaseConnection = new DataBaseConnection("bd-dc.cs.tuiasi.ro","1539","orcl","bd137","bd137");
+
+        dataBaseConnection = new DataBaseConnection();
         appActionListener = new AppActionListener(this);
-        
+
         adminWindow = null;
         clientWindow = null;
-  
+
+        
+        BufferedReader reader;
+        try {
+
+            reader = new BufferedReader(new FileReader("res/Fisiere text/Meniul curent.txt"));           
+            currentMenu = reader.readLine();
+            System.out.println("Meniul curent este: "+currentMenu);
+            reader.close();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+        
+
         initComponents();
         initActionListeners();
     }
@@ -120,52 +137,49 @@ public final class ApplicationWindow extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void initActionListeners()
-    {
+    private void initActionListeners() {
         adminButton.addActionListener(appActionListener.getButtonClickListener());
         clientButton.addActionListener(appActionListener.getButtonClickListener());
     }
-    
+
     public void startAdminWindow() {
-        if(adminWindow == null)
-        {
+        if (adminWindow == null) {
             adminWindow = new AdminWindow(this);
             adminWindow.setVisible(true);
-        }
-        else
-        {
+        } else {
             adminWindow.setVisible(true);
         }
     }
-    
+
     public void startClientWindow() {
-        if(clientWindow == null)
-        {
+        if (clientWindow == null) {
             clientWindow = new ClientWindow(this);
             clientWindow.setVisible(true);
-        }
-        else
-        {
+        } else {
             clientWindow.setVisible(true);
         }
     }
-    
+
     public AppActionListener getAppActionListener() {
         return appActionListener;
     }
-    
+
     public DataBaseConnection getDataBaseConnection() {
         return dataBaseConnection;
     }
     
+    public String getcurrentMenu() {
+        return currentMenu;
+    }
+
     public AdminWindow getAdminWindow() {
         return adminWindow;
     }
-    
+
     public ClientWindow getClientWindow() {
         return clientWindow;
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton adminButton;
     private javax.swing.JButton clientButton;

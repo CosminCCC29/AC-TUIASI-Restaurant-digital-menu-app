@@ -80,6 +80,7 @@ public class MenusAdminPanel extends javax.swing.JPanel {
         String data_crearii;
 
         switch (tmpEventButton.getText()) {
+            /////////////// INSERARE ///////////////
             case "Inserare":
 
                 if (numeMeniuTextField.getText().equals("") && detaliiSuplimentareTextField.getText().equals("")) {
@@ -112,7 +113,7 @@ public class MenusAdminPanel extends javax.swing.JPanel {
                     ResultSet rs = conn.createStatement().executeQuery("SELECT MAX(nr_meniu) FROM Meniuri");
                     rs.next();
                     nr_meniu = rs.getString(1);
-                    Object tfData[] = {Integer.parseInt(nr_meniu), nume_meniu, detalii_suplimentare_meniu, currentDate};
+                    Object tfData[] = {Short.parseShort(nr_meniu), nume_meniu, detalii_suplimentare_meniu, currentDate};
                     tblModel.addRow(tfData);
 
                 } catch (SQLException ex) {
@@ -121,11 +122,13 @@ public class MenusAdminPanel extends javax.swing.JPanel {
 
                 break;
 
+            /////////////// STERGEREA CASTETELOR TEXT FIELD ///////////////
             case "Sterge casetele":
                 numeMeniuTextField.setText("");
                 detaliiSuplimentareTextField.setText("");
                 break;
 
+            /////////////// MODIFICAREA IN BAZA DE DATE ///////////////
             case "Modificare":
 
                 tblModel = (DefaultTableModel) menusTable.getModel();
@@ -137,17 +140,9 @@ public class MenusAdminPanel extends javax.swing.JPanel {
                     nr_meniu = tblModel.getValueAt(menusTable.convertRowIndexToModel(menusTable.getSelectedRow()), 0).toString();
                     nume_meniu = numeMeniuTextField.getText();
                     detalii_suplimentare_meniu = detaliiSuplimentareTextField.getText();
-                    data_crearii = tblModel.getValueAt(menusTable.getSelectedRow(), 3).toString();
-
-                    String tmp_nume_meniu = nume_meniu;
-                    String tmp_detalii_suplimentare_meniu = detalii_suplimentare_meniu;
+                    data_crearii = tblModel.getValueAt(menusTable.convertRowIndexToModel(menusTable.getSelectedRow()), 3).toString();
 
                     try {
-
-                        tblModel.setValueAt(nr_meniu, menusTable.convertRowIndexToModel(menusTable.getSelectedRow()), 0);
-                        tblModel.setValueAt(nume_meniu, menusTable.convertRowIndexToModel(menusTable.getSelectedRow()), 1);
-                        tblModel.setValueAt(detalii_suplimentare_meniu, menusTable.convertRowIndexToModel(menusTable.getSelectedRow()), 2);
-                        tblModel.setValueAt(data_crearii, menusTable.convertRowIndexToModel(menusTable.getSelectedRow()), 3);
 
                         PreparedStatement prepSelectSt = conn.prepareStatement("SELECT * FROM Meniuri WHERE nr_meniu = ?");
                         prepSelectSt.setShort(1, Short.parseShort(nr_meniu));
@@ -168,10 +163,13 @@ public class MenusAdminPanel extends javax.swing.JPanel {
                             prepUpdateSt2.execute();
                         }
 
+                        tblModel.setValueAt(Short.parseShort(nr_meniu), menusTable.convertRowIndexToModel(menusTable.getSelectedRow()), 0);
+                        tblModel.setValueAt(nume_meniu, menusTable.convertRowIndexToModel(menusTable.getSelectedRow()), 1);
+                        tblModel.setValueAt(detalii_suplimentare_meniu, menusTable.convertRowIndexToModel(menusTable.getSelectedRow()), 2);
+                        tblModel.setValueAt(data_crearii, menusTable.convertRowIndexToModel(menusTable.getSelectedRow()), 3);
+
                     } catch (SQLException ex) {
 
-                        tblModel.setValueAt(tmp_nume_meniu, menusTable.convertRowIndexToModel(menusTable.getSelectedRow()), 1);
-                        tblModel.setValueAt(tmp_detalii_suplimentare_meniu, menusTable.convertRowIndexToModel(menusTable.getSelectedRow()), 2);
                         JOptionPane.showMessageDialog(this, ex.getMessage());
                     }
 
@@ -182,6 +180,7 @@ public class MenusAdminPanel extends javax.swing.JPanel {
 
                 break;
 
+            /////////////// STERGEREA DIN BAZA DE DATE ///////////////
             case "Sterge":
 
                 tblModel = (DefaultTableModel) menusTable.getModel();
@@ -190,11 +189,11 @@ public class MenusAdminPanel extends javax.swing.JPanel {
                     JOptionPane.showMessageDialog(this, "Tabelul este gol.");
                 } else if (menusTable.getSelectedRowCount() == 1) {
 
-                    nume_meniu = menusTable.getValueAt(menusTable.convertRowIndexToModel(menusTable.getSelectedRow()), 2).toString();
-                    
+                    nr_meniu = tblModel.getValueAt(menusTable.convertRowIndexToModel(menusTable.getSelectedRow()), 0).toString();
+
                     try {
-                        PreparedStatement prepSt = conn.prepareStatement("DELETE FROM Meniuri WHERE nr_meniu = (SELECT nr_meniu FROM Meniuri WHERE nume_meniu = ?)");
-                        prepSt.setString(1, nume_meniu);
+                        PreparedStatement prepSt = conn.prepareStatement("DELETE FROM Meniuri WHERE nr_meniu = ?");
+                        prepSt.setString(1, nr_meniu);
                         prepSt.execute();
 
                     } catch (SQLException ex) {
@@ -207,8 +206,11 @@ public class MenusAdminPanel extends javax.swing.JPanel {
                 }
                 break;
 
-            case "Afisare":
+            /////////////// AFISARE/REFRESH JTABLE ///////////////
+            case "Afisare/Refresh":
 
+                filterTextField.setText("");
+                startFilter();
                 tr.setSortKeys(sortKeys);
                 setVisibleAll(true);
 
@@ -220,12 +222,12 @@ public class MenusAdminPanel extends javax.swing.JPanel {
                     tblModel.setRowCount(0);
 
                     while (rs.next()) {
-                        nr_meniu = String.valueOf(rs.getShort("nr_meniu"));
+                        nr_meniu = rs.getString("nr_meniu");
                         nume_meniu = rs.getString("nume_meniu");
                         detalii_suplimentare_meniu = rs.getString("detalii_suplimentare_meniu");
                         data_crearii = rs.getDate("data_crearii").toString();
 
-                        Object tblData[] = {Integer.parseInt(nr_meniu), nume_meniu, detalii_suplimentare_meniu, data_crearii};
+                        Object tblData[] = {Short.parseShort(nr_meniu), nume_meniu, detalii_suplimentare_meniu, data_crearii};
                         tblModel = (DefaultTableModel) this.menusTable.getModel();
                         tblModel.addRow(tblData);
                     }
@@ -317,7 +319,7 @@ public class MenusAdminPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(13, 12, 13, 14);
         buttonsPanel.add(deleteButton, gridBagConstraints);
 
-        showButton.setText("Afisare");
+        showButton.setText("Afisare/Refresh");
         showButton.setActionCommand("ButoaneMeniuriAdmin");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -474,7 +476,6 @@ public class MenusAdminPanel extends javax.swing.JPanel {
         detaliiSuplimentareTextField.setText(detalii_suplimentare_meniu);
 
     }//GEN-LAST:event_menusTableMouseClicked
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel buttonsPanel;
