@@ -5,6 +5,14 @@
  */
 package mainpackage.AdminWindowPanels;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import mainpackage.ApplicationWindow;
 
 /**
@@ -69,11 +77,9 @@ public class AdminMainPanel extends javax.swing.JPanel {
         loginButton = new javax.swing.JButton();
         createNewAccountButton = new javax.swing.JButton();
         createAccountPanel = new javax.swing.JPanel();
-        idAdminCALabel = new javax.swing.JLabel();
         numeContCALabel = new javax.swing.JLabel();
         parolaContCAtLabel = new javax.swing.JLabel();
         parolaContCAtLabel1 = new javax.swing.JLabel();
-        idAdminCATextField = new javax.swing.JTextField();
         numeContCATextField = new javax.swing.JTextField();
         parolaContCATextField = new javax.swing.JPasswordField();
         repParolaContCATextField1 = new javax.swing.JPasswordField();
@@ -122,6 +128,11 @@ public class AdminMainPanel extends javax.swing.JPanel {
 
         loginButton.setFont(new java.awt.Font("Segoe UI Historic", 0, 11)); // NOI18N
         loginButton.setText("Logare");
+        loginButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loginButtonActionPerformed(evt);
+            }
+        });
 
         createNewAccountButton.setFont(new java.awt.Font("Segoe UI Historic", 0, 11)); // NOI18N
         createNewAccountButton.setText("Creare cont nou");
@@ -179,10 +190,6 @@ public class AdminMainPanel extends javax.swing.JPanel {
         createAccountPanel.setBackground(new java.awt.Color(102, 51, 0));
         createAccountPanel.setForeground(new java.awt.Color(102, 0, 51));
 
-        idAdminCALabel.setFont(new java.awt.Font("Segoe UI Historic", 0, 11)); // NOI18N
-        idAdminCALabel.setForeground(new java.awt.Color(255, 255, 255));
-        idAdminCALabel.setText("ID ADMIN:");
-
         numeContCALabel.setFont(new java.awt.Font("Segoe UI Historic", 0, 11)); // NOI18N
         numeContCALabel.setForeground(new java.awt.Color(255, 255, 255));
         numeContCALabel.setText("NUME CONT:");
@@ -195,8 +202,6 @@ public class AdminMainPanel extends javax.swing.JPanel {
         parolaContCAtLabel1.setForeground(new java.awt.Color(255, 255, 255));
         parolaContCAtLabel1.setText("REPETA PAROLA:");
 
-        idAdminCATextField.setFont(new java.awt.Font("Segoe UI Historic", 0, 11)); // NOI18N
-
         numeContCATextField.setFont(new java.awt.Font("Segoe UI Historic", 0, 11)); // NOI18N
 
         backCAButton.setFont(new java.awt.Font("Segoe UI Historic", 0, 11)); // NOI18N
@@ -204,6 +209,11 @@ public class AdminMainPanel extends javax.swing.JPanel {
 
         createAccountButton.setFont(new java.awt.Font("Segoe UI Historic", 0, 11)); // NOI18N
         createAccountButton.setText("Creare cont");
+        createAccountButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                createAccountButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout createAccountPanelLayout = new javax.swing.GroupLayout(createAccountPanel);
         createAccountPanel.setLayout(createAccountPanelLayout);
@@ -218,14 +228,11 @@ public class AdminMainPanel extends javax.swing.JPanel {
                                 .addComponent(parolaContCAtLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(numeContCALabel, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(createAccountPanelLayout.createSequentialGroup()
-                                .addGroup(createAccountPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(idAdminCALabel, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(parolaContCAtLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(parolaContCAtLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(10, 10, 10)))
                         .addGap(32, 32, 32)
                         .addGroup(createAccountPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(idAdminCATextField, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE)
-                            .addComponent(numeContCATextField)
+                            .addComponent(numeContCATextField, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE)
                             .addComponent(parolaContCATextField, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(repParolaContCATextField1, javax.swing.GroupLayout.Alignment.LEADING)))
                     .addGroup(createAccountPanelLayout.createSequentialGroup()
@@ -238,11 +245,7 @@ public class AdminMainPanel extends javax.swing.JPanel {
         createAccountPanelLayout.setVerticalGroup(
             createAccountPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, createAccountPanelLayout.createSequentialGroup()
-                .addContainerGap(153, Short.MAX_VALUE)
-                .addGroup(createAccountPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(idAdminCATextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(idAdminCALabel, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addContainerGap(185, Short.MAX_VALUE)
                 .addGroup(createAccountPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(numeContCATextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(numeContCALabel, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -478,6 +481,70 @@ public class AdminMainPanel extends javax.swing.JPanel {
         productsAdminPanel.fillComboBoxes();
     }//GEN-LAST:event_productsAdminButtonActionPerformed
 
+    private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
+        
+    }//GEN-LAST:event_loginButtonActionPerformed
+
+    private void createAccountButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createAccountButtonActionPerformed
+        // TODO add your handling code here:
+        createAccountButton.setActionCommand("Creare cont");
+    }//GEN-LAST:event_createAccountButtonActionPerformed
+
+    public int personalCheckFunction(int check)
+    {
+        try {
+            // TODO add your handling code here:
+            Connection conn = appWindow.getDataBaseConnection().getConnection();
+            Statement st = conn.createStatement();
+            String temp1 = idAdminTextField.getText();
+            String temp2 = numeContTextField.getText();
+            String temp3 = parolaContTextField.getText();
+            ResultSet rs = st.executeQuery("SELECT COUNT(*) FROM Administratori WHERE id_admin = '"+ temp1 +"' AND nume_prenume_cont= '"+temp2 +"' AND parola_cont='"+temp3+"'");
+            while(rs.next())
+            {
+                String checkString = rs.getString(1);
+                if(checkString.equals("1"))
+                {
+                    check = 1;
+                }
+                else
+                {
+                    check = 0;
+                    JOptionPane.showMessageDialog(this, "Unul din campurile introduse este incorect");
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(AdminMainPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return check;
+    }
+    
+    public void newAccount()
+    {
+        try {
+            // TODO add your handling code here:
+            Connection conn = appWindow.getDataBaseConnection().getConnection();
+            String temp1 = numeContCATextField.getText();
+            String temp2 = parolaContCATextField.getText();
+            String temp3 = repParolaContCATextField1.getText();
+            PreparedStatement st = conn.prepareStatement("INSERT INTO Administratori(nume_prenume_cont, parola_cont) VALUES(? , ?)");
+            st.setString(1, temp1);
+            st.setString(2, temp2);
+            if(temp2.equals(temp3))
+            {
+                ResultSet rs2 = st.executeQuery();
+                System.out.println("Cont creat cu succes");
+                ResultSet rs = conn.createStatement().executeQuery("SELECT MAX(id_admin) FROM Administratori");
+                rs.next();
+                JOptionPane.showMessageDialog(this, "Id-ul dumneavoastra este:"+rs.getString(1));
+            }
+            else{
+                JOptionPane.showMessageDialog(this, "Reintroducere parola incorecta");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(AdminMainPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel adminLoginPanel;
@@ -489,8 +556,6 @@ public class AdminMainPanel extends javax.swing.JPanel {
     private javax.swing.JPanel createAccountPanel;
     private javax.swing.JButton createNewAccountButton;
     private javax.swing.JPanel defaultPanel;
-    private javax.swing.JLabel idAdminCALabel;
-    private javax.swing.JTextField idAdminCATextField;
     private javax.swing.JLabel idAdminLabel;
     private javax.swing.JTextField idAdminTextField;
     private javax.swing.JButton ingredientsAdminButton;
