@@ -2,6 +2,8 @@ package mainpackage;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.sql.*;
 import java.util.*;
 import java.util.logging.Level;
@@ -23,6 +25,20 @@ public class ClientWindow extends javax.swing.JFrame {
         
         this.appWindow = appWindow;
         initComponents();
+        
+        this.addWindowListener(new WindowAdapter()
+        {
+            @Override
+            public void windowClosing(WindowEvent e)
+            {
+                System.out.println("Client window closed.");
+                e.getWindow().setVisible(false);
+                appWindow.setVisible(true);
+                e.getWindow().dispose();     
+            }
+        });
+        
+        
         int ct=0;
      
         
@@ -320,7 +336,7 @@ public class ClientWindow extends javax.swing.JFrame {
         CtgPanel = new javax.swing.JPanel();
         DynamicPanel = new javax.swing.JPanel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Fereastra meniu client");
 
         mainPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());

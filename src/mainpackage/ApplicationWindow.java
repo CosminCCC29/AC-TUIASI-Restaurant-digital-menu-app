@@ -2,6 +2,8 @@ package mainpackage;
 
 import Database.DataBaseConnection;
 import EventHandling.AppActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -34,6 +36,16 @@ public final class ApplicationWindow extends javax.swing.JFrame {
             System.out.println(e.getMessage());
         }
         
+       this.addWindowListener(new WindowAdapter()
+        {
+            @Override
+            public void windowClosing(WindowEvent e)
+            {
+                System.out.println("AppWindow window closed.");
+                e.getWindow().setVisible(false);
+                e.getWindow().dispose();     
+            }
+        });
 
         initComponents();
         initActionListeners();
@@ -51,7 +63,7 @@ public final class ApplicationWindow extends javax.swing.JFrame {
         adminButton = new javax.swing.JButton();
         clientButton = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Meniu restaurant");
         setAlwaysOnTop(true);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -168,7 +180,11 @@ public final class ApplicationWindow extends javax.swing.JFrame {
         return dataBaseConnection;
     }
     
-    public String getcurrentMenu() {
+    public void setCurrentMenu(String currentMenu) {
+         this.currentMenu = currentMenu;
+    }
+    
+    public String getCurrentMenu() {
         return currentMenu;
     }
 
@@ -179,7 +195,7 @@ public final class ApplicationWindow extends javax.swing.JFrame {
     public ClientWindow getClientWindow() {
         return clientWindow;
     }
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton adminButton;
     private javax.swing.JButton clientButton;

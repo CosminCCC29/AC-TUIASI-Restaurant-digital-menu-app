@@ -19,20 +19,18 @@ import mainpackage.ClientWindow;
 public class ButtonClickListener implements ActionListener {
 
     private ApplicationWindow appWindow;
-    
-    ButtonClickListener(ApplicationWindow appWindow)
-    {
+
+    ButtonClickListener(ApplicationWindow appWindow) {
         this.appWindow = appWindow;
     }
-    
+
     @Override
     public void actionPerformed(ActionEvent e) {
 
         String command = e.getActionCommand();
         CardLayout cardLayout;
-        
-        switch(command)
-        {
+
+        switch (command) {
             case "Admin":
                 appWindow.setVisible(false);
                 appWindow.startAdminWindow();
@@ -61,14 +59,54 @@ public class ButtonClickListener implements ActionListener {
 
             case "ButonMeniuAdmin":
                 cardLayout = (CardLayout) appWindow.getAdminWindow().adminMainPanel.rightSideAdminPanel.getLayout();
-                javax.swing.JButton tmpJButton = (javax.swing.JButton)e.getSource();
+                javax.swing.JButton tmpJButton = (javax.swing.JButton) e.getSource();
                 cardLayout.show(appWindow.getAdminWindow().adminMainPanel.rightSideAdminPanel, tmpJButton.getText());
                 break;
+
+            ///////////// BUTOANE PANOURI ADMIN /////////////
                 
             case "ButoaneMeniuriAdmin":
                 appWindow.getAdminWindow().adminMainPanel.menusAdminPanel.startAction(e);
                 break;
+
+            case "ButoaneCategoriiAdmin":
+                appWindow.getAdminWindow().adminMainPanel.categoriesAdminPanel.startAction(e);
+                break;
+
+            case "ButoaneCategoriiProduseAdmin":
+                appWindow.getAdminWindow().adminMainPanel.categoriesProductsAdminPanel.startAction(e);
+                break;
+
+            case "ButoaneIngredienteAdmin":
+                appWindow.getAdminWindow().adminMainPanel.ingredientsAdminPanel.startAction(e);
+                break;
+
+            case "ButoaneComenziAdmin":
+                appWindow.getAdminWindow().adminMainPanel.ordersAdminPanel.startAction(e);
+                break;
+
+            case "ButoaneStocuriAdmin":
+                appWindow.getAdminWindow().adminMainPanel.productStockPanel.startAction(e);
+                break;
+
+            case "ButoaneTipuriProdusAdmin":
+                appWindow.getAdminWindow().adminMainPanel.productTypeAdminPanel.startAction(e);
+                break;
+
+            case "ButoaneProduseAdmin":
+                appWindow.getAdminWindow().adminMainPanel.productsAdminPanel.startAction(e);
+                break;
+
+            case "ButoaneProduseComenziAdmin":
+                appWindow.getAdminWindow().adminMainPanel.productsOrdersAdminPanel.startAction(e);
+                break;
+
+            case "ButoaneReteteAdmin":
+                appWindow.getAdminWindow().adminMainPanel.recipesAdminPanel.startAction(e);
+                break;
                 
+            //////////////////////////////////////////////////
+
             case "SchimbarePanouMeniuClient":
                 appWindow.clientWindow.startAction(e);
                 break;

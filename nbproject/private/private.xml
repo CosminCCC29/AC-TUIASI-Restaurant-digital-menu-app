@@ -3,30 +3,32 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/mainpackage/AdminWindowPanels/ProductTypeAdminPanel.java</file>
             <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/mainpackage/Main.java</file>
+            <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/mainpackage/AdminWindowPanels/CategoriesAdminPanel.java</file>
+            <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/mainpackage/ApplicationWindow.java</file>
+            <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/mainpackage/AdminWindowPanels/RecipesAdminPanel.java</file>
+            <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/mainpackage/ClientWindowPanels/SupePanel.java</file>
+            <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/res/Poze/Logo%20Restaurant.jpg</file>
+            <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/mainpackage/AdminWindowPanels/IngredientsAdminPanel.java</file>
+            <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/res/Script-uri/Schema%20baza%20de%20date.PNG</file>
+            <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/mainpackage/AdminWindowPanels/ProductsOrdersAdminPanel.java</file>
+            <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/mainpackage/AdminWindowPanels/ProductStockPanel.java</file>
+            <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/mainpackage/AdminWindowPanels/MenusAdminPanel.java</file>
+            <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/mainpackage/AdminWindowPanels/ProductTypeAdminPanel.java</file>
             <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/mainpackage/AdminWindowPanels/CategoriesProductsAdminPanel.java</file>
             <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/mainpackage/ClientWindowPanels/PizzaPanel.java</file>
             <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/EventHandling/AppActionListener.java</file>
             <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/mainpackage/AdminWindowPanels/ProductsAdminPanel.java</file>
-            <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/mainpackage/AdminWindowPanels/CategoriesAdminPanel.java</file>
-            <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/mainpackage/ApplicationWindow.java</file>
-            <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/mainpackage/AdminWindowPanels/MenusCategoriesAdminPanel.java</file>
-            <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/mainpackage/AdminWindowPanels/RecipesAdminPanel.java</file>
+            <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/res/Fisiere%20text/Meniul%20curent.txt</file>
             <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/mainpackage/AdminWindow.java</file>
             <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/mainpackage/ClientWindow.java</file>
             <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/mainpackage/ClientWindowPanels/BauturiPanel.java</file>
             <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/EventHandling/ButtonClickListener.java</file>
             <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/Entities/Meniuri.java</file>
-            <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/mainpackage/ClientWindowPanels/SupePanel.java</file>
-            <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/res/Poze/Logo%20Restaurant.jpg</file>
-            <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/mainpackage/AdminWindowPanels/IngredientsAdminPanel.java</file>
             <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/mainpackage/AdminWindowPanels/OrdersAdminPanel.java</file>
             <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/mainpackage/AdminWindowPanels/AdminMainPanel.java</file>
-            <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/res/Script-uri/Schema%20baza%20de%20date.PNG</file>
             <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/Database/DataBaseConnection.java</file>
             <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/Entities/Administratori.java</file>
-            <file>file:/C:/Users/cosmi/Documents/NetBeansProjects/Meniu_digital_restaurant/src/mainpackage/AdminWindowPanels/MenusAdminPanel.java</file>
         </group>
     </open-files>
 </project-private>

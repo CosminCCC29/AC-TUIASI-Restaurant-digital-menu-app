@@ -7,6 +7,11 @@ package mainpackage.AdminWindowPanels;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,8 +44,9 @@ public class MenusAdminPanel extends javax.swing.JPanel {
         this.appWindow = appWindow;
         initComponents();
         initFilter();
+        
+        currMenuTextField.setText(appWindow.getCurrentMenu());
 
-        setVisibleAll(false);
         initActionListeners();
 
     }
@@ -52,14 +58,16 @@ public class MenusAdminPanel extends javax.swing.JPanel {
         deleteBoxesButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
         updateButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
         showButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+        currMenuButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+
     }
 
     private void initFilter() {
-        tr = new TableRowSorter<>((DefaultTableModel) menusTable.getModel());
-        menusTable.setRowSorter(tr);
+        tr = new TableRowSorter<>((DefaultTableModel) dataTable.getModel());
+        dataTable.setRowSorter(tr);
 
         sortKeys = new ArrayList<>();
-        for (int i = 0; i < menusTable.getColumnCount(); ++i) {
+        for (int i = 0; i < dataTable.getColumnCount(); ++i) {
             sortKeys.add(new RowSorter.SortKey(i, SortOrder.UNSORTED));
         }
     }
@@ -80,14 +88,45 @@ public class MenusAdminPanel extends javax.swing.JPanel {
         String data_crearii;
 
         switch (tmpEventButton.getText()) {
+
+            case "Setare ca meniu curent":
+
+                nume_meniu = dataTable.getModel().getValueAt(dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 1).toString();
+
+                try {
+
+                    try (Writer fileWriter = new FileWriter("res/Fisiere text/Meniul curent.txt", false)) {
+                        fileWriter.write(nume_meniu);
+                        this.appWindow.setCurrentMenu(nume_meniu);
+                        currMenuTextField.setText(nume_meniu);
+                        System.out.println("Noul meniu curent este: " + nume_meniu);
+                    }
+                } catch (IOException ex) {
+                    System.out.println(ex.getMessage());
+                }
+
+                break;
+
             /////////////// INSERARE ///////////////
             case "Inserare":
 
+                try {
+                    Statement st = conn.createStatement();
+                    ResultSet rs = st.executeQuery("SELECT COUNT(*) FROM Meniuri");
+                    rs.next();
+                    int nr = rs.getInt(1);
+
+                    if (nr != 0 && dataTable.getModel().getRowCount() == 0) {
+                        JOptionPane.showMessageDialog(this, "Mai intai faceti un refresh la baza de date.");
+                        break;
+                    }
+
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage());
+                }
+
                 if (numeMeniuTextField.getText().equals("") && detaliiSuplimentareTextField.getText().equals("")) {
                     JOptionPane.showMessageDialog(this, "Casetele sunt goale.");
-                    break;
-                } else if (!filterTextField.getText().equals("")) {
-                    JOptionPane.showMessageDialog(this, "Stergeti textul din caseta filtrarii!");
                     break;
                 }
 
@@ -97,7 +136,7 @@ public class MenusAdminPanel extends javax.swing.JPanel {
                 Date date = new Date(System.currentTimeMillis());
                 String currentDate = formatter.format(date);
 
-                tblModel = (DefaultTableModel) this.menusTable.getModel();
+                tblModel = (DefaultTableModel) this.dataTable.getModel();
 
                 nume_meniu = numeMeniuTextField.getText();
                 detalii_suplimentare_meniu = detaliiSuplimentareTextField.getText();
@@ -116,10 +155,11 @@ public class MenusAdminPanel extends javax.swing.JPanel {
                     Object tfData[] = {Short.parseShort(nr_meniu), nume_meniu, detalii_suplimentare_meniu, currentDate};
                     tblModel.addRow(tfData);
 
+                    conn.createStatement().execute("commit");
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage());
                 }
-
+                Refresh();
                 break;
 
             /////////////// STERGEREA CASTETELOR TEXT FIELD ///////////////
@@ -131,16 +171,16 @@ public class MenusAdminPanel extends javax.swing.JPanel {
             /////////////// MODIFICAREA IN BAZA DE DATE ///////////////
             case "Modificare":
 
-                tblModel = (DefaultTableModel) menusTable.getModel();
+                tblModel = (DefaultTableModel) dataTable.getModel();
 
-                if (menusTable.getRowCount() == 0) {
+                if (dataTable.getRowCount() == 0) {
                     JOptionPane.showMessageDialog(this, "Tabelul este gol.");
-                } else if (menusTable.getSelectedRowCount() == 1) {
+                } else if (dataTable.getSelectedRowCount() == 1) {
 
-                    nr_meniu = tblModel.getValueAt(menusTable.convertRowIndexToModel(menusTable.getSelectedRow()), 0).toString();
+                    nr_meniu = tblModel.getValueAt(dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 0).toString();
                     nume_meniu = numeMeniuTextField.getText();
                     detalii_suplimentare_meniu = detaliiSuplimentareTextField.getText();
-                    data_crearii = tblModel.getValueAt(menusTable.convertRowIndexToModel(menusTable.getSelectedRow()), 3).toString();
+                    data_crearii = tblModel.getValueAt(dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 3).toString();
 
                     try {
 
@@ -163,11 +203,12 @@ public class MenusAdminPanel extends javax.swing.JPanel {
                             prepUpdateSt2.execute();
                         }
 
-                        tblModel.setValueAt(Short.parseShort(nr_meniu), menusTable.convertRowIndexToModel(menusTable.getSelectedRow()), 0);
-                        tblModel.setValueAt(nume_meniu, menusTable.convertRowIndexToModel(menusTable.getSelectedRow()), 1);
-                        tblModel.setValueAt(detalii_suplimentare_meniu, menusTable.convertRowIndexToModel(menusTable.getSelectedRow()), 2);
-                        tblModel.setValueAt(data_crearii, menusTable.convertRowIndexToModel(menusTable.getSelectedRow()), 3);
+                        tblModel.setValueAt(Short.parseShort(nr_meniu), dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 0);
+                        tblModel.setValueAt(nume_meniu, dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 1);
+                        tblModel.setValueAt(detalii_suplimentare_meniu, dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 2);
+                        tblModel.setValueAt(data_crearii, dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 3);
 
+                        conn.createStatement().execute("commit");
                     } catch (SQLException ex) {
 
                         JOptionPane.showMessageDialog(this, ex.getMessage());
@@ -177,66 +218,73 @@ public class MenusAdminPanel extends javax.swing.JPanel {
                     JOptionPane.showMessageDialog(this, "Selecteaza un singur rand pentru a modifica.");
 
                 }
-
+                Refresh();
                 break;
 
             /////////////// STERGEREA DIN BAZA DE DATE ///////////////
             case "Sterge":
 
-                tblModel = (DefaultTableModel) menusTable.getModel();
+                tblModel = (DefaultTableModel) dataTable.getModel();
 
-                if (menusTable.getRowCount() == 0) {
+                if (dataTable.getRowCount() == 0) {
                     JOptionPane.showMessageDialog(this, "Tabelul este gol.");
-                } else if (menusTable.getSelectedRowCount() == 1) {
+                } else if (dataTable.getSelectedRowCount() == 1) {
 
-                    nr_meniu = tblModel.getValueAt(menusTable.convertRowIndexToModel(menusTable.getSelectedRow()), 0).toString();
+                    nr_meniu = tblModel.getValueAt(dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 0).toString();
 
                     try {
                         PreparedStatement prepSt = conn.prepareStatement("DELETE FROM Meniuri WHERE nr_meniu = ?");
                         prepSt.setString(1, nr_meniu);
                         prepSt.execute();
 
+                        tblModel.removeRow(dataTable.convertRowIndexToModel(dataTable.getSelectedRow()));
+
+                        conn.createStatement().execute("commit");
                     } catch (SQLException ex) {
                         JOptionPane.showMessageDialog(this, ex.getMessage());
                     }
 
-                    tblModel.removeRow(menusTable.convertRowIndexToModel(menusTable.getSelectedRow()));
                 } else {
                     JOptionPane.showMessageDialog(this, "Selecteaza un singur rand pentru a sterge.");
                 }
                 break;
 
             /////////////// AFISARE/REFRESH JTABLE ///////////////
-            case "Afisare/Refresh":
-
-                filterTextField.setText("");
-                startFilter();
-                tr.setSortKeys(sortKeys);
-                setVisibleAll(true);
-
-                try {
-                    Statement st = conn.createStatement();
-                    ResultSet rs = st.executeQuery("SELECT nr_meniu, nume_meniu, detalii_suplimentare_meniu, data_crearii FROM Meniuri");
-
-                    tblModel = (DefaultTableModel) menusTable.getModel();
-                    tblModel.setRowCount(0);
-
-                    while (rs.next()) {
-                        nr_meniu = rs.getString("nr_meniu");
-                        nume_meniu = rs.getString("nume_meniu");
-                        detalii_suplimentare_meniu = rs.getString("detalii_suplimentare_meniu");
-                        data_crearii = rs.getDate("data_crearii").toString();
-
-                        Object tblData[] = {Short.parseShort(nr_meniu), nume_meniu, detalii_suplimentare_meniu, data_crearii};
-                        tblModel = (DefaultTableModel) this.menusTable.getModel();
-                        tblModel.addRow(tblData);
-                    }
-
-                } catch (SQLException ex) {
-                    Logger.getLogger(MenusAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
-                }
+            case "Refresh":
+                Refresh();
                 break;
 
+        }
+    }
+
+    private void Refresh() {
+        filterTextField.setText("");
+        startFilter();
+        tr.setSortKeys(sortKeys);
+
+        numeMeniuTextField.setText("");
+        detaliiSuplimentareTextField.setText("");
+
+        try {
+            Statement st = appWindow.getDataBaseConnection().getConnection().createStatement();
+            ResultSet rs = st.executeQuery("SELECT nr_meniu, nume_meniu, detalii_suplimentare_meniu, data_crearii FROM Meniuri");
+
+            DefaultTableModel tblModel = (DefaultTableModel) dataTable.getModel();
+            tblModel.setRowCount(0);
+
+            while (rs.next()) {
+                String nr_meniu = rs.getString("nr_meniu");
+                String nume_meniu = rs.getString("nume_meniu");
+                String detalii_suplimentare_meniu = rs.getString("detalii_suplimentare_meniu");
+                String data_crearii = rs.getDate("data_crearii").toString();
+
+                Object tblData[] = {Short.parseShort(nr_meniu), nume_meniu, detalii_suplimentare_meniu, data_crearii};
+                tblModel = (DefaultTableModel) this.dataTable.getModel();
+                tblModel.addRow(tblData);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(MenusAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -250,9 +298,9 @@ public class MenusAdminPanel extends javax.swing.JPanel {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        menusScrollPanel = new javax.swing.JScrollPane();
-        menusTable = new javax.swing.JTable();
-        menusPanel = new javax.swing.JPanel();
+        scrollPanel = new javax.swing.JScrollPane();
+        dataTable = new javax.swing.JTable();
+        bottomPanel = new javax.swing.JPanel();
         buttonsPanel = new javax.swing.JPanel();
         deleteButton = new javax.swing.JButton();
         showButton = new javax.swing.JButton();
@@ -264,12 +312,14 @@ public class MenusAdminPanel extends javax.swing.JPanel {
         detaliiSuplimentareTextField = new javax.swing.JTextField();
         insertButton = new javax.swing.JButton();
         deleteBoxesButton = new javax.swing.JButton();
+        currMenuButton = new javax.swing.JButton();
+        currMenuTextField = new javax.swing.JTextField();
         filterTextField = new javax.swing.JTextField();
         filterLabel = new javax.swing.JLabel();
 
         setPreferredSize(new java.awt.Dimension(1065, 718));
 
-        menusTable.setModel(new javax.swing.table.DefaultTableModel(
+        dataTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -292,18 +342,18 @@ public class MenusAdminPanel extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        menusTable.getTableHeader().setReorderingAllowed(false);
-        menusTable.addMouseListener(new java.awt.event.MouseAdapter() {
+        dataTable.getTableHeader().setReorderingAllowed(false);
+        dataTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                menusTableMouseClicked(evt);
+                dataTableMouseClicked(evt);
             }
         });
-        menusTable.addKeyListener(new java.awt.event.KeyAdapter() {
+        dataTable.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                menusTableKeyReleased(evt);
+                dataTableKeyReleased(evt);
             }
         });
-        menusScrollPanel.setViewportView(menusTable);
+        scrollPanel.setViewportView(dataTable);
 
         buttonsPanel.setLayout(new java.awt.GridBagLayout());
 
@@ -319,7 +369,7 @@ public class MenusAdminPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(13, 12, 13, 14);
         buttonsPanel.add(deleteButton, gridBagConstraints);
 
-        showButton.setText("Afisare/Refresh");
+        showButton.setText("Refresh");
         showButton.setActionCommand("ButoaneMeniuriAdmin");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -353,32 +403,48 @@ public class MenusAdminPanel extends javax.swing.JPanel {
         deleteBoxesButton.setText("Sterge casetele");
         deleteBoxesButton.setActionCommand("ButoaneMeniuriAdmin");
 
+        currMenuButton.setText("Setare ca meniu curent");
+        currMenuButton.setActionCommand("ButoaneMeniuriAdmin");
+
+        currMenuTextField.setEditable(false);
+
         javax.swing.GroupLayout insertUpdatePanelLayout = new javax.swing.GroupLayout(insertUpdatePanel);
         insertUpdatePanel.setLayout(insertUpdatePanelLayout);
         insertUpdatePanelLayout.setHorizontalGroup(
             insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, insertUpdatePanelLayout.createSequentialGroup()
-                .addGap(78, 78, 78)
-                .addGroup(insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(detaliiSuplimentareLabel)
-                    .addComponent(numeMeniuLabel))
+            .addGroup(insertUpdatePanelLayout.createSequentialGroup()
+                .addGap(34, 34, 34)
+                .addGroup(insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(detaliiSuplimentareLabel)
+                        .addComponent(numeMeniuLabel))
+                    .addComponent(currMenuButton))
                 .addGap(18, 18, 18)
                 .addGroup(insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(detaliiSuplimentareTextField)
-                    .addComponent(numeMeniuTextField))
-                .addGroup(insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(insertUpdatePanelLayout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(insertButton, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(detaliiSuplimentareTextField)
+                            .addComponent(numeMeniuTextField))
+                        .addGroup(insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(insertUpdatePanelLayout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(insertButton, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(insertUpdatePanelLayout.createSequentialGroup()
+                                .addGap(19, 19, 19)
+                                .addComponent(deleteBoxesButton, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(87, 87, 87))
                     .addGroup(insertUpdatePanelLayout.createSequentialGroup()
-                        .addGap(19, 19, 19)
-                        .addComponent(deleteBoxesButton, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(87, 87, 87))
+                        .addComponent(currMenuTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         insertUpdatePanelLayout.setVerticalGroup(
             insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(insertUpdatePanelLayout.createSequentialGroup()
-                .addGap(72, 72, 72)
+                .addGap(31, 31, 31)
+                .addGroup(insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(currMenuButton, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(currMenuTextField))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(numeMeniuTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(numeMeniuLabel)
@@ -391,25 +457,25 @@ public class MenusAdminPanel extends javax.swing.JPanel {
                 .addContainerGap(142, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout menusPanelLayout = new javax.swing.GroupLayout(menusPanel);
-        menusPanel.setLayout(menusPanelLayout);
-        menusPanelLayout.setHorizontalGroup(
-            menusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, menusPanelLayout.createSequentialGroup()
+        javax.swing.GroupLayout bottomPanelLayout = new javax.swing.GroupLayout(bottomPanel);
+        bottomPanel.setLayout(bottomPanelLayout);
+        bottomPanelLayout.setHorizontalGroup(
+            bottomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bottomPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(insertUpdatePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
-        menusPanelLayout.setVerticalGroup(
-            menusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(menusPanelLayout.createSequentialGroup()
+        bottomPanelLayout.setVerticalGroup(
+            bottomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(bottomPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(menusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(bottomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(insertUpdatePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(menusPanelLayout.createSequentialGroup()
-                        .addComponent(buttonsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(bottomPanelLayout.createSequentialGroup()
+                        .addComponent(buttonsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 340, Short.MAX_VALUE)
                         .addContainerGap())))
         );
 
@@ -425,8 +491,8 @@ public class MenusAdminPanel extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(menusScrollPanel)
-            .addComponent(menusPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(scrollPanel)
+            .addComponent(bottomPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(filterLabel)
@@ -440,45 +506,43 @@ public class MenusAdminPanel extends javax.swing.JPanel {
                     .addComponent(filterTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(filterLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(1, 1, 1)
-                .addComponent(menusScrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 399, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(scrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 399, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(menusPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(bottomPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void setVisibleAll(boolean value) {
-        this.insertUpdatePanel.setVisible(value);
-        this.deleteButton.setVisible(value);
-        this.updateButton.setVisible(value);
-    }
 
     private void filterTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_filterTextFieldKeyReleased
         startFilter();
     }//GEN-LAST:event_filterTextFieldKeyReleased
 
-    private void menusTableKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_menusTableKeyReleased
+    private void dataTableKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dataTableKeyReleased
 
         if (evt.getKeyCode() == KeyEvent.VK_UP || evt.getKeyCode() == KeyEvent.VK_DOWN) {
-            String nume_meniu = menusTable.getValueAt(menusTable.getSelectedRow(), 1).toString();
-            String detalii_suplimentare_meniu = (menusTable.getValueAt(menusTable.getSelectedRow(), 2) == null) ? "" : menusTable.getValueAt(menusTable.getSelectedRow(), 2).toString();
+            String nume_meniu = dataTable.getValueAt(dataTable.getSelectedRow(), 1).toString();
+            String detalii_suplimentare_meniu = (dataTable.getValueAt(dataTable.getSelectedRow(), 2) == null) ? "" : dataTable.getValueAt(dataTable.getSelectedRow(), 2).toString();
 
             numeMeniuTextField.setText(nume_meniu);
             detaliiSuplimentareTextField.setText(detalii_suplimentare_meniu);
         }
-    }//GEN-LAST:event_menusTableKeyReleased
+    }//GEN-LAST:event_dataTableKeyReleased
 
-    private void menusTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menusTableMouseClicked
+    private void dataTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dataTableMouseClicked
 
-        String nume_meniu = menusTable.getValueAt(menusTable.getSelectedRow(), 1).toString();
-        String detalii_suplimentare_meniu = (menusTable.getValueAt(menusTable.getSelectedRow(), 2) == null) ? "" : menusTable.getValueAt(menusTable.getSelectedRow(), 2).toString();
+        String nume_meniu = dataTable.getValueAt(dataTable.getSelectedRow(), 1).toString();
+        String detalii_suplimentare_meniu = (dataTable.getValueAt(dataTable.getSelectedRow(), 2) == null) ? "" : dataTable.getValueAt(dataTable.getSelectedRow(), 2).toString();
 
         numeMeniuTextField.setText(nume_meniu);
         detaliiSuplimentareTextField.setText(detalii_suplimentare_meniu);
 
-    }//GEN-LAST:event_menusTableMouseClicked
+    }//GEN-LAST:event_dataTableMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel bottomPanel;
     private javax.swing.JPanel buttonsPanel;
+    private javax.swing.JButton currMenuButton;
+    private javax.swing.JTextField currMenuTextField;
+    private javax.swing.JTable dataTable;
     private javax.swing.JButton deleteBoxesButton;
     private javax.swing.JButton deleteButton;
     private javax.swing.JLabel detaliiSuplimentareLabel;
@@ -487,11 +551,9 @@ public class MenusAdminPanel extends javax.swing.JPanel {
     private javax.swing.JTextField filterTextField;
     private javax.swing.JButton insertButton;
     private javax.swing.JPanel insertUpdatePanel;
-    private javax.swing.JPanel menusPanel;
-    private javax.swing.JScrollPane menusScrollPanel;
-    private javax.swing.JTable menusTable;
     private javax.swing.JLabel numeMeniuLabel;
     private javax.swing.JTextField numeMeniuTextField;
+    private javax.swing.JScrollPane scrollPanel;
     private javax.swing.JButton showButton;
     private javax.swing.JButton updateButton;
     // End of variables declaration//GEN-END:variables

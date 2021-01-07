@@ -21,8 +21,8 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="menusScrollPanel" alignment="0" max="32767" attributes="0"/>
-          <Component id="menusPanel" alignment="0" max="32767" attributes="0"/>
+          <Component id="scrollPanel" alignment="0" max="32767" attributes="0"/>
+          <Component id="bottomPanel" alignment="0" max="32767" attributes="0"/>
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
               <Component id="filterLabel" min="-2" max="-2" attributes="0"/>
@@ -39,19 +39,19 @@
                   <Component id="filterLabel" alignment="3" min="-2" pref="17" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
-              <Component id="menusScrollPanel" min="-2" pref="399" max="-2" attributes="0"/>
+              <Component id="scrollPanel" min="-2" pref="399" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="menusPanel" min="-2" max="-2" attributes="0"/>
+              <Component id="bottomPanel" min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Container class="javax.swing.JScrollPane" name="menusScrollPanel">
+    <Container class="javax.swing.JScrollPane" name="scrollPanel">
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JTable" name="menusTable">
+        <Component class="javax.swing.JTable" name="dataTable">
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
               <Table columnCount="4" rowCount="0">
@@ -90,13 +90,13 @@
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="menusTableMouseClicked"/>
-            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="menusTableKeyReleased"/>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="dataTableMouseClicked"/>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="dataTableKeyReleased"/>
           </Events>
         </Component>
       </SubComponents>
     </Container>
-    <Container class="javax.swing.JPanel" name="menusPanel">
+    <Container class="javax.swing.JPanel" name="bottomPanel">
 
       <Layout>
         <DimensionLayout dim="0">
@@ -117,7 +117,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="insertUpdatePanel" max="32767" attributes="0"/>
                       <Group type="102" attributes="0">
-                          <Component id="buttonsPanel" max="32767" attributes="0"/>
+                          <Component id="buttonsPanel" pref="340" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -143,7 +143,7 @@
             </Component>
             <Component class="javax.swing.JButton" name="showButton">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Afisare/Refresh"/>
+                <Property name="text" type="java.lang.String" value="Refresh"/>
                 <Property name="actionCommand" type="java.lang.String" value="ButoaneMeniuriAdmin"/>
               </Properties>
               <Constraints>
@@ -170,35 +170,51 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace min="-2" pref="78" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="detaliiSuplimentareLabel" min="-2" max="-2" attributes="0"/>
-                          <Component id="numeMeniuLabel" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="detaliiSuplimentareLabel" min="-2" max="-2" attributes="0"/>
+                              <Component id="numeMeniuLabel" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="currMenuButton" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="detaliiSuplimentareTextField" max="32767" attributes="0"/>
-                          <Component id="numeMeniuTextField" max="32767" attributes="0"/>
-                      </Group>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="insertButton" min="-2" pref="197" max="-2" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="detaliiSuplimentareTextField" max="32767" attributes="0"/>
+                                  <Component id="numeMeniuTextField" max="32767" attributes="0"/>
+                              </Group>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                      <Component id="insertButton" min="-2" pref="197" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
+                                      <Component id="deleteBoxesButton" min="-2" pref="197" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <EmptySpace min="-2" pref="87" max="-2" attributes="0"/>
                           </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
-                              <Component id="deleteBoxesButton" min="-2" pref="197" max="-2" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Component id="currMenuTextField" min="-2" pref="182" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace min="-2" pref="87" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <EmptySpace min="-2" pref="72" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="currMenuButton" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
+                          <Component id="currMenuTextField" alignment="3" max="32767" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="numeMeniuTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="numeMeniuLabel" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -240,6 +256,17 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Sterge casetele"/>
                 <Property name="actionCommand" type="java.lang.String" value="ButoaneMeniuriAdmin"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JButton" name="currMenuButton">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Setare ca meniu curent"/>
+                <Property name="actionCommand" type="java.lang.String" value="ButoaneMeniuriAdmin"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="currMenuTextField">
+              <Properties>
+                <Property name="editable" type="boolean" value="false"/>
               </Properties>
             </Component>
           </SubComponents>

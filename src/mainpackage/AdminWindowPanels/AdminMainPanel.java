@@ -37,13 +37,13 @@ public class AdminMainPanel extends javax.swing.JPanel {
         categoriesAdminButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
         productsAdminButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
         ingredientsAdminButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
-        menusCategoriesAdminButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
         categoriesProductsAdminButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
         
         recipesAdminButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
         productTypeAdminButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
         ordersAdminButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
-        
+        productsOrdersButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+        productStocksButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
         
     }
     
@@ -85,22 +85,14 @@ public class AdminMainPanel extends javax.swing.JPanel {
         categoriesAdminButton = new javax.swing.JButton();
         productsAdminButton = new javax.swing.JButton();
         ingredientsAdminButton = new javax.swing.JButton();
-        menusCategoriesAdminButton = new javax.swing.JButton();
         categoriesProductsAdminButton = new javax.swing.JButton();
         recipesAdminButton = new javax.swing.JButton();
         productTypeAdminButton = new javax.swing.JButton();
         ordersAdminButton = new javax.swing.JButton();
+        productsOrdersButton = new javax.swing.JButton();
+        productStocksButton = new javax.swing.JButton();
         rightSideAdminPanel = new javax.swing.JPanel();
         defaultPanel = new javax.swing.JPanel();
-        menusAdminPanel = new mainpackage.AdminWindowPanels.MenusAdminPanel(appWindow);
-        categoriesAdminPanel = new mainpackage.AdminWindowPanels.CategoriesAdminPanel();
-        menusCategoriesAdminPanel = new mainpackage.AdminWindowPanels.MenusCategoriesAdminPanel();
-        productsAdminPanel = new mainpackage.AdminWindowPanels.ProductsAdminPanel();
-        categoriesProductsAdminPanel = new mainpackage.AdminWindowPanels.CategoriesProductsAdminPanel();
-        ingredientsAdminPanel = new mainpackage.AdminWindowPanels.IngredientsAdminPanel();
-        recipesAdminPanel = new mainpackage.AdminWindowPanels.RecipesAdminPanel();
-        productTypeAdminPanel = new mainpackage.AdminWindowPanels.ProductTypeAdminPanel();
-        ordersAdminPanel = new mainpackage.AdminWindowPanels.OrdersAdminPanel();
 
         setLayout(new java.awt.CardLayout());
 
@@ -327,6 +319,11 @@ public class AdminMainPanel extends javax.swing.JPanel {
 
         productsAdminButton.setText("Produse");
         productsAdminButton.setActionCommand("ButonMeniuAdmin");
+        productsAdminButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                productsAdminButtonActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
@@ -347,22 +344,16 @@ public class AdminMainPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
         leftSideAdminPanel.add(ingredientsAdminButton, gridBagConstraints);
 
-        menusCategoriesAdminButton.setText("Meniuri <-> Categorii");
-        menusCategoriesAdminButton.setActionCommand("ButonMeniuAdmin");
+        categoriesProductsAdminButton.setText("Categorii <-> Produse");
+        categoriesProductsAdminButton.setActionCommand("ButonMeniuAdmin");
+        categoriesProductsAdminButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                categoriesProductsAdminButtonActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.ipadx = 42;
-        gridBagConstraints.ipady = 46;
-        gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
-        leftSideAdminPanel.add(menusCategoriesAdminButton, gridBagConstraints);
-
-        categoriesProductsAdminButton.setText("Categorii <-> Produse");
-        categoriesProductsAdminButton.setActionCommand("ButonMeniuAdmin");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.ipadx = 42;
         gridBagConstraints.ipady = 46;
@@ -395,12 +386,34 @@ public class AdminMainPanel extends javax.swing.JPanel {
         ordersAdminButton.setActionCommand("ButonMeniuAdmin");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridy = 9;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.ipadx = 45;
         gridBagConstraints.ipady = 49;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
         leftSideAdminPanel.add(ordersAdminButton, gridBagConstraints);
+
+        productsOrdersButton.setText("Produse <-> Comenzi");
+        productsOrdersButton.setActionCommand("ButonMeniuAdmin");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 8;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 45;
+        gridBagConstraints.ipady = 49;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
+        leftSideAdminPanel.add(productsOrdersButton, gridBagConstraints);
+
+        productStocksButton.setText("Stocuri produs");
+        productStocksButton.setActionCommand("ButonMeniuAdmin");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 45;
+        gridBagConstraints.ipady = 49;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
+        leftSideAdminPanel.add(productStocksButton, gridBagConstraints);
 
         adminMenuPanel.setLeftComponent(leftSideAdminPanel);
 
@@ -410,128 +423,60 @@ public class AdminMainPanel extends javax.swing.JPanel {
         defaultPanel.setLayout(defaultPanelLayout);
         defaultPanelLayout.setHorizontalGroup(
             defaultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1067, Short.MAX_VALUE)
+            .addGap(0, 1085, Short.MAX_VALUE)
         );
         defaultPanelLayout.setVerticalGroup(
             defaultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 740, Short.MAX_VALUE)
+            .addGap(0, 856, Short.MAX_VALUE)
         );
 
-        rightSideAdminPanel.add(defaultPanel, "defaultCard");
-        rightSideAdminPanel.add(menusAdminPanel, "Meniuri");
-
-        javax.swing.GroupLayout categoriesAdminPanelLayout = new javax.swing.GroupLayout(categoriesAdminPanel);
-        categoriesAdminPanel.setLayout(categoriesAdminPanelLayout);
-        categoriesAdminPanelLayout.setHorizontalGroup(
-            categoriesAdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1085, Short.MAX_VALUE)
-        );
-        categoriesAdminPanelLayout.setVerticalGroup(
-            categoriesAdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 740, Short.MAX_VALUE)
-        );
-
-        rightSideAdminPanel.add(categoriesAdminPanel, "Categorii");
-
-        javax.swing.GroupLayout menusCategoriesAdminPanelLayout = new javax.swing.GroupLayout(menusCategoriesAdminPanel);
-        menusCategoriesAdminPanel.setLayout(menusCategoriesAdminPanelLayout);
-        menusCategoriesAdminPanelLayout.setHorizontalGroup(
-            menusCategoriesAdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1085, Short.MAX_VALUE)
-        );
-        menusCategoriesAdminPanelLayout.setVerticalGroup(
-            menusCategoriesAdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 740, Short.MAX_VALUE)
-        );
-
-        rightSideAdminPanel.add(menusCategoriesAdminPanel, "Meniuri <-> Categorii");
-
-        javax.swing.GroupLayout productsAdminPanelLayout = new javax.swing.GroupLayout(productsAdminPanel);
-        productsAdminPanel.setLayout(productsAdminPanelLayout);
-        productsAdminPanelLayout.setHorizontalGroup(
-            productsAdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1085, Short.MAX_VALUE)
-        );
-        productsAdminPanelLayout.setVerticalGroup(
-            productsAdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 740, Short.MAX_VALUE)
-        );
-
-        rightSideAdminPanel.add(productsAdminPanel, "Produse");
-
-        javax.swing.GroupLayout categoriesProductsAdminPanelLayout = new javax.swing.GroupLayout(categoriesProductsAdminPanel);
-        categoriesProductsAdminPanel.setLayout(categoriesProductsAdminPanelLayout);
-        categoriesProductsAdminPanelLayout.setHorizontalGroup(
-            categoriesProductsAdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1085, Short.MAX_VALUE)
-        );
-        categoriesProductsAdminPanelLayout.setVerticalGroup(
-            categoriesProductsAdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 740, Short.MAX_VALUE)
-        );
-
-        rightSideAdminPanel.add(categoriesProductsAdminPanel, "Categorii <-> Produse");
-
-        javax.swing.GroupLayout ingredientsAdminPanelLayout = new javax.swing.GroupLayout(ingredientsAdminPanel);
-        ingredientsAdminPanel.setLayout(ingredientsAdminPanelLayout);
-        ingredientsAdminPanelLayout.setHorizontalGroup(
-            ingredientsAdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1085, Short.MAX_VALUE)
-        );
-        ingredientsAdminPanelLayout.setVerticalGroup(
-            ingredientsAdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 740, Short.MAX_VALUE)
-        );
-
-        rightSideAdminPanel.add(ingredientsAdminPanel, "Ingrediente");
-
-        javax.swing.GroupLayout recipesAdminPanelLayout = new javax.swing.GroupLayout(recipesAdminPanel);
-        recipesAdminPanel.setLayout(recipesAdminPanelLayout);
-        recipesAdminPanelLayout.setHorizontalGroup(
-            recipesAdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1085, Short.MAX_VALUE)
-        );
-        recipesAdminPanelLayout.setVerticalGroup(
-            recipesAdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 740, Short.MAX_VALUE)
-        );
-
-        rightSideAdminPanel.add(recipesAdminPanel, "Retete");
-
-        javax.swing.GroupLayout productTypeAdminPanelLayout = new javax.swing.GroupLayout(productTypeAdminPanel);
-        productTypeAdminPanel.setLayout(productTypeAdminPanelLayout);
-        productTypeAdminPanelLayout.setHorizontalGroup(
-            productTypeAdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1085, Short.MAX_VALUE)
-        );
-        productTypeAdminPanelLayout.setVerticalGroup(
-            productTypeAdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 740, Short.MAX_VALUE)
-        );
-
-        rightSideAdminPanel.add(productTypeAdminPanel, "Tipuri aliment");
-
-        javax.swing.GroupLayout ordersAdminPanelLayout = new javax.swing.GroupLayout(ordersAdminPanel);
-        ordersAdminPanel.setLayout(ordersAdminPanelLayout);
-        ordersAdminPanelLayout.setHorizontalGroup(
-            ordersAdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1085, Short.MAX_VALUE)
-        );
-        ordersAdminPanelLayout.setVerticalGroup(
-            ordersAdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 740, Short.MAX_VALUE)
-        );
-
-        rightSideAdminPanel.add(ordersAdminPanel, "Comenzi");
+        rightSideAdminPanel.add(defaultPanel, "card2");
 
         adminMenuPanel.setRightComponent(rightSideAdminPanel);
 
         add(adminMenuPanel, "card2");
+        menusAdminPanel = new MenusAdminPanel(this.appWindow);
+        rightSideAdminPanel.add(menusAdminPanel, "Meniuri");
+
+        categoriesAdminPanel = new CategoriesAdminPanel(this.appWindow);
+        rightSideAdminPanel.add(categoriesAdminPanel, "Categorii");
+
+        categoriesProductsAdminPanel = new CategoriesProductsAdminPanel(this.appWindow);
+        rightSideAdminPanel.add(categoriesProductsAdminPanel, "Categorii <-> Produse");
+
+        ingredientsAdminPanel = new IngredientsAdminPanel(this.appWindow);
+        rightSideAdminPanel.add(ingredientsAdminPanel, "Ingrediente");
+
+        ordersAdminPanel = new OrdersAdminPanel(this.appWindow);
+        rightSideAdminPanel.add(ordersAdminPanel, "Comenzi");
+
+        productStockPanel = new ProductStockPanel(this.appWindow);
+        rightSideAdminPanel.add(productStockPanel, "Stocuri produs");
+
+        productTypeAdminPanel = new ProductTypeAdminPanel(this.appWindow);
+        rightSideAdminPanel.add(productTypeAdminPanel, "Tipuri produs");
+
+        productsAdminPanel = new ProductsAdminPanel(this.appWindow);
+        rightSideAdminPanel.add(productsAdminPanel, "Produse");
+
+        productsOrdersAdminPanel = new ProductsOrdersAdminPanel(this.appWindow);
+        rightSideAdminPanel.add(productsOrdersAdminPanel, "Produse <-> Comenzi");
+
+        recipesAdminPanel = new RecipesAdminPanel(this.appWindow);
+        rightSideAdminPanel.add(recipesAdminPanel, "Retete");
     }// </editor-fold>//GEN-END:initComponents
 
     private void categoriesAdminButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categoriesAdminButtonActionPerformed
-        // TODO add your handling code here:
+        categoriesAdminPanel.fillComboBoxes();
     }//GEN-LAST:event_categoriesAdminButtonActionPerformed
+
+    private void categoriesProductsAdminButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categoriesProductsAdminButtonActionPerformed
+        categoriesProductsAdminPanel.fillComboBoxes();
+    }//GEN-LAST:event_categoriesProductsAdminButtonActionPerformed
+
+    private void productsAdminButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productsAdminButtonActionPerformed
+        productsAdminPanel.fillComboBoxes();
+    }//GEN-LAST:event_productsAdminButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -539,9 +484,7 @@ public class AdminMainPanel extends javax.swing.JPanel {
     private javax.swing.JSplitPane adminMenuPanel;
     private javax.swing.JButton backCAButton;
     private javax.swing.JButton categoriesAdminButton;
-    public mainpackage.AdminWindowPanels.CategoriesAdminPanel categoriesAdminPanel;
     private javax.swing.JButton categoriesProductsAdminButton;
-    public mainpackage.AdminWindowPanels.CategoriesProductsAdminPanel categoriesProductsAdminPanel;
     private javax.swing.JButton createAccountButton;
     private javax.swing.JPanel createAccountPanel;
     private javax.swing.JButton createNewAccountButton;
@@ -551,33 +494,38 @@ public class AdminMainPanel extends javax.swing.JPanel {
     private javax.swing.JLabel idAdminLabel;
     private javax.swing.JTextField idAdminTextField;
     private javax.swing.JButton ingredientsAdminButton;
-    public mainpackage.AdminWindowPanels.IngredientsAdminPanel ingredientsAdminPanel;
     private javax.swing.JPanel leftSideAdminPanel;
     private javax.swing.JButton loginButton;
     private javax.swing.JPanel loginMainPanel;
     public javax.swing.JPanel loginPanels;
     private javax.swing.JButton menusAdminButton;
-    public mainpackage.AdminWindowPanels.MenusAdminPanel menusAdminPanel;
-    private javax.swing.JButton menusCategoriesAdminButton;
-    public mainpackage.AdminWindowPanels.MenusCategoriesAdminPanel menusCategoriesAdminPanel;
     private javax.swing.JLabel numeContCALabel;
     private javax.swing.JTextField numeContCATextField;
     private javax.swing.JLabel numeContLabel;
     private javax.swing.JTextField numeContTextField;
     private javax.swing.JButton ordersAdminButton;
-    private mainpackage.AdminWindowPanels.OrdersAdminPanel ordersAdminPanel;
     private javax.swing.JPasswordField parolaContCATextField;
     private javax.swing.JLabel parolaContCAtLabel;
     private javax.swing.JLabel parolaContCAtLabel1;
     private javax.swing.JLabel parolaContLabel;
     private javax.swing.JPasswordField parolaContTextField;
+    private javax.swing.JButton productStocksButton;
     private javax.swing.JButton productTypeAdminButton;
-    public mainpackage.AdminWindowPanels.ProductTypeAdminPanel productTypeAdminPanel;
     private javax.swing.JButton productsAdminButton;
-    public mainpackage.AdminWindowPanels.ProductsAdminPanel productsAdminPanel;
+    private javax.swing.JButton productsOrdersButton;
     private javax.swing.JButton recipesAdminButton;
-    public mainpackage.AdminWindowPanels.RecipesAdminPanel recipesAdminPanel;
     private javax.swing.JPasswordField repParolaContCATextField1;
     public javax.swing.JPanel rightSideAdminPanel;
     // End of variables declaration//GEN-END:variables
+
+    public MenusAdminPanel menusAdminPanel;
+    public CategoriesAdminPanel categoriesAdminPanel;
+    public CategoriesProductsAdminPanel categoriesProductsAdminPanel;
+    public IngredientsAdminPanel ingredientsAdminPanel;
+    public OrdersAdminPanel ordersAdminPanel;
+    public ProductStockPanel productStockPanel;
+    public ProductTypeAdminPanel productTypeAdminPanel;
+    public ProductsAdminPanel productsAdminPanel;
+    public ProductsOrdersAdminPanel productsOrdersAdminPanel;
+    public RecipesAdminPanel recipesAdminPanel;
 }

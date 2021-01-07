@@ -9,12 +9,35 @@ package mainpackage.AdminWindowPanels;
  *
  * @author cosmi
  */
+
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.RowFilter;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+import mainpackage.ApplicationWindow;
+
 public class RecipesAdminPanel extends javax.swing.JPanel {
 
     /**
      * Creates new form recipesAdminPanel
      */
-    public RecipesAdminPanel() {
+    private final ApplicationWindow appWindow;
+    private TableRowSorter<DefaultTableModel> tr;
+    private List<RowSorter.SortKey> sortKeys;
+
+    public RecipesAdminPanel(ApplicationWindow appWindow) {
+        this.appWindow = appWindow;
         initComponents();
     }
 
@@ -26,22 +49,256 @@ public class RecipesAdminPanel extends javax.swing.JPanel {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
+
+        scrollPanel = new javax.swing.JScrollPane();
+        dataTable = new javax.swing.JTable();
+        bottomPanel = new javax.swing.JPanel();
+        buttonsPanel = new javax.swing.JPanel();
+        deleteButton = new javax.swing.JButton();
+        showButton = new javax.swing.JButton();
+        updateButton = new javax.swing.JButton();
+        insertUpdatePanel = new javax.swing.JPanel();
+        numeMeniuLabel = new javax.swing.JLabel();
+        detaliiSuplimentareLabel = new javax.swing.JLabel();
+        detaliiSuplimentareLabel1 = new javax.swing.JLabel();
+        insertButton = new javax.swing.JButton();
+        deleteBoxesButton = new javax.swing.JButton();
+        numeProdusCB = new javax.swing.JComboBox<>();
+        numeIngredientCB = new javax.swing.JComboBox<>();
+        cantitateIngredientTF = new javax.swing.JTextField();
+        filterTextField = new javax.swing.JTextField();
+        filterLabel = new javax.swing.JLabel();
 
         setPreferredSize(new java.awt.Dimension(1065, 718));
+
+        dataTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "nume_produs", "nume_ingredient", "cantitate_ingredient"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.Float.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, true, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        dataTable.getTableHeader().setReorderingAllowed(false);
+        dataTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                dataTableMouseClicked(evt);
+            }
+        });
+        dataTable.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                dataTableKeyReleased(evt);
+            }
+        });
+        scrollPanel.setViewportView(dataTable);
+
+        buttonsPanel.setLayout(new java.awt.GridBagLayout());
+
+        deleteButton.setText("Sterge");
+        deleteButton.setActionCommand("ButoaneReteteAdmin");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 63;
+        gridBagConstraints.ipady = 48;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(13, 12, 13, 14);
+        buttonsPanel.add(deleteButton, gridBagConstraints);
+
+        showButton.setText("Afisare/Refresh");
+        showButton.setActionCommand("ButoaneReteteAdmin");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 63;
+        gridBagConstraints.ipady = 48;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(13, 12, 13, 14);
+        buttonsPanel.add(showButton, gridBagConstraints);
+
+        updateButton.setText("Modificare");
+        updateButton.setActionCommand("ButoaneReteteAdmin");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 63;
+        gridBagConstraints.ipady = 48;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(13, 12, 13, 14);
+        buttonsPanel.add(updateButton, gridBagConstraints);
+
+        numeMeniuLabel.setText("nume_produs");
+
+        detaliiSuplimentareLabel.setText("nume_ingredient");
+
+        detaliiSuplimentareLabel1.setText("cantitate_ingredient");
+
+        insertButton.setText("Inserare");
+        insertButton.setActionCommand("ButoaneReteteAdmin");
+
+        deleteBoxesButton.setText("Sterge casetele");
+        deleteBoxesButton.setActionCommand("ButoaneReteteAdmin");
+
+        javax.swing.GroupLayout insertUpdatePanelLayout = new javax.swing.GroupLayout(insertUpdatePanel);
+        insertUpdatePanel.setLayout(insertUpdatePanelLayout);
+        insertUpdatePanelLayout.setHorizontalGroup(
+            insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, insertUpdatePanelLayout.createSequentialGroup()
+                .addGap(78, 78, 78)
+                .addGroup(insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(numeMeniuLabel)
+                    .addComponent(detaliiSuplimentareLabel)
+                    .addComponent(detaliiSuplimentareLabel1))
+                .addGap(30, 30, 30)
+                .addGroup(insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(cantitateIngredientTF, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)
+                    .addComponent(numeProdusCB, 0, 237, Short.MAX_VALUE)
+                    .addComponent(numeIngredientCB, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(insertButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(deleteBoxesButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(87, 87, 87))
+        );
+        insertUpdatePanelLayout.setVerticalGroup(
+            insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(insertUpdatePanelLayout.createSequentialGroup()
+                .addGap(72, 72, 72)
+                .addGroup(insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(numeMeniuLabel)
+                    .addComponent(insertButton, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(numeProdusCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(17, 17, 17)
+                .addGroup(insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(deleteBoxesButton, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, insertUpdatePanelLayout.createSequentialGroup()
+                        .addGroup(insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(detaliiSuplimentareLabel)
+                            .addComponent(numeIngredientCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(29, 29, 29)))
+                .addGroup(insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(detaliiSuplimentareLabel1)
+                    .addComponent(cantitateIngredientTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout bottomPanelLayout = new javax.swing.GroupLayout(bottomPanel);
+        bottomPanel.setLayout(bottomPanelLayout);
+        bottomPanelLayout.setHorizontalGroup(
+            bottomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bottomPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(insertUpdatePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(buttonsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        bottomPanelLayout.setVerticalGroup(
+            bottomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(bottomPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(bottomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(insertUpdatePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(bottomPanelLayout.createSequentialGroup()
+                        .addComponent(buttonsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 340, Short.MAX_VALUE)
+                        .addContainerGap())))
+        );
+
+        filterTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                filterTextFieldKeyReleased(evt);
+            }
+        });
+
+        filterLabel.setText("Filter:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addComponent(scrollPanel)
+            .addComponent(bottomPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(filterLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(filterTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 1045, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(filterTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(filterLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(1, 1, 1)
+                .addComponent(scrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 399, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(bottomPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void dataTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dataTableMouseClicked
+
+        String nume_meniu = dataTable.getValueAt(dataTable.getSelectedRow(), 1).toString();
+        String detalii_suplimentare_meniu = (dataTable.getValueAt(dataTable.getSelectedRow(), 2) == null) ? "" : dataTable.getValueAt(dataTable.getSelectedRow(), 2).toString();
+
+        numeMeniuTextField.setText(nume_meniu);
+        detaliiSuplimentareTextField.setText(detalii_suplimentare_meniu);
+    }//GEN-LAST:event_dataTableMouseClicked
+
+    private void dataTableKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dataTableKeyReleased
+
+        if (evt.getKeyCode() == KeyEvent.VK_UP || evt.getKeyCode() == KeyEvent.VK_DOWN) {
+            String nume_meniu = dataTable.getValueAt(dataTable.getSelectedRow(), 1).toString();
+            String detalii_suplimentare_meniu = (dataTable.getValueAt(dataTable.getSelectedRow(), 2) == null) ? "" : dataTable.getValueAt(dataTable.getSelectedRow(), 2).toString();
+
+            numeMeniuTextField.setText(nume_meniu);
+            detaliiSuplimentareTextField.setText(detalii_suplimentare_meniu);
+        }
+    }//GEN-LAST:event_dataTableKeyReleased
+
+    private void filterTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_filterTextFieldKeyReleased
+        startFilter();
+    }//GEN-LAST:event_filterTextFieldKeyReleased
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel bottomPanel;
+    private javax.swing.JPanel buttonsPanel;
+    private javax.swing.JTextField cantitateIngredientTF;
+    private javax.swing.JTable dataTable;
+    private javax.swing.JButton deleteBoxesButton;
+    private javax.swing.JButton deleteButton;
+    private javax.swing.JLabel detaliiSuplimentareLabel;
+    private javax.swing.JLabel detaliiSuplimentareLabel1;
+    private javax.swing.JLabel filterLabel;
+    private javax.swing.JTextField filterTextField;
+    private javax.swing.JButton insertButton;
+    private javax.swing.JPanel insertUpdatePanel;
+    private javax.swing.JComboBox<String> numeIngredientCB;
+    private javax.swing.JLabel numeMeniuLabel;
+    private javax.swing.JComboBox<String> numeProdusCB;
+    private javax.swing.JScrollPane scrollPanel;
+    private javax.swing.JButton showButton;
+    private javax.swing.JButton updateButton;
     // End of variables declaration//GEN-END:variables
 }
