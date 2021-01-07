@@ -18,7 +18,7 @@ public final class ApplicationWindow extends javax.swing.JFrame {
 
     public ApplicationWindow() {
 
-        dataBaseConnection = new DataBaseConnection();
+        dataBaseConnection = new DataBaseConnection("bd-dc.cs.tuiasi.ro","1539","orcl","bd137","bd137");
         appActionListener = new AppActionListener(this);
 
         adminWindow = null;
@@ -164,12 +164,10 @@ public final class ApplicationWindow extends javax.swing.JFrame {
     }
 
     public void startClientWindow() {
-        if (clientWindow == null) {
+        
             clientWindow = new ClientWindow(this);
             clientWindow.setVisible(true);
-        } else {
-            clientWindow.setVisible(true);
-        }
+
     }
 
     public AppActionListener getAppActionListener() {

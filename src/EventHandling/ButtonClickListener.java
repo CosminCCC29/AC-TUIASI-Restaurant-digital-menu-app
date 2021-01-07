@@ -46,6 +46,10 @@ public class ButtonClickListener implements ActionListener {
                 cardLayout = (CardLayout) appWindow.getAdminWindow().adminMainPanel.loginPanels.getLayout();
                 cardLayout.show(appWindow.getAdminWindow().adminMainPanel.loginPanels, "card2");
                 break;
+            
+            case "Creare cont":
+                appWindow.getAdminWindow().adminMainPanel.newAccount();
+                break;
 
             case "Înapoi":
                 cardLayout = (CardLayout) appWindow.getAdminWindow().adminMainPanel.loginPanels.getLayout();
@@ -53,8 +57,13 @@ public class ButtonClickListener implements ActionListener {
                 break;
 
             case "Logare":
-                cardLayout = (CardLayout) appWindow.getAdminWindow().adminMainPanel.getLayout();
-                cardLayout.show(appWindow.getAdminWindow().adminMainPanel, "card2");
+                int check = 0;
+                check = appWindow.getAdminWindow().adminMainPanel.personalCheckFunction(check);
+                if(check == 1)
+                {
+                    cardLayout = (CardLayout) appWindow.getAdminWindow().adminMainPanel.getLayout();
+                    cardLayout.show(appWindow.getAdminWindow().adminMainPanel, "card2");
+                }
                 break;
 
             case "ButonMeniuAdmin":

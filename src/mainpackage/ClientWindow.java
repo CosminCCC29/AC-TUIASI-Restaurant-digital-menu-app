@@ -9,6 +9,7 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.control.ButtonType;
+import javafx.scene.layout.Border;
 import javax.swing.*;
 import mainpackage.ClientWindowPanels.BauturiPanel;
 
@@ -18,6 +19,8 @@ public class ClientWindow extends javax.swing.JFrame {
     private ApplicationWindow appWindow;
     public ArrayList<ArrayList<String>> produseleMele = new ArrayList<>();  
     public PreparedStatement selectProduct;
+    private JComboBox tableComboBox = new JComboBox();
+    private JComboBox detailsComboBox = new JComboBox();
     
     BauturiPanel bauturiPanel = new BauturiPanel();    
     GridBagLayout layout = new GridBagLayout();
@@ -38,14 +41,13 @@ public class ClientWindow extends javax.swing.JFrame {
                 e.getWindow().dispose();
             }
         });
-        
-        
+       
         int ct=0;
              
         try {
             Connection conn = appWindow.getDataBaseConnection().getConnection();
             Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT nume_categorie FROM CATEGORII WHERE Meniuri_nr_meniu = 1");
+            ResultSet rs = st.executeQuery("SELECT nume_categorie FROM CATEGORII WHERE Meniuri_nr_meniu = (SELECT nr_meniu FROM Meniuri WHERE nume_meniu = '"+appWindow.getCurrentMenu() +"')");
             selectProduct = conn.prepareStatement("SELECT p.nume_produs, p.pret FROM Categorii c, Produse p, categorii_produse cp  WHERE c.nume_categorie = ? AND c.Meniuri_nr_meniu = 1 AND p.nr_produs = cp.Produse_nr_produs AND c.nr_categorie = cp.Categorii_nr_categorie");
             
             while(rs.next())
@@ -120,7 +122,13 @@ public class ClientWindow extends javax.swing.JFrame {
                     foodPicture.setBackground(new Color(255, 255, 255));
                     foodPicture.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
                     foodPicture.setSize(new Dimension(200,150)); 
-                    ImageIcon img = new ImageIcon(new ImageIcon(getClass().getResource("/Poze/"+nume_produs+".jpg")).getImage().getScaledInstance(foodPicture.getWidth(), foodPicture.getHeight(), Image.SCALE_SMOOTH));
+                    ImageIcon img = null;
+                    try{
+                    img = new ImageIcon(new ImageIcon(getClass().getResource("/Poze/"+nume_produs+".jpg")).getImage().getScaledInstance(foodPicture.getWidth(), foodPicture.getHeight(), Image.SCALE_SMOOTH));
+                    }
+                    catch(Exception e){
+                        img = new ImageIcon(new ImageIcon(getClass().getResource("/Poze/empty.jpg")).getImage().getScaledInstance(foodPicture.getWidth(), foodPicture.getHeight(), Image.SCALE_SMOOTH));
+                    }
                     foodPicture.setIcon(img);
                     foodPicture.setVerifyInputWhenFocusTarget(false);
                     produsPanel.add(foodPicture, BorderLayout.NORTH);
@@ -221,16 +229,22 @@ public class ClientWindow extends javax.swing.JFrame {
     {
         try {
             Connection conn = appWindow.getDataBaseConnection().getConnection();
-            int index = 1;
+            int index = 3;
             String str = "BEGIN\n" +
-                        "\n" +
                         "DECLARE\n" +
                         "    produse_comandate produse_comenzi.nr_produse_comandate%TYPE;\n" +
+                        "    nr_masa_insert Comenzi.nr_masa%TYPE;\n" +
+                        "    detalii_suplimentare comenzi.detalii_suplimentare_comanda%TYPE;\n" +
+                        "    \n" +
                         "    produs_in_reteta Ingrediente.id_ingredient%TYPE;\n" +
                         "    produs_in_stoc stocuri_produs.stoc_produs%TYPE;\n" +
                         "BEGIN\n" +
                         "\n" +
-                        "    INSERT INTO Comenzi(id_comanda, data_comanda, nr_masa) VALUES(NULL,SYSDATE,3);\n";
+                        "    SAVEPOINT sp;\n" +
+                        "\n" +
+                        "    nr_masa_insert := ?;\n" +
+                        "    detalii_suplimentare := ?;\n" +
+                        "    INSERT INTO Comenzi(id_comanda, data_comanda, nr_masa, detalii_suplimentare_comanda) VALUES(NULL,SYSDATE,nr_masa_insert,detalii_suplimentare);";
             
             for(int i = 0; i< produseleMele.size() ; i++)
                 {
@@ -254,13 +268,22 @@ public class ClientWindow extends javax.swing.JFrame {
                         "    END;\n";
             }
             str = str +"END;\n"+
-                        "END;";
+                       "COMMIT;\n" +
+                       "\n" +
+                       "    EXCEPTION\n" +
+                       "        WHEN OTHERS THEN\n" +
+                       "            ROLLBACK TO sp;\n" +
+                       "            RAISE;"+
+                       "END;";
             selectProduct = conn.prepareStatement(str);
+            short val = Short.valueOf(String.valueOf(tableComboBox.getSelectedIndex() + 1));
+            selectProduct.setShort(1, val);
+            selectProduct.setString(2, (String) detailsComboBox.getSelectedItem());
             for(int i = 0; i< produseleMele.size() ; i++)
             {
                 String nume = produseleMele.get(i).get(0);
                 String cantitate = produseleMele.get(i).get(2);
-                if(index % 7 == 1)
+                if(index % 7 == 3)
                         selectProduct.setString(index, cantitate);
                 selectProduct.setString(index+1, nume);
                 selectProduct.setString(index+2, nume);
@@ -372,18 +395,34 @@ public class ClientWindow extends javax.swing.JFrame {
         
         //ADAUGARE BUTON PENTRU GOLIRE COS COMANDA
             
-            JButton emptyButton= new JButton();
-                emptyButton.setText("Golire Cos");
-                gridBagConstraints = new java.awt.GridBagConstraints();
-                gridBagConstraints.fill = GridBagConstraints.BOTH;
-                gridBagConstraints.gridx = 6;
-                gridBagConstraints.gridy = 7;
-                gridBagConstraints.ipadx = 32;
-                gridBagConstraints.ipady = 27;
-                emptyButton.setSize(new Dimension(20,20));
-                commandPanel.add(emptyButton,BorderLayout.EAST);
-                emptyButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
-                emptyButton.setActionCommand("emptyOrder");
+        JButton emptyButton= new JButton();
+        emptyButton.setText("Golire Cos");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = GridBagConstraints.BOTH;
+        gridBagConstraints.gridx = 6;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.ipadx = 32;
+        gridBagConstraints.ipady = 27;
+        emptyButton.setSize(new Dimension(20,20));
+        commandPanel.add(emptyButton,BorderLayout.EAST);
+        emptyButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+        emptyButton.setActionCommand("emptyOrder");
+        
+        JPanel panouDreapta = new JPanel(new BorderLayout());
+        //JComboBox tableComboBox = new JComboBox();
+        //JComboBox detailsComboBox = new JComboBox();
+        
+        tableComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Masa 1", "Masa 2", "Masa 3", "Masa 4" , "Masa 5" , "Masa 6" }));
+        tableComboBox.setSelectedItem("Masa 1");
+        panouDreapta.add(tableComboBox, BorderLayout.SOUTH);
+        
+        detailsComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Plata numerar", "Plata card" }));
+        detailsComboBox.setSelectedItem("Plata numerar");
+        panouDreapta.add(detailsComboBox, BorderLayout.NORTH);
+        
+        panouDreapta.add(emptyButton,BorderLayout.CENTER);
+        panouDreapta.setBackground(new Color(100, 100, 100));
+        commandPanel.add(panouDreapta,BorderLayout.EAST);
                
         //////////////////////////////////////////
         
@@ -427,6 +466,8 @@ public class ClientWindow extends javax.swing.JFrame {
         JTextField textField = new JTextField();
         textField = (JTextField)components[1];
         int ct=Integer.parseInt(textField.getText());
+        int ok;
+        int ctok;
         
         try {
             Connection conn = appWindow.getDataBaseConnection().getConnection();
@@ -440,19 +481,37 @@ public class ClientWindow extends javax.swing.JFrame {
                 String y = rs.getString(1);
                 String a[] = new String[] { tmpJButton.getParent().getName(),y,String.valueOf(ct)};
                 
-                int ok = 1;
+                ok = 0;
+                if(ct == 0)
+                {
+                    ctok = 0;
+                }
+                else
+                {
+                    ctok = 1;
+                }
                 int index = 0;
                 for(int i = 0; i< produseleMele.size() ; i++)
                 {
                     if(produseleMele.get(i).get(0) == a[0])
                     {
-                        ok = 0;
+                        ok = 1;
                         index = i;
                     }
                 }
-                if(ok==1)
+                if(ok == 0 && ctok == 0)
+                {
+                    JOptionPane.showMessageDialog(this, "Pentru a adauga produsul trebuie selectata cantitatea");
+                }
+                if(ok == 0 && ctok == 1)
+                {
                     produseleMele.add(new ArrayList<String>(Arrays.asList(a)));
-                else
+                }
+                if(ok == 1 && ctok == 0)
+                { 
+                    produseleMele.remove(index);
+                }
+                if(ok == 1 && ctok == 1)
                 {
                     produseleMele.set(index, new ArrayList<String>(Arrays.asList(a)));
                 }
