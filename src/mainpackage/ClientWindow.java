@@ -6,6 +6,7 @@ import java.sql.*;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.control.ButtonType;
 import javax.swing.*;
 import mainpackage.ClientWindowPanels.BauturiPanel;
 
@@ -24,9 +25,7 @@ public class ClientWindow extends javax.swing.JFrame {
         this.appWindow = appWindow;
         initComponents();
         int ct=0;
-     
-        
-        
+             
         try {
             Connection conn = appWindow.getDataBaseConnection().getConnection();
             Statement st = conn.createStatement();
@@ -42,10 +41,7 @@ public class ClientWindow extends javax.swing.JFrame {
                 
                 selectProduct.setString(1, buttonText);
                 ResultSet rs2 = selectProduct.executeQuery();
-                
-                System.out.println("Produsele din categoria "+buttonText+" sunt:");       
-                System.out.println("\n\n");
-              
+
                 JButton btn= new JButton();
                 btn.setText(buttonText);
                 btn.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
@@ -58,7 +54,7 @@ public class ClientWindow extends javax.swing.JFrame {
                 gridBagConstraints.gridy = ct++;
                 gridBagConstraints.ipadx = 32;
                 gridBagConstraints.ipady = 27;
-                
+                CtgPanel.setBackground(new Color(174, 40, 37));
                 CtgPanel.add(btn, gridBagConstraints);
                          
                 //panel settings
@@ -66,7 +62,7 @@ public class ClientWindow extends javax.swing.JFrame {
                 // VARIABILA panel REPREZINTA PANELUL ADAUGAT IN DYNAMIC PANEL SI IN CARE SE VOR ADAUGA PRODUSELE
                 
                 JPanel panel = new JPanel();      
-                panel.setBackground(Color.yellow);
+                panel.setBackground(new Color(201, 184, 56));
                 panel.setName(btn.getText());                   
                 DynamicPanel.add(panel,btn.getText());
                 
@@ -80,11 +76,10 @@ public class ClientWindow extends javax.swing.JFrame {
                     //ADAUGARE PANEL PENTRU FIECARE PRODUS DIN CATEGORIA SELECTATA
                     
                     JPanel produsPanel = new JPanel(new BorderLayout());
-                    produsPanel.setPreferredSize(new Dimension(300,200));
-                    produsPanel.setBackground(Color.BLUE);
+                    produsPanel.setPreferredSize(new Dimension(300,250));
+                    produsPanel.setBackground(new Color(180,114,71));
                     produsPanel.setName(nume_produs);
                     panel.add(produsPanel,nume_produs);
-                    
                     ///////////////////////////////////
                     
                     
@@ -103,17 +98,17 @@ public class ClientWindow extends javax.swing.JFrame {
                     
                     ////////////////////////////////////////////////////
                     
-                    
                     //ADAUGAREA UNEI POZE PENTRU PRODUS
                     
                     JLabel foodPicture = new javax.swing.JLabel();
-                    foodPicture.setBackground(new java.awt.Color(255, 255, 255));
+                    foodPicture.setBackground(new Color(255, 255, 255));
                     foodPicture.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-                    foodPicture.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Poze/food1.png"))); // NOI18N
+                    foodPicture.setSize(new Dimension(200,150)); 
+                    ImageIcon img = new ImageIcon(new ImageIcon(getClass().getResource("/Poze/"+nume_produs+".jpg")).getImage().getScaledInstance(foodPicture.getWidth(), foodPicture.getHeight(), Image.SCALE_SMOOTH));
+                    foodPicture.setIcon(img);
                     foodPicture.setVerifyInputWhenFocusTarget(false);
                     produsPanel.add(foodPicture, BorderLayout.NORTH);
-                    
-                    
+    
                     ///////////////////////////////////
                     
                     //ADAUGARE BUTON ADD FIECARUI PRODUS
@@ -130,11 +125,17 @@ public class ClientWindow extends javax.swing.JFrame {
                     produsPanel.add(button, BorderLayout.EAST);
                     
                     /////////////////////////////////////////
-                    
+                                      
+                    ///ADAUGAREA BUTOANE + - PENTRU SELECTAREA CANTITATII DIN FIECARE PRODUS
                     JPanel numarProdusePanel = new JPanel(new BorderLayout());
                     JButton leftB = new JButton("-");
                     JButton leftR = new JButton("+");
+                    leftB.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+                    leftR.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+                    leftB.setActionCommand("MINUS");
+                    leftR.setActionCommand("PLUS");
                     JTextField numarProduseTextField = new JTextField("0");
+                    numarProduseTextField.setEditable(false);
                     
                     numarProdusePanel.add(leftB, BorderLayout.WEST);
                     numarProdusePanel.add(numarProduseTextField, BorderLayout.CENTER);
@@ -149,8 +150,8 @@ public class ClientWindow extends javax.swing.JFrame {
             javax.swing.JButton button= new JButton();
                 button.setText("Vizualizare Comanda");
                 java.awt.GridBagConstraints gridBagConstraints;
-                gridBagConstraints = new java.awt.GridBagConstraints();
-                gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+                gridBagConstraints = new GridBagConstraints();
+                gridBagConstraints.fill = GridBagConstraints.BOTH;
                 gridBagConstraints.gridx = 0;
                 gridBagConstraints.gridy = ct++;
                 gridBagConstraints.ipadx = 32;
@@ -164,8 +165,8 @@ public class ClientWindow extends javax.swing.JFrame {
             //ADAUGARE BUTON DE BACK DIN MENIUL CLIENT IN CEL DE PORNIRE
             javax.swing.JButton button1= new JButton();
                 button1.setText("Back");
-                gridBagConstraints = new java.awt.GridBagConstraints();
-                gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+                gridBagConstraints = new GridBagConstraints();
+                gridBagConstraints.fill = GridBagConstraints.BOTH;
                 gridBagConstraints.gridx = 0;
                 gridBagConstraints.gridy = ct;
                 gridBagConstraints.ipadx = 32;
@@ -181,18 +182,125 @@ public class ClientWindow extends javax.swing.JFrame {
         }
         
     }
+
+    public void increaseTextArea(ActionEvent e)
+    {
+        JButton tmpJButton = (JButton)e.getSource();
+        Component[] components = tmpJButton.getParent().getComponents();
+        JTextField textField = new JTextField();
+        textField = (JTextField)components[1];
+        int i=Integer.parseInt(textField.getText());
+        String s=String.valueOf(i+1);
+        textField.setText(s);
+    }
+    
+    public void decreaseTextArea(ActionEvent e)
+    {
+        JButton tmpJButton = (JButton)e.getSource();
+        Component[] components = tmpJButton.getParent().getComponents();
+        JTextField textField = new JTextField();
+        textField = (JTextField)components[1];
+        
+        int i=Integer.parseInt(textField.getText());
+        String s="";
+        if(i>0)
+        {
+            s=String.valueOf(i-1);
+        }
+        else
+        {
+            s="0";
+        }
+        textField.setText(s);
+    }
+       
+    public void finalizeOrder(ActionEvent e)
+    {
+        try {
+            Connection conn = appWindow.getDataBaseConnection().getConnection();
+            int index = 1;
+            String str = "BEGIN\n" +
+                        "\n" +
+                        "DECLARE\n" +
+                        "    produse_comandate produse_comenzi.nr_produse_comandate%TYPE;\n" +
+                        "    produs_in_reteta Ingrediente.id_ingredient%TYPE;\n" +
+                        "    produs_in_stoc stocuri_produs.stoc_produs%TYPE;\n" +
+                        "BEGIN\n" +
+                        "\n" +
+                        "    INSERT INTO Comenzi(id_comanda, data_comanda, nr_masa) VALUES(NULL,SYSDATE,3);\n";
+            
+            for(int i = 0; i< produseleMele.size() ; i++)
+                {
+                    str = str +  
+                        "    BEGIN\n" +
+                        "        produse_comandate := ?;\n" +
+                        "        INSERT INTO produse_comenzi(nr_produse_comandate, Produse_nr_produs, Comenzi_id_comanda) VALUES(produse_comandate, (SELECT nr_produs FROM Produse WHERE nume_produs = ?), (SELECT MAX(id_comanda) FROM Comenzi));\n" +
+                        "\n" +
+                        "        SELECT COUNT(Produse_nr_produs) INTO produs_in_reteta FROM Retete r WHERE r.Produse_nr_produs = (SELECT nr_produs FROM Produse WHERE nume_produs = ?);\n" +
+                        "        SELECT COUNT(Produse_nr_produs) INTO produs_in_stoc FROM stocuri_produs sp WHERE sp.Produse_nr_produs = (SELECT nr_produs FROM Produse WHERE nume_produs = ?);\n" +
+                        "\n" +
+                        "        IF (produs_in_reteta > 0) THEN\n" +
+                        "            UPDATE Ingrediente i\n" +
+                        "            SET stoc_ingredient = stoc_ingredient - produse_comandate * (SELECT r.cantitate_ingredient FROM Retete r WHERE r.Produse_nr_produs = (SELECT nr_produs FROM Produse WHERE nume_produs = ?) and r.Ingrediente_id_ingredient = i.id_ingredient)\n" +
+                        "            WHERE EXISTS (SELECT 1 FROM Retete r WHERE Produse_nr_produs = (SELECT nr_produs FROM Produse WHERE nume_produs = ?) and r.Ingrediente_id_ingredient = i.id_ingredient);\n" +
+                        "        ELSIF (produs_in_stoc > 0) THEN\n" +
+                        "            UPDATE stocuri_produs sp\n" +
+                        "            SET stoc_produs = stoc_produs - produse_comandate\n" +
+                        "            WHERE sp.Produse_nr_produs = (SELECT nr_produs FROM Produse WHERE nume_produs = ?);\n" +
+                        "        END IF;\n" +
+                        "    END;\n";
+            }
+            str = str +"END;\n"+
+                        "END;";
+            selectProduct = conn.prepareStatement(str);
+            for(int i = 0; i< produseleMele.size() ; i++)
+            {
+                String nume = produseleMele.get(i).get(0);
+                String cantitate = produseleMele.get(i).get(2);
+                if(index % 7 == 1)
+                        selectProduct.setString(index, cantitate);
+                selectProduct.setString(index+1, nume);
+                selectProduct.setString(index+2, nume);
+                selectProduct.setString(index+3, nume);
+                selectProduct.setString(index+4, nume);
+                selectProduct.setString(index+5, nume);
+                selectProduct.setString(index+6, nume);
+                index += 7;
+            }
+            
+            ResultSet rs = selectProduct.executeQuery();
+            
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(ClientWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
     public void vizualizeOrder(ActionEvent e)
     {
         int costComanda = 0;
         int par=1;
-        JPanel commandPanel = new JPanel(new GridBagLayout());
+        JPanel commandPanel = new JPanel(new BorderLayout());
                 
-        commandPanel.setBackground(Color.RED);
+        commandPanel.setBackground(new Color(115,89,105));
         commandPanel.setName("Finalizare Comanda");
         commandPanel.setVisible(true);
         DynamicPanel.add(commandPanel,"Finalizare comanda");
         
+        JLabel foodPicture = new JLabel();
+        JLabel foodPicture2 = new JLabel();
+        
+        foodPicture.setBackground(new Color(255, 255, 255));
+        foodPicture.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        foodPicture.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Poze/food1.png"))); // NOI18N
+        foodPicture.setVerifyInputWhenFocusTarget(false);
+        commandPanel.add(foodPicture, BorderLayout.NORTH);
+        
+        foodPicture2.setBackground(new Color(255, 255, 255));
+        foodPicture2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        foodPicture2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Poze/food1.png"))); // NOI18N
+        foodPicture2.setVerifyInputWhenFocusTarget(false);
+        commandPanel.add(foodPicture2, BorderLayout.SOUTH);
         
         //Adaugare text box in vizualizare comanda
         JTextArea jTextArea1 = new javax.swing.JTextArea();
@@ -209,18 +317,25 @@ public class ClientWindow extends javax.swing.JFrame {
         
         for(ArrayList<String> list:produseleMele)
         {
+            int pret = 0;
             for(String str:list)
             {
-                if(par % 2 ==1 )
+                if(par % 3 ==1 )
                 {
                     jTextArea1.append(">>> ");
+                    jTextArea1.append(str+"              ");
                 }
-                jTextArea1.append(str+"              ");
-                if(par % 2 == 0)
+                if(par % 3 == 2)
                 {
                     int i=Integer.parseInt(str);
-                    costComanda = costComanda + i;
-                    jTextArea1.append("\n");
+                    pret=i;
+                    jTextArea1.append(str+" lei");
+                }
+                if(par % 3 == 0)
+                {
+                    int i=Integer.parseInt(str);
+                    costComanda = costComanda + pret *i;
+                    jTextArea1.append("  x  "+str+"\n");
                 }
                 par++;
             }
@@ -232,46 +347,52 @@ public class ClientWindow extends javax.swing.JFrame {
         jTextArea1.setLineWrap(true);
         jTextArea1.setEditable(false);
                     
-                       
-        //commandPanel.add(jTextArea1,BorderLayout.CENTER);
-        commandPanel.add(jScrollPane2);
+        commandPanel.add(jScrollPane2,BorderLayout.CENTER);
         
         //ADAUGARE BUTON PENTRU FINALIZARE COMANDA
             
-            javax.swing.JButton button= new JButton();
+            JButton button= new JButton();
                 button.setText("Finalizare Comanda");
-                java.awt.GridBagConstraints gridBagConstraints;
+                GridBagConstraints gridBagConstraints;
                 gridBagConstraints = new java.awt.GridBagConstraints();
-                gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+                gridBagConstraints.fill = GridBagConstraints.BOTH;
                 gridBagConstraints.gridx = 5;
-                gridBagConstraints.gridy = 5;
+                gridBagConstraints.gridy = 6;
                 gridBagConstraints.ipadx = 32;
                 gridBagConstraints.ipady = 27;
                 button.setSize(new Dimension(20,20));
-                commandPanel.add(button,gridBagConstraints);
+                commandPanel.add(button,BorderLayout.WEST);
                 button.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
                 button.setActionCommand("finalize");
+               
+        //////////////////////////////////////////
+        
+        //ADAUGARE BUTON PENTRU GOLIRE COS COMANDA
+            
+            JButton emptyButton= new JButton();
+                emptyButton.setText("Golire Cos");
+                gridBagConstraints = new java.awt.GridBagConstraints();
+                gridBagConstraints.fill = GridBagConstraints.BOTH;
+                gridBagConstraints.gridx = 6;
+                gridBagConstraints.gridy = 7;
+                gridBagConstraints.ipadx = 32;
+                gridBagConstraints.ipady = 27;
+                emptyButton.setSize(new Dimension(20,20));
+                commandPanel.add(emptyButton,BorderLayout.EAST);
+                emptyButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+                emptyButton.setActionCommand("emptyOrder");
                
         //////////////////////////////////////////
         
         CardLayout cardLayout;
         cardLayout = (CardLayout) DynamicPanel.getLayout();
         cardLayout.show(DynamicPanel, "Finalizare comanda");
-        
-        displayOrder();
-        
+
     }
     
-    public void displayOrder()
+    public void emptyOrderBag()
     {
-        System.out.println("\n\n\n\n");
-        for(ArrayList<String> list:produseleMele)
-        {
-            for(String str:list)
-            {
-                System.out.println(str);
-            }
-        }
+        produseleMele.removeAll(produseleMele);
     }
     
     public void BackFunction()
@@ -290,9 +411,19 @@ public class ClientWindow extends javax.swing.JFrame {
     
     public void addProducts(ActionEvent e)
     {
-        javax.swing.JButton tmpJButton = (javax.swing.JButton)e.getSource();
-        System.out.println(tmpJButton.getParent().getName());
+        JButton tmpJButton = (JButton)e.getSource();
         
+        Component[] components = tmpJButton.getParent().getComponents();
+        
+        //DEPLASARE PRIN COMPONENTELE PRODUSULUI MEU
+        JPanel panouJPanel = new JPanel();
+        panouJPanel = (JPanel)components[3];
+        components = panouJPanel.getComponents();
+        
+        //DEPLASARE PRIN ELEMENTELE DIN PANELUL CARE FACE PARTE DIN PRODUSUL MEU
+        JTextField textField = new JTextField();
+        textField = (JTextField)components[1];
+        int ct=Integer.parseInt(textField.getText());
         
         try {
             Connection conn = appWindow.getDataBaseConnection().getConnection();
@@ -304,7 +435,24 @@ public class ClientWindow extends javax.swing.JFrame {
             while(rs.next())
             {
                 String y = rs.getString(1);
-                produseleMele.add(new ArrayList<String>(Arrays.asList(tmpJButton.getParent().getName(),y)));
+                String a[] = new String[] { tmpJButton.getParent().getName(),y,String.valueOf(ct)};
+                
+                int ok = 1;
+                int index = 0;
+                for(int i = 0; i< produseleMele.size() ; i++)
+                {
+                    if(produseleMele.get(i).get(0) == a[0])
+                    {
+                        ok = 0;
+                        index = i;
+                    }
+                }
+                if(ok==1)
+                    produseleMele.add(new ArrayList<String>(Arrays.asList(a)));
+                else
+                {
+                    produseleMele.set(index, new ArrayList<String>(Arrays.asList(a)));
+                }
             }
             
         } catch (SQLException ex) {
