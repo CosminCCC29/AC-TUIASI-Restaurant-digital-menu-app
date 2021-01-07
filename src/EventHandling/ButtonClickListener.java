@@ -116,8 +116,23 @@ public class ButtonClickListener implements ActionListener {
             case "vizualize":
                 appWindow.clientWindow.vizualizeOrder(e);
                 break;
+            case "finalize":
+                appWindow.clientWindow.finalizeOrder(e);
+                System.out.println("Comanda inregistrata cu succes");
+                break;
             case "Add":
                 appWindow.clientWindow.addProducts(e);
+                break;
+            case "MINUS":
+                appWindow.clientWindow.decreaseTextArea(e);
+                break;
+            case "PLUS":
+                appWindow.clientWindow.increaseTextArea(e);
+                break;
+            case "emptyOrder":
+                System.out.println("Am golit cosul de comanda");
+                appWindow.clientWindow.emptyOrderBag();
+                appWindow.clientWindow.vizualizeOrder(e);
                 break;
         }
 
