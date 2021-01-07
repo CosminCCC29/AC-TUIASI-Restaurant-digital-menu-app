@@ -28,7 +28,7 @@ GROUP BY c.id_comanda, c.nr_masa, c.data_comanda
 ORDER BY c.id_comanda;
 
 -- Suma facuta intreaga zi
-
+Administratori_nume_parola_UN
 SELECT SUM(p.pret * pc.nr_produse_comandate) as total_astazi, SUM(pc.nr_produse_comandate) as produse_vandute_astazi, TRUNC(sysdate) as data_de_azi
 FROM Comenzi c, produse_comenzi pc, Produse p
 WHERE c.id_comanda = pc.Comenzi_id_comanda and pc.Produse_nr_produs = p.nr_produs and TRUNC(c.data_comanda) = TRUNC(sysdate);
