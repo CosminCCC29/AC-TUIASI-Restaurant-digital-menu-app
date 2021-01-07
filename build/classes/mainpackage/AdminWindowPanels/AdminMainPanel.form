@@ -11,7 +11,7 @@
     <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
-    <AuxValue name="designerSize" type="java.awt.Dimension" value="-84,-19,0,5,115,114,0,18,106,97,118,97,46,97,119,116,46,68,105,109,101,110,115,105,111,110,65,-114,-39,-41,-84,95,68,20,2,0,2,73,0,6,104,101,105,103,104,116,73,0,5,119,105,100,116,104,120,112,0,0,3,90,0,0,5,3"/>
+    <AuxValue name="designerSize" type="java.awt.Dimension" value="-84,-19,0,5,115,114,0,18,106,97,118,97,46,97,119,116,46,68,105,109,101,110,115,105,111,110,65,-114,-39,-41,-84,95,68,20,2,0,2,73,0,6,104,101,105,103,104,116,73,0,5,119,105,100,116,104,120,112,0,0,3,93,0,0,5,3"/>
   </AuxValues>
 
   <Layout class="org.netbeans.modules.form.compat2.layouts.DesignCardLayout"/>
@@ -388,7 +388,7 @@
         </Property>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="menusAdminPanel = new MenusAdminPanel(this.appWindow);&#xa;rightSideAdminPanel.add(menusAdminPanel, &quot;Meniuri&quot;);&#xa;&#xa;categoriesAdminPanel = new CategoriesAdminPanel(this.appWindow);&#xa;rightSideAdminPanel.add(categoriesAdminPanel, &quot;Categorii&quot;);&#xa;&#xa;categoriesProductsAdminPanel = new CategoriesProductsAdminPanel(this.appWindow);&#xa;rightSideAdminPanel.add(categoriesProductsAdminPanel, &quot;Categorii &lt;-&gt; Produse&quot;);&#xa;&#xa;ingredientsAdminPanel = new IngredientsAdminPanel(this.appWindow);&#xa;rightSideAdminPanel.add(ingredientsAdminPanel, &quot;Ingrediente&quot;);&#xa;&#xa;ordersAdminPanel = new OrdersAdminPanel(this.appWindow);&#xa;rightSideAdminPanel.add(ordersAdminPanel, &quot;Comenzi&quot;);&#xa;&#xa;productStockPanel = new ProductStockPanel(this.appWindow);&#xa;rightSideAdminPanel.add(productStockPanel, &quot;Stocuri produs&quot;);&#xa;&#xa;productTypeAdminPanel = new ProductTypeAdminPanel(this.appWindow);&#xa;rightSideAdminPanel.add(productTypeAdminPanel, &quot;Tipuri produs&quot;);&#xa;&#xa;productsAdminPanel = new ProductsAdminPanel(this.appWindow);&#xa;rightSideAdminPanel.add(productsAdminPanel, &quot;Produse&quot;);&#xa;&#xa;productsOrdersAdminPanel = new ProductsOrdersAdminPanel(this.appWindow);&#xa;rightSideAdminPanel.add(productsOrdersAdminPanel, &quot;Produse &lt;-&gt; Comenzi&quot;);&#xa;&#xa;recipesAdminPanel = new RecipesAdminPanel(this.appWindow);&#xa;rightSideAdminPanel.add(recipesAdminPanel, &quot;Retete&quot;);"/>
+        <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="menusAdminPanel = new MenusAdminPanel(this.appWindow);&#xa;rightSideAdminPanel.add(menusAdminPanel, &quot;Meniuri&quot;);&#xa;&#xa;categoriesAdminPanel = new CategoriesAdminPanel(this.appWindow);&#xa;rightSideAdminPanel.add(categoriesAdminPanel, &quot;Categorii&quot;);&#xa;&#xa;categoriesProductsAdminPanel = new CategoriesProductsAdminPanel(this.appWindow);&#xa;rightSideAdminPanel.add(categoriesProductsAdminPanel, &quot;Categorii &lt;-&gt; Produse&quot;);&#xa;&#xa;ingredientsAdminPanel = new IngredientsAdminPanel(this.appWindow);&#xa;rightSideAdminPanel.add(ingredientsAdminPanel, &quot;Ingrediente&quot;);&#xa;&#xa;ordersAdminPanel = new OrdersAdminPanel(this.appWindow);&#xa;rightSideAdminPanel.add(ordersAdminPanel, &quot;Comenzi&quot;);&#xa;&#xa;productStockPanel = new ProductStockPanel(this.appWindow);&#xa;rightSideAdminPanel.add(productStockPanel, &quot;Stocuri produs&quot;);&#xa;&#xa;productTypeAdminPanel = new ProductTypeAdminPanel(this.appWindow);&#xa;rightSideAdminPanel.add(productTypeAdminPanel, &quot;Tipuri aliment&quot;);&#xa;&#xa;productsAdminPanel = new ProductsAdminPanel(this.appWindow);&#xa;rightSideAdminPanel.add(productsAdminPanel, &quot;Produse&quot;);&#xa;&#xa;productsOrdersAdminPanel = new ProductsOrdersAdminPanel(this.appWindow);&#xa;rightSideAdminPanel.add(productsOrdersAdminPanel, &quot;Produse &lt;-&gt; Comenzi&quot;);&#xa;&#xa;recipesAdminPanel = new RecipesAdminPanel(this.appWindow);&#xa;rightSideAdminPanel.add(recipesAdminPanel, &quot;Retete&quot;);"/>
       </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
@@ -456,6 +456,9 @@
                 <Property name="text" type="java.lang.String" value="Ingrediente"/>
                 <Property name="actionCommand" type="java.lang.String" value="ButonMeniuAdmin"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ingredientsAdminButtonActionPerformed"/>
+              </Events>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
                   <GridBagConstraints gridX="0" gridY="5" gridWidth="1" gridHeight="1" fill="1" ipadX="42" ipadY="46" insetsTop="4" insetsLeft="4" insetsBottom="4" insetsRight="4" anchor="10" weightX="0.0" weightY="0.0"/>
@@ -492,6 +495,9 @@
                 <Property name="text" type="java.lang.String" value="Tipuri aliment"/>
                 <Property name="actionCommand" type="java.lang.String" value="ButonMeniuAdmin"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="productTypeAdminButtonActionPerformed"/>
+              </Events>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
                   <GridBagConstraints gridX="0" gridY="7" gridWidth="1" gridHeight="1" fill="1" ipadX="42" ipadY="46" insetsTop="4" insetsLeft="4" insetsBottom="4" insetsRight="4" anchor="10" weightX="0.0" weightY="0.0"/>
@@ -525,9 +531,25 @@
                 <Property name="text" type="java.lang.String" value="Stocuri produs"/>
                 <Property name="actionCommand" type="java.lang.String" value="ButonMeniuAdmin"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="productStocksButtonActionPerformed"/>
+              </Events>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
                   <GridBagConstraints gridX="0" gridY="4" gridWidth="1" gridHeight="1" fill="1" ipadX="45" ipadY="49" insetsTop="4" insetsLeft="4" insetsBottom="4" insetsRight="4" anchor="10" weightX="0.0" weightY="0.0"/>
+                </Constraint>
+              </Constraints>
+            </Component>
+            <Component class="javax.swing.JButton" name="delogareButton">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Delogare"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="delogareButtonActionPerformed"/>
+              </Events>
+              <Constraints>
+                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                  <GridBagConstraints gridX="0" gridY="10" gridWidth="1" gridHeight="1" fill="1" ipadX="45" ipadY="49" insetsTop="4" insetsLeft="4" insetsBottom="4" insetsRight="4" anchor="10" weightX="0.0" weightY="0.0"/>
                 </Constraint>
               </Constraints>
             </Component>
@@ -560,7 +582,7 @@
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <EmptySpace min="0" pref="856" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="859" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
               </Layout>

@@ -9,7 +9,6 @@ package mainpackage.AdminWindowPanels;
  *
  * @author cosmi
  */
-
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.sql.*;
@@ -39,6 +38,272 @@ public class IngredientsAdminPanel extends javax.swing.JPanel {
     public IngredientsAdminPanel(ApplicationWindow appWindow) {
         this.appWindow = appWindow;
         initComponents();
+        initFilter();
+
+        initActionListeners();
+    }
+
+    private void initActionListeners() {
+        insertButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+        showButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+        deleteButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+        deleteBoxesButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+        updateButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+        showButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+    }
+
+    private void initFilter() {
+        tr = new TableRowSorter<>((DefaultTableModel) dataTable.getModel());
+        dataTable.setRowSorter(tr);
+
+        sortKeys = new ArrayList<>();
+        for (int i = 0; i < dataTable.getColumnCount(); ++i) {
+            sortKeys.add(new RowSorter.SortKey(i, SortOrder.UNSORTED));
+        }
+    }
+
+    public void fillComboBoxes() {
+
+        int idx = (foodTypeCB.getItemCount() == -1) ? -1 : foodTypeCB.getSelectedIndex();
+
+        foodTypeCB.removeAllItems();
+
+        try {
+            ResultSet rs = appWindow.getDataBaseConnection().getConnection().createStatement().executeQuery("SELECT nume_tip FROM tipuri_aliment");
+
+            while (rs.next()) {
+                foodTypeCB.addItem(rs.getString(1));
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(CategoriesAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        foodTypeCB.setSelectedIndex((foodTypeCB.getItemCount() == 0) ? -1 : (idx == -1) ? 0 : idx);
+
+    }
+
+    public void startFilter() {
+        tr.setRowFilter(RowFilter.regexFilter(filterTextField.getText()));
+    }
+
+    public void startAction(ActionEvent e) {
+        JButton tmpEventButton = (JButton) e.getSource();
+
+        Connection conn = appWindow.getDataBaseConnection().getConnection();
+
+        DefaultTableModel tblModel;
+        String id_ingredient;
+        String nume_ingredient;
+        String tip_aliment;
+        String stoc_ingredient;
+        String producator;
+
+        switch (tmpEventButton.getText()) {
+            /////////////// INSERARE ///////////////
+            case "Inserare":
+
+                try {
+                    tip_aliment = foodTypeCB.getSelectedItem().toString();
+
+                    Statement st = conn.createStatement();
+                    ResultSet rs = st.executeQuery("SELECT COUNT(*) FROM Ingrediente");
+                    rs.next();
+                    int nr = rs.getInt(1);
+
+                    if (nr != 0 && dataTable.getModel().getRowCount() == 0) {
+                        JOptionPane.showMessageDialog(this, "Mai intai faceti un refresh la baza de date.");
+                        break;
+                    }
+
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage());
+                }
+
+                if (numeIngredientTextField.getText().equals("") && stocIngredientTextField.getText().equals("") && producatorTextField.getText().equals("")) {
+                    JOptionPane.showMessageDialog(this, "Casetele sunt goale.");
+                    break;
+                }
+
+                tr.setSortKeys(sortKeys);
+
+                tblModel = (DefaultTableModel) this.dataTable.getModel();
+
+                nume_ingredient = numeIngredientTextField.getText();
+                stoc_ingredient = stocIngredientTextField.getText();
+                producator = producatorTextField.getText();
+                tip_aliment = foodTypeCB.getSelectedItem().toString();
+
+                ////////////////////// Modificare baza de date //////////////////////
+                try {
+                    PreparedStatement prepSt = conn.prepareStatement("INSERT INTO Ingrediente(nume_ingredient, stoc_ingredient, producator, tipuri_aliment_id_tip) VALUES(?, ?, ?, (SELECT id_tip FROM tipuri_aliment WHERE nume_tip = ?))");
+                    prepSt.setString(1, nume_ingredient);
+                    prepSt.setFloat(2, Float.valueOf(stoc_ingredient));
+                    prepSt.setString(3, producator);
+                    prepSt.setString(4, tip_aliment);
+                    prepSt.execute();
+
+                    ResultSet rs = conn.createStatement().executeQuery("SELECT MAX(id_ingredient) FROM Ingrediente");
+                    rs.next();
+                    id_ingredient = rs.getString(1);
+                    Object tfData[] = {Short.parseShort(id_ingredient), nume_ingredient, tip_aliment, Float.parseFloat(stoc_ingredient), producator};
+                    tblModel.addRow(tfData);
+
+                    conn.createStatement().execute("commit");
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage());
+                }
+                Refresh();
+                break;
+
+            /////////////// STERGEREA CASTETELOR TEXT FIELD ///////////////
+            case "Sterge casetele":
+                numeIngredientTextField.setText("");
+                stocIngredientTextField.setText("");
+                producatorTextField.setText("");
+                foodTypeCB.setSelectedIndex((foodTypeCB.getItemCount() == 0) ? -1 : 0);
+                break;
+
+            /////////////// MODIFICAREA IN BAZA DE DATE ///////////////
+            case "Modificare":
+
+                tblModel = (DefaultTableModel) dataTable.getModel();
+
+                if (dataTable.getRowCount() == 0) {
+                    JOptionPane.showMessageDialog(this, "Tabelul este gol.");
+                } else if (dataTable.getSelectedRowCount() == 1) {
+
+                    id_ingredient = tblModel.getValueAt(dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 0).toString();
+                    nume_ingredient = numeIngredientTextField.getText();
+                    stoc_ingredient = stocIngredientTextField.getText();
+                    producator = producatorTextField.getText();
+                    tip_aliment = foodTypeCB.getSelectedItem().toString();
+
+                    try {
+
+                        PreparedStatement prepSelectSt = conn.prepareStatement("SELECT * FROM Ingrediente WHERE id_ingredient = ?");
+                        prepSelectSt.setShort(1, Short.parseShort(id_ingredient));
+                        ResultSet resultSelectSet = prepSelectSt.executeQuery();
+                        resultSelectSet.next();
+
+                        if (!nume_ingredient.equals(resultSelectSet.getString("nume_ingredient"))) {
+                            PreparedStatement prepUpdateSt2 = conn.prepareStatement("UPDATE Ingrediente SET nume_ingredient = ? WHERE id_ingredient = ?");
+                            prepUpdateSt2.setString(1, nume_ingredient);
+                            prepUpdateSt2.setShort(2, Short.parseShort(id_ingredient));
+                            prepUpdateSt2.execute();
+                        }
+
+                        if (Float.parseFloat(stoc_ingredient) != (resultSelectSet.getFloat("stoc_ingredient"))) {
+                            PreparedStatement prepUpdateSt1 = conn.prepareStatement("UPDATE Ingrediente SET stoc_ingredient = ? WHERE id_ingredient = ?");
+                            prepUpdateSt1.setFloat(1, Float.parseFloat(stoc_ingredient));
+                            prepUpdateSt1.setShort(2, Short.parseShort(id_ingredient));
+                            prepUpdateSt1.execute();
+                        }
+
+                        if (!producator.equals(resultSelectSet.getString("producator"))) {
+                            PreparedStatement prepUpdateSt2 = conn.prepareStatement("UPDATE Ingrediente SET producator = ? WHERE id_ingredient = ?");
+                            prepUpdateSt2.setString(1, producator);
+                            prepUpdateSt2.setShort(2, Short.parseShort(id_ingredient));
+                            prepUpdateSt2.execute();
+                        }
+
+                        if (!tip_aliment.equals(resultSelectSet.getString("tipuri_aliment_id_tip"))) {
+                            PreparedStatement prepUpdateSt2 = conn.prepareStatement("UPDATE Ingrediente SET tipuri_aliment_id_tip = (SELECT id_tip FROM tipuri_aliment WHERE nume_tip = ?) WHERE id_ingredient = ?");
+                            prepUpdateSt2.setString(1, tip_aliment);
+                            prepUpdateSt2.setShort(2, Short.parseShort(id_ingredient));
+                            prepUpdateSt2.execute();
+                        }
+
+                        tblModel.setValueAt(Short.parseShort(id_ingredient), dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 0);
+                        tblModel.setValueAt(nume_ingredient, dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 1);
+                        tblModel.setValueAt(tip_aliment, dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 2);
+                        tblModel.setValueAt(Float.parseFloat(stoc_ingredient), dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 3);
+                        tblModel.setValueAt(producator, dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 4);
+
+                        conn.createStatement().execute("commit");
+                    } catch (SQLException ex) {
+
+                        JOptionPane.showMessageDialog(this, ex.getMessage());
+                        // Logger.getLogger(CategoriesAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                } else {
+                    JOptionPane.showMessageDialog(this, "Selecteaza un singur rand pentru a modifica.");
+
+                }
+                Refresh();
+                break;
+
+            /////////////// STERGEREA DIN BAZA DE DATE ///////////////
+            case "Sterge":
+
+                tblModel = (DefaultTableModel) dataTable.getModel();
+
+                if (dataTable.getRowCount() == 0) {
+                    JOptionPane.showMessageDialog(this, "Tabelul este gol.");
+                } else if (dataTable.getSelectedRowCount() == 1) {
+
+                    id_ingredient = tblModel.getValueAt(dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 0).toString();
+
+                    try {
+                        PreparedStatement prepSt = conn.prepareStatement("DELETE FROM Ingrediente WHERE id_ingredient = ?");
+                        prepSt.setString(1, id_ingredient);
+                        prepSt.execute();
+
+                        conn.createStatement().execute("commit");
+
+                        tblModel.removeRow(dataTable.convertRowIndexToModel(dataTable.getSelectedRow()));
+                    } catch (SQLException ex) {
+                        JOptionPane.showMessageDialog(this, ex.getMessage());
+                    }
+
+                } else {
+                    JOptionPane.showMessageDialog(this, "Selecteaza un singur rand pentru a sterge.");
+                }
+                break;
+
+            /////////////// AFISARE/REFRESH JTABLE ///////////////
+            case "Refresh":
+                Refresh();
+                break;
+
+        }
+    }
+
+    private void Refresh() {
+        filterTextField.setText("");
+        startFilter();
+        tr.setSortKeys(sortKeys);
+        fillComboBoxes();
+
+        try {
+            ResultSet rs = appWindow.getDataBaseConnection().getConnection().createStatement().executeQuery("SELECT * FROM Ingrediente");
+
+            DefaultTableModel tblModel = (DefaultTableModel) dataTable.getModel();
+            tblModel.setRowCount(0);
+
+            while (rs.next()) {
+                String id_ingredient = rs.getString(1);
+                String nume_ingredient = rs.getString(2);
+                String stoc_ingredient = rs.getString(3);
+                String producator = rs.getString(4);
+                String tip_aliment = rs.getString(5);
+
+                if (tip_aliment != null) {
+                    PreparedStatement ps = appWindow.getDataBaseConnection().getConnection().prepareStatement("SELECT nume_tip FROM tipuri_aliment WHERE id_tip = ?");
+                    ps.setShort(1, Short.valueOf(tip_aliment));
+                    ResultSet rs2 = ps.executeQuery();
+                    rs2.next();
+                    tip_aliment = rs2.getString(1);
+                }
+
+                Object tblData[] = {Short.parseShort(id_ingredient), nume_ingredient, tip_aliment, Float.parseFloat(stoc_ingredient), producator};
+                tblModel.addRow(tblData);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(MenusAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -46,6 +311,7 @@ public class IngredientsAdminPanel extends javax.swing.JPanel {
      * WARNING: Do NOT modify this code. The content of this method is always
      * regenerated by the Form Editor.
      */
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -60,13 +326,15 @@ public class IngredientsAdminPanel extends javax.swing.JPanel {
         updateButton = new javax.swing.JButton();
         insertUpdatePanel = new javax.swing.JPanel();
         numeIngredientLabel = new javax.swing.JLabel();
-        stocIngredientLabel = new javax.swing.JLabel();
-        numeMeniuTextField = new javax.swing.JTextField();
-        detaliiSuplimentareTextField = new javax.swing.JTextField();
+        prodIngredientLabel = new javax.swing.JLabel();
+        numeIngredientTextField = new javax.swing.JTextField();
+        producatorTextField = new javax.swing.JTextField();
         insertButton = new javax.swing.JButton();
         deleteBoxesButton = new javax.swing.JButton();
         foodTypeCB = new javax.swing.JComboBox<>();
         tipAlimentLabel = new javax.swing.JLabel();
+        stocIngredientLabel1 = new javax.swing.JLabel();
+        stocIngredientTextField = new javax.swing.JTextField();
         filterTextField = new javax.swing.JTextField();
         filterLabel = new javax.swing.JLabel();
 
@@ -77,11 +345,11 @@ public class IngredientsAdminPanel extends javax.swing.JPanel {
 
             },
             new String [] {
-                "id_ingredient", "nume_ingredient", "stoc_ingredient", "producator", "data_creare"
+                "id_ingredient", "nume_ingredient", "tip_aliment", "stoc_ingredient", "producator"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Short.class, java.lang.String.class, java.lang.Float.class, java.lang.String.class, java.lang.String.class
+                java.lang.Short.class, java.lang.String.class, java.lang.String.class, java.lang.Float.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false
@@ -112,9 +380,16 @@ public class IngredientsAdminPanel extends javax.swing.JPanel {
 
         deleteButton.setText("Sterge");
         deleteButton.setActionCommand("ButoaneIngredienteAdmin");
-        buttonsPanel.add(deleteButton, new java.awt.GridBagConstraints());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 63;
+        gridBagConstraints.ipady = 48;
+        gridBagConstraints.insets = new java.awt.Insets(13, 12, 13, 14);
+        buttonsPanel.add(deleteButton, gridBagConstraints);
 
-        showButton.setText("Afisare/Refresh");
+        showButton.setText("Refresh");
         showButton.setActionCommand("ButoaneIngredienteAdmin");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -138,9 +413,9 @@ public class IngredientsAdminPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(13, 12, 13, 14);
         buttonsPanel.add(updateButton, gridBagConstraints);
 
-        numeIngredientLabel.setText("nume_ingredient");
+        numeIngredientLabel.setText("nume_ingredient:");
 
-        stocIngredientLabel.setText("stoc_ingredient");
+        prodIngredientLabel.setText("producator:");
 
         insertButton.setText("Inserare");
         insertButton.setActionCommand("ButoaneIngredienteAdmin");
@@ -150,6 +425,8 @@ public class IngredientsAdminPanel extends javax.swing.JPanel {
 
         tipAlimentLabel.setText("tip_aliment");
 
+        stocIngredientLabel1.setText("stoc_ingredient:");
+
         javax.swing.GroupLayout insertUpdatePanelLayout = new javax.swing.GroupLayout(insertUpdatePanel);
         insertUpdatePanel.setLayout(insertUpdatePanelLayout);
         insertUpdatePanelLayout.setHorizontalGroup(
@@ -157,26 +434,25 @@ public class IngredientsAdminPanel extends javax.swing.JPanel {
             .addGroup(insertUpdatePanelLayout.createSequentialGroup()
                 .addGap(78, 78, 78)
                 .addGroup(insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(numeIngredientLabel)
-                    .addGroup(insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(tipAlimentLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(stocIngredientLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addGap(18, 18, 18)
-                .addGroup(insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(insertUpdatePanelLayout.createSequentialGroup()
+                        .addComponent(numeIngredientLabel)
+                        .addGap(18, 18, 18)
+                        .addGroup(insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(stocIngredientTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 353, Short.MAX_VALUE)
+                            .addComponent(producatorTextField, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(numeIngredientTextField))
+                        .addGap(18, 18, Short.MAX_VALUE)
                         .addGroup(insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(detaliiSuplimentareTextField)
-                            .addComponent(numeMeniuTextField))
-                        .addGroup(insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(insertUpdatePanelLayout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addComponent(insertButton, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(insertUpdatePanelLayout.createSequentialGroup()
-                                .addGap(19, 19, 19)
-                                .addComponent(deleteBoxesButton, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(insertButton, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(deleteBoxesButton, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(87, 87, 87))
                     .addGroup(insertUpdatePanelLayout.createSequentialGroup()
-                        .addComponent(foodTypeCB, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(stocIngredientLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(tipAlimentLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(prodIngredientLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(foodTypeCB, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         insertUpdatePanelLayout.setVerticalGroup(
@@ -184,19 +460,23 @@ public class IngredientsAdminPanel extends javax.swing.JPanel {
             .addGroup(insertUpdatePanelLayout.createSequentialGroup()
                 .addGap(72, 72, 72)
                 .addGroup(insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(numeMeniuTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(numeIngredientTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(numeIngredientLabel)
                     .addComponent(insertButton, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(17, 17, 17)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(detaliiSuplimentareTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(stocIngredientLabel)
+                    .addComponent(stocIngredientTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(stocIngredientLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(producatorTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(prodIngredientLabel)
                     .addComponent(deleteBoxesButton, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(foodTypeCB, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tipAlimentLabel))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(94, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout bottomPanelLayout = new javax.swing.GroupLayout(bottomPanel);
@@ -217,7 +497,7 @@ public class IngredientsAdminPanel extends javax.swing.JPanel {
                 .addGroup(bottomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(insertUpdatePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(bottomPanelLayout.createSequentialGroup()
-                        .addComponent(buttonsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 340, Short.MAX_VALUE)
+                        .addComponent(buttonsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 355, Short.MAX_VALUE)
                         .addContainerGap())))
         );
 
@@ -256,21 +536,29 @@ public class IngredientsAdminPanel extends javax.swing.JPanel {
 
     private void dataTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dataTableMouseClicked
 
-        String nume_meniu = dataTable.getValueAt(dataTable.getSelectedRow(), 1).toString();
-        String detalii_suplimentare_meniu = (dataTable.getValueAt(dataTable.getSelectedRow(), 2) == null) ? "" : dataTable.getValueAt(dataTable.getSelectedRow(), 2).toString();
+        String nume_ingredient = dataTable.getValueAt(dataTable.getSelectedRow(), 1).toString();
+        String tip_aliment = (dataTable.getValueAt(dataTable.getSelectedRow(), 2) == null) ? "" : dataTable.getValueAt(dataTable.getSelectedRow(), 2).toString();
+        String stoc_ingredient = dataTable.getValueAt(dataTable.getSelectedRow(), 3).toString();
+        String producator = (dataTable.getValueAt(dataTable.getSelectedRow(), 4) == null) ? "" : dataTable.getValueAt(dataTable.getSelectedRow(), 4).toString();
 
-        numeMeniuTextField.setText(nume_meniu);
-        detaliiSuplimentareTextField.setText(detalii_suplimentare_meniu);
+        numeIngredientTextField.setText(nume_ingredient);
+        foodTypeCB.setSelectedItem(tip_aliment);
+        stocIngredientTextField.setText(stoc_ingredient);
+        producatorTextField.setText(producator);
     }//GEN-LAST:event_dataTableMouseClicked
 
     private void dataTableKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dataTableKeyReleased
 
         if (evt.getKeyCode() == KeyEvent.VK_UP || evt.getKeyCode() == KeyEvent.VK_DOWN) {
-            String nume_meniu = dataTable.getValueAt(dataTable.getSelectedRow(), 1).toString();
-            String detalii_suplimentare_meniu = (dataTable.getValueAt(dataTable.getSelectedRow(), 2) == null) ? "" : dataTable.getValueAt(dataTable.getSelectedRow(), 2).toString();
+            String nume_ingredient = dataTable.getValueAt(dataTable.getSelectedRow(), 1).toString();
+            String tip_aliment = (dataTable.getValueAt(dataTable.getSelectedRow(), 2) == null) ? "" : dataTable.getValueAt(dataTable.getSelectedRow(), 2).toString();
+            String stoc_ingredient = dataTable.getValueAt(dataTable.getSelectedRow(), 3).toString();
+            String producator = (dataTable.getValueAt(dataTable.getSelectedRow(), 4) == null) ? "" : dataTable.getValueAt(dataTable.getSelectedRow(), 4).toString();
 
-            numeMeniuTextField.setText(nume_meniu);
-            detaliiSuplimentareTextField.setText(detalii_suplimentare_meniu);
+            numeIngredientTextField.setText(nume_ingredient);
+            foodTypeCB.setSelectedItem(tip_aliment);
+            stocIngredientTextField.setText(stoc_ingredient);
+            producatorTextField.setText(producator);
         }
     }//GEN-LAST:event_dataTableKeyReleased
 
@@ -285,17 +573,19 @@ public class IngredientsAdminPanel extends javax.swing.JPanel {
     private javax.swing.JTable dataTable;
     private javax.swing.JButton deleteBoxesButton;
     private javax.swing.JButton deleteButton;
-    private javax.swing.JTextField detaliiSuplimentareTextField;
     private javax.swing.JLabel filterLabel;
     private javax.swing.JTextField filterTextField;
     private javax.swing.JComboBox<String> foodTypeCB;
     private javax.swing.JButton insertButton;
     private javax.swing.JPanel insertUpdatePanel;
     private javax.swing.JLabel numeIngredientLabel;
-    private javax.swing.JTextField numeMeniuTextField;
+    private javax.swing.JTextField numeIngredientTextField;
+    private javax.swing.JLabel prodIngredientLabel;
+    private javax.swing.JTextField producatorTextField;
     private javax.swing.JScrollPane scrollPanel;
     private javax.swing.JButton showButton;
-    private javax.swing.JLabel stocIngredientLabel;
+    private javax.swing.JLabel stocIngredientLabel1;
+    private javax.swing.JTextField stocIngredientTextField;
     private javax.swing.JLabel tipAlimentLabel;
     private javax.swing.JButton updateButton;
     // End of variables declaration//GEN-END:variables

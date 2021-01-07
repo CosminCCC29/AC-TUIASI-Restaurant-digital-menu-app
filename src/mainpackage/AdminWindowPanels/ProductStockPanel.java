@@ -9,8 +9,6 @@ package mainpackage.AdminWindowPanels;
  *
  * @author cosmi
  */
-
-
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.sql.*;
@@ -27,6 +25,7 @@ import javax.swing.SortOrder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import mainpackage.ApplicationWindow;
+
 public class ProductStockPanel extends javax.swing.JPanel {
 
     /**
@@ -39,6 +38,228 @@ public class ProductStockPanel extends javax.swing.JPanel {
     public ProductStockPanel(ApplicationWindow appWindow) {
         this.appWindow = appWindow;
         initComponents();
+        initFilter();
+
+        initActionListeners();
+    }
+
+    private void initActionListeners() {
+        insertButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+        showButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+        deleteButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+        deleteBoxesButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+        updateButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+        showButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+    }
+
+    private void initFilter() {
+        tr = new TableRowSorter<>((DefaultTableModel) dataTable.getModel());
+        dataTable.setRowSorter(tr);
+
+        sortKeys = new ArrayList<>();
+        for (int i = 0; i < dataTable.getColumnCount(); ++i) {
+            sortKeys.add(new RowSorter.SortKey(i, SortOrder.UNSORTED));
+        }
+    }
+
+    public void fillComboBoxes() {
+
+        int idx = (numeProdusCB.getItemCount() == -1) ? -1 : numeProdusCB.getSelectedIndex();
+
+        numeProdusCB.removeAllItems();
+
+        try {
+            ResultSet rs = appWindow.getDataBaseConnection().getConnection().createStatement().executeQuery("SELECT nume_produs FROM Produse");
+
+            while (rs.next()) {
+                numeProdusCB.addItem(rs.getString(1));
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(CategoriesAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        numeProdusCB.setSelectedIndex((numeProdusCB.getItemCount() == 0) ? -1 : (idx == -1) ? 0 : idx);
+
+    }
+
+    public void startFilter() {
+        tr.setRowFilter(RowFilter.regexFilter(filterTextField.getText()));
+    }
+
+    public void startAction(ActionEvent e) {
+        JButton tmpEventButton = (JButton) e.getSource();
+
+        Connection conn = appWindow.getDataBaseConnection().getConnection();
+
+        DefaultTableModel tblModel;
+        String nume_produs;
+        String stoc_produs;
+
+        switch (tmpEventButton.getText()) {
+            /////////////// INSERARE ///////////////
+            case "Inserare":
+
+                try {
+
+                    PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) FROM stocuri_produs");
+                    ResultSet rs = ps.executeQuery();
+                    rs.next();
+                    int nr = rs.getInt(1);
+
+                    if (nr != 0 && dataTable.getModel().getRowCount() == 0) {
+                        JOptionPane.showMessageDialog(this, "Mai intai faceti un refresh la baza de date.");
+                        break;
+                    }
+
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage());
+                }
+
+                if (stocProdusTextField.getText().equals("")) {
+                    JOptionPane.showMessageDialog(this, "Casetele sunt goale.");
+                    break;
+                }
+
+                tr.setSortKeys(sortKeys);
+
+                tblModel = (DefaultTableModel) this.dataTable.getModel();
+
+                nume_produs = numeProdusCB.getSelectedItem().toString();
+                stoc_produs = stocProdusTextField.getText();
+
+                try {
+                    PreparedStatement prepSt = conn.prepareStatement("INSERT INTO stocuri_produs(stoc_produs, Produse_nr_produs) VALUES(?, (SELECT nr_produs FROM Produse WHERE nume_produs = ?))");
+                    prepSt.setString(1, stoc_produs);
+                    prepSt.setString(2, nume_produs);
+                    prepSt.execute();
+
+                    Object tfData[] = {nume_produs, Short.parseShort(stoc_produs)};
+                    tblModel.addRow(tfData);
+
+                    conn.createStatement().execute("commit");
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage());
+                }
+                Refresh();
+                break;
+
+            /////////////// STERGEREA CASTETELOR TEXT FIELD ///////////////
+            case "Sterge casetele":
+                stocProdusTextField.setText("");
+                numeProdusCB.setSelectedIndex((numeProdusCB.getItemCount() == 0) ? -1 : 0);
+                break;
+
+            /////////////// MODIFICAREA IN BAZA DE DATE ///////////////
+            case "Modificare":
+
+                tblModel = (DefaultTableModel) dataTable.getModel();
+
+                if (dataTable.getRowCount() == 0) {
+                    JOptionPane.showMessageDialog(this, "Tabelul este gol.");
+                } else if (dataTable.getSelectedRowCount() == 1) {
+
+                    stoc_produs = stocProdusTextField.getText();
+                    nume_produs = numeProdusCB.getSelectedItem().toString();
+
+                    try {
+
+                        PreparedStatement prepSelectSt = conn.prepareStatement("SELECT stoc_produs FROM stocuri_produs WHERE Produse_nr_produs = (SELECT nr_produs FROM Produse WHERE nume_produs = ?)");
+                        prepSelectSt.setString(1, nume_produs);
+                        ResultSet resultSelectSet = prepSelectSt.executeQuery();
+                        resultSelectSet.next();
+                        
+                        String str = resultSelectSet.getString(1);
+
+                        if (!stoc_produs.equals(resultSelectSet.getString(1))) {
+                            PreparedStatement prepUpdateSt1 = conn.prepareStatement("UPDATE stocuri_produs SET stoc_produs = ? WHERE Produse_nr_produs = (SELECT nr_produs FROM Produse WHERE nume_produs = ?)");
+                            prepUpdateSt1.setShort(1, Short.parseShort(stoc_produs));
+                            prepUpdateSt1.setString(2, nume_produs);
+                            prepUpdateSt1.execute();
+                        }
+
+                        tblModel.setValueAt(nume_produs, dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 0);
+                        tblModel.setValueAt(Short.parseShort(stoc_produs), dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 1);
+
+                        conn.createStatement().execute("commit");
+                    } catch (SQLException ex) {
+
+                        JOptionPane.showMessageDialog(this, ex.getMessage());
+                        // Logger.getLogger(CategoriesAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                } else {
+                    JOptionPane.showMessageDialog(this, "Selecteaza un singur rand pentru a modifica.");
+
+                }
+                Refresh();
+                break;
+
+            /////////////// STERGEREA DIN BAZA DE DATE ///////////////
+            case "Sterge":
+
+                tblModel = (DefaultTableModel) dataTable.getModel();
+
+                if (dataTable.getRowCount() == 0) {
+                    JOptionPane.showMessageDialog(this, "Tabelul este gol.");
+                } else if (dataTable.getSelectedRowCount() == 1) {
+
+                    nume_produs = tblModel.getValueAt(dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 0).toString();
+
+                    try {
+                        PreparedStatement prepSt = conn.prepareStatement("DELETE FROM stocuri_produs WHERE Produse_nr_produs = (SELECT nr_produs FROM Produse WHERE nume_produs = ?)");
+                        prepSt.setString(1, nume_produs);
+                        prepSt.execute();
+
+                        conn.createStatement().execute("commit");
+                    } catch (SQLException ex) {
+                        JOptionPane.showMessageDialog(this, ex.getMessage());
+                    }
+
+                    tblModel.removeRow(dataTable.convertRowIndexToModel(dataTable.getSelectedRow()));
+
+                } else {
+                    JOptionPane.showMessageDialog(this, "Selecteaza un singur rand pentru a sterge.");
+                }
+                break;
+
+            /////////////// AFISARE/REFRESH JTABLE ///////////////
+            case "Refresh":
+                Refresh();
+                break;
+
+        }
+    }
+
+    private void Refresh() {
+        filterTextField.setText("");
+        startFilter();
+        tr.setSortKeys(sortKeys);
+        fillComboBoxes();
+
+        try {
+            ResultSet rs = appWindow.getDataBaseConnection().getConnection().createStatement().executeQuery("SELECT * FROM stocuri_produs");
+
+            DefaultTableModel tblModel = (DefaultTableModel) dataTable.getModel();
+            tblModel.setRowCount(0);
+
+            while (rs.next()) {
+                String stoc_produs = rs.getString(1);
+                String nume_produs = rs.getString(2);
+
+                PreparedStatement ps = appWindow.getDataBaseConnection().getConnection().prepareStatement("SELECT nume_produs FROM Produse WHERE nr_produs = ?");
+                ps.setShort(1, Short.valueOf(nume_produs));
+                ResultSet rs2 = ps.executeQuery();
+                rs2.next();
+                nume_produs = rs2.getString(1);
+
+                Object tblData[] = {nume_produs, Short.parseShort(stoc_produs)};
+                tblModel.addRow(tblData);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(MenusAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -118,7 +339,7 @@ public class ProductStockPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(13, 12, 13, 14);
         buttonsPanel.add(deleteButton, gridBagConstraints);
 
-        showButton.setText("Afisare/Refresh");
+        showButton.setText("Refresh");
         showButton.setActionCommand("ButoaneStocuriAdmin");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -247,21 +468,21 @@ public class ProductStockPanel extends javax.swing.JPanel {
 
     private void dataTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dataTableMouseClicked
 
-        String nume_meniu = dataTable.getValueAt(dataTable.getSelectedRow(), 1).toString();
-        String detalii_suplimentare_meniu = (dataTable.getValueAt(dataTable.getSelectedRow(), 2) == null) ? "" : dataTable.getValueAt(dataTable.getSelectedRow(), 2).toString();
+        String nume_produs = dataTable.getValueAt(dataTable.getSelectedRow(), 0).toString();
+        String stoc_produs = dataTable.getValueAt(dataTable.getSelectedRow(), 1).toString();
 
-        numeProdusTextField.setText(nume_meniu);
-        stocProdusTextField.setText(detalii_suplimentare_meniu);
+        numeProdusCB.setSelectedItem(nume_produs);
+        stocProdusTextField.setText(stoc_produs);
     }//GEN-LAST:event_dataTableMouseClicked
 
     private void dataTableKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dataTableKeyReleased
 
         if (evt.getKeyCode() == KeyEvent.VK_UP || evt.getKeyCode() == KeyEvent.VK_DOWN) {
-            String nume_meniu = dataTable.getValueAt(dataTable.getSelectedRow(), 1).toString();
-            String detalii_suplimentare_meniu = (dataTable.getValueAt(dataTable.getSelectedRow(), 2) == null) ? "" : dataTable.getValueAt(dataTable.getSelectedRow(), 2).toString();
+            String nume_produs = dataTable.getValueAt(dataTable.getSelectedRow(), 0).toString();
+            String stoc_produs = dataTable.getValueAt(dataTable.getSelectedRow(), 1).toString();
 
-            numeProdusTextField.setText(nume_meniu);
-            stocProdusTextField.setText(detalii_suplimentare_meniu);
+            numeProdusCB.setSelectedItem(nume_produs);
+            stocProdusTextField.setText(stoc_produs);
         }
     }//GEN-LAST:event_dataTableKeyReleased
 

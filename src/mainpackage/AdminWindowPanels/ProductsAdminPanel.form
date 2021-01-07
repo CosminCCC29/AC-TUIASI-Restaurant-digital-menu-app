@@ -24,7 +24,7 @@
           <Component id="scrollPanel" alignment="0" max="32767" attributes="0"/>
           <Component id="bottomPanel" alignment="0" max="32767" attributes="0"/>
           <Group type="102" alignment="1" attributes="0">
-              <EmptySpace min="0" pref="67" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
               <Component id="filterLabel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="filterTextField" min="-2" pref="1045" max="-2" attributes="0"/>
@@ -141,7 +141,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="insertUpdatePanel" alignment="0" max="32767" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="buttonsPanel" pref="355" max="32767" attributes="0"/>
+                          <Component id="buttonsPanel" pref="358" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -198,11 +198,18 @@
                       <EmptySpace min="-2" pref="78" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
-                              <Component id="stockCheckButton" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="103" max="32767" attributes="0"/>
                               <Component id="tipProdusLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
                               <Component id="productTypeCB" min="-2" pref="116" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                              <Component id="tipAlimentLabel" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="foodTypeCB" min="-2" pref="123" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="stareLabel" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="stateCB" min="-2" pref="99" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
@@ -216,34 +223,20 @@
                                   <Component id="detaliiSuplimentareTextField" alignment="0" max="32767" attributes="0"/>
                                   <Component id="numeProdusTextField" alignment="0" max="32767" attributes="0"/>
                               </Group>
-                          </Group>
-                      </Group>
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Group type="102" attributes="0">
-                              <EmptySpace min="-2" pref="147" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="insertButton" min="-2" pref="197" max="-2" attributes="0"/>
                                   <Group type="102" alignment="0" attributes="0">
                                       <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
-                                      <Component id="deleteBoxesButton" min="-2" pref="197" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                          <Component id="deleteType" max="32767" attributes="0"/>
+                                          <Component id="deleteBoxesButton" pref="197" max="32767" attributes="0"/>
+                                      </Group>
                                   </Group>
                               </Group>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
-                              <Component id="tipAlimentLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="deleteType" pref="123" max="32767" attributes="0"/>
-                                  <Component id="foodTypeCB" max="32767" attributes="0"/>
-                              </Group>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="stareLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Component id="stateCB" min="-2" pref="99" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="87" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace min="-2" pref="87" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -274,22 +267,20 @@
                               </Group>
                           </Group>
                       </Group>
-                      <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="stateCB" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
                               <Component id="stareLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="deleteType" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
                           </Group>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="stockCheckButton" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="productTypeCB" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
                               <Component id="foodTypeCB" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
                               <Component id="tipProdusLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="tipAlimentLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="deleteType" min="-2" pref="35" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -351,11 +342,6 @@
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
               </AuxValues>
-            </Component>
-            <Component class="javax.swing.JCheckBox" name="stockCheckButton">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Adaugare stoc individual"/>
-              </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="tipProdusLabel">
               <Properties>

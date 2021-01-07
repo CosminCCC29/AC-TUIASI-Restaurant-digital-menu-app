@@ -26,7 +26,6 @@ import mainpackage.ApplicationWindow;
  *
  * @author cosmi
  */
-
 public class OrdersAdminPanel extends javax.swing.JPanel {
 
     /**
@@ -39,6 +38,167 @@ public class OrdersAdminPanel extends javax.swing.JPanel {
     public OrdersAdminPanel(ApplicationWindow appWindow) {
         this.appWindow = appWindow;
         initComponents();
+        initFilter();
+
+        initActionListeners();
+    }
+
+    private void initActionListeners() {
+        showButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+        deleteButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+        showButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+    }
+
+    private void initFilter() {
+        tr = new TableRowSorter<>((DefaultTableModel) dataTable.getModel());
+        dataTable.setRowSorter(tr);
+
+        sortKeys = new ArrayList<>();
+        for (int i = 0; i < dataTable.getColumnCount(); ++i) {
+            sortKeys.add(new RowSorter.SortKey(i, SortOrder.UNSORTED));
+        }
+    }
+
+    public void startFilter() {
+        tr.setRowFilter(RowFilter.regexFilter(filterTextField.getText()));
+    }
+
+    public void startAction(ActionEvent e) {
+        JButton tmpEventButton = (JButton) e.getSource();
+
+        Connection conn = appWindow.getDataBaseConnection().getConnection();
+
+        DefaultTableModel tblModel;
+        String id_comanda;
+
+        switch (tmpEventButton.getText()) {
+
+            /////////////// STERGEREA DIN BAZA DE DATE ///////////////
+            case "Sterge":
+
+                tblModel = (DefaultTableModel) dataTable.getModel();
+
+                if (dataTable.getRowCount() == 0) {
+                    JOptionPane.showMessageDialog(this, "Tabelul este gol.");
+                } else if (dataTable.getSelectedRowCount() == 1) {
+
+                    id_comanda = tblModel.getValueAt(dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 0).toString();
+
+                    try {
+
+                        PreparedStatement ps = conn.prepareStatement("SELECT produse_nr_produs FROM produse_comenzi WHERE Comenzi_id_comanda = ?");
+                        ps.setInt(1, Integer.parseInt(id_comanda));
+                        ResultSet rs = ps.executeQuery();
+
+                        String query
+                                = "DECLARE\n"
+                                + "    id_comanda_plasata Comenzi.id_comanda%TYPE;\n"
+                                + "    nr_produs_comanda Produse.nr_produs%TYPE;\n"
+                                + "    produse_comandate produse_comenzi.nr_produse_comandate%TYPE;\n"
+                                + "    \n"
+                                + "    produs_in_reteta Ingrediente.id_ingredient%TYPE;\n"
+                                + "    produs_in_stoc stocuri_produs.stoc_produs%TYPE;\n"
+                                + "BEGIN\n"
+                                + "\n"
+                                + "    SAVEPOINT sp;\n"
+                                + "\n"
+                                + "    id_comanda_plasata := '" + id_comanda + "';\n"
+                                + "\n";
+
+                        while (rs.next()) {
+                           
+                            query   +="    BEGIN\n"
+                                    + "\n"
+                                    + "        nr_produs_comanda := "+rs.getString(1)+";\n"
+                                    + "        SELECT nr_produse_comandate INTO produse_comandate FROM produse_comenzi WHERE Comenzi_id_comanda = id_comanda_plasata AND Produse_nr_produs = nr_produs_comanda;\n"
+                                    + "\n"
+                                    + "        SELECT COUNT(Produse_nr_produs) INTO produs_in_reteta FROM Retete r WHERE r.Produse_nr_produs = nr_produs_comanda;\n"
+                                    + "        SELECT COUNT(Produse_nr_produs) INTO produs_in_stoc FROM stocuri_produs sp WHERE sp.Produse_nr_produs = nr_produs_comanda;\n"
+                                    + "\n"
+                                    + "        IF (produs_in_reteta > 0) THEN\n"
+                                    + "            UPDATE Ingrediente i\n"
+                                    + "            SET stoc_ingredient = stoc_ingredient + produse_comandate * (SELECT r.cantitate_ingredient FROM Retete r WHERE r.Produse_nr_produs = nr_produs_comanda and r.Ingrediente_id_ingredient = i.id_ingredient)\n"
+                                    + "            WHERE EXISTS (SELECT 1 FROM Retete r WHERE Produse_nr_produs = nr_produs_comanda and r.Ingrediente_id_ingredient = i.id_ingredient);\n"
+                                    + "        ELSIF (produs_in_stoc > 0) THEN\n"
+                                    + "            UPDATE stocuri_produs sp\n"
+                                    + "            SET stoc_produs = stoc_produs + produse_comandate\n"
+                                    + "            WHERE sp.Produse_nr_produs = nr_produs_comanda;\n"
+                                    + "        END IF;\n"
+                                    + "    END;\n";
+
+                        }
+                        query  +="    \n"
+                                + "    DELETE FROM Comenzi WHERE id_comanda = id_comanda_plasata;\n"
+                                + "    COMMIT;\n"
+                                + "\n"
+                                + "    EXCEPTION\n"
+                                + "        WHEN OTHERS THEN\n"
+                                + "            ROLLBACK TO sp;\n"
+                                + "            RAISE;\n"
+                                + "\n"
+                                + "END;";
+                        
+                        
+
+                        conn.createStatement().execute(query);
+
+                        tblModel.removeRow(dataTable.convertRowIndexToModel(dataTable.getSelectedRow()));
+                        conn.createStatement().execute("commit");
+                    } catch (SQLException ex) {
+                        JOptionPane.showMessageDialog(this, ex.getMessage());
+                    }
+
+                } else {
+                    JOptionPane.showMessageDialog(this, "Selecteaza un singur rand pentru a sterge.");
+                }
+                break;
+
+            /////////////// AFISARE/REFRESH JTABLE ///////////////
+            case "Refresh":
+                Refresh();
+                break;
+
+        }
+    }
+
+    private void Refresh() {
+        filterTextField.setText("");
+        startFilter();
+        tr.setSortKeys(sortKeys);
+
+        String id_comanda;
+        String total_plata;
+        String detalii_suplimentare;
+        String nr_masa;
+        String data_si_ora_comanda;
+
+        try {
+            ResultSet rs = appWindow.getDataBaseConnection().getConnection().createStatement().executeQuery(
+                      "SELECT c.id_comanda, SUM(p.pret * pc.nr_produse_comandate) as total_plata, c.nr_masa,  to_char(c.detalii_suplimentare_comanda) as detalii_comanda, (SELECT to_char(c.data_comanda,'DD-MON-YYYY HH24:MI:SS') from dual) as data_si_ora_comanda\n"
+                    + "FROM Comenzi c, produse_comenzi pc, Produse p\n"
+                    + "WHERE c.id_comanda = pc.Comenzi_id_comanda and pc.Produse_nr_produs = p.nr_produs\n"
+                    + "GROUP BY c.id_comanda, c.nr_masa, to_char(c.detalii_suplimentare_comanda), c.data_comanda\n"
+                    + "ORDER BY c.id_comanda"
+            );
+
+            DefaultTableModel tblModel = (DefaultTableModel) dataTable.getModel();
+            tblModel.setRowCount(0);
+
+            while (rs.next()) {
+                id_comanda = rs.getString(1);
+                total_plata = rs.getString(2);
+                nr_masa = rs.getString(3);
+                detalii_suplimentare = rs.getString(4);
+                data_si_ora_comanda = rs.getString(5);
+
+                Object tblData[] = {Integer.parseInt(id_comanda), Integer.parseInt(total_plata), Short.parseShort(nr_masa), detalii_suplimentare, data_si_ora_comanda};
+                tblModel = (DefaultTableModel) this.dataTable.getModel();
+                tblModel.addRow(tblData);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(MenusAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -57,7 +217,6 @@ public class OrdersAdminPanel extends javax.swing.JPanel {
         buttonsPanel = new javax.swing.JPanel();
         deleteButton = new javax.swing.JButton();
         showButton = new javax.swing.JButton();
-        updateButton = new javax.swing.JButton();
         insertUpdatePanel = new javax.swing.JPanel();
         filterTextField = new javax.swing.JTextField();
         filterLabel = new javax.swing.JLabel();
@@ -69,14 +228,14 @@ public class OrdersAdminPanel extends javax.swing.JPanel {
 
             },
             new String [] {
-                "id_comanda", "data_comanda", "nr_masa", "pret_total", "detalii_suplimentare"
+                "id_comanda", "total_plata_lei", "nr_masa", "detalii_suplimentare", "data_comanda"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.Short.class, java.lang.Object.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.Integer.class, java.lang.Short.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, true, false
+                false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -88,16 +247,6 @@ public class OrdersAdminPanel extends javax.swing.JPanel {
             }
         });
         dataTable.getTableHeader().setReorderingAllowed(false);
-        dataTable.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                dataTableMouseClicked(evt);
-            }
-        });
-        dataTable.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                dataTableKeyReleased(evt);
-            }
-        });
         scrollPanel.setViewportView(dataTable);
 
         buttonsPanel.setLayout(new java.awt.GridBagLayout());
@@ -114,7 +263,7 @@ public class OrdersAdminPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(13, 12, 13, 14);
         buttonsPanel.add(deleteButton, gridBagConstraints);
 
-        showButton.setText("Afisare/Refresh");
+        showButton.setText("Refresh");
         showButton.setActionCommand("ButoaneComenziAdmin");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -125,18 +274,6 @@ public class OrdersAdminPanel extends javax.swing.JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(13, 12, 13, 14);
         buttonsPanel.add(showButton, gridBagConstraints);
-
-        updateButton.setText("Modificare");
-        updateButton.setActionCommand("ButoaneComenziAdmin");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.ipadx = 63;
-        gridBagConstraints.ipady = 48;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(13, 12, 13, 14);
-        buttonsPanel.add(updateButton, gridBagConstraints);
 
         javax.swing.GroupLayout insertUpdatePanelLayout = new javax.swing.GroupLayout(insertUpdatePanel);
         insertUpdatePanel.setLayout(insertUpdatePanelLayout);
@@ -204,26 +341,6 @@ public class OrdersAdminPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void dataTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dataTableMouseClicked
-
-        String nume_meniu = dataTable.getValueAt(dataTable.getSelectedRow(), 1).toString();
-        String detalii_suplimentare_meniu = (dataTable.getValueAt(dataTable.getSelectedRow(), 2) == null) ? "" : dataTable.getValueAt(dataTable.getSelectedRow(), 2).toString();
-
-        numeMeniuTextField.setText(nume_meniu);
-        detaliiSuplimentareTextField.setText(detalii_suplimentare_meniu);
-    }//GEN-LAST:event_dataTableMouseClicked
-
-    private void dataTableKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dataTableKeyReleased
-
-        if (evt.getKeyCode() == KeyEvent.VK_UP || evt.getKeyCode() == KeyEvent.VK_DOWN) {
-            String nume_meniu = dataTable.getValueAt(dataTable.getSelectedRow(), 1).toString();
-            String detalii_suplimentare_meniu = (dataTable.getValueAt(dataTable.getSelectedRow(), 2) == null) ? "" : dataTable.getValueAt(dataTable.getSelectedRow(), 2).toString();
-
-            numeMeniuTextField.setText(nume_meniu);
-            detaliiSuplimentareTextField.setText(detalii_suplimentare_meniu);
-        }
-    }//GEN-LAST:event_dataTableKeyReleased
-
     private void filterTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_filterTextFieldKeyReleased
         startFilter();
     }//GEN-LAST:event_filterTextFieldKeyReleased
@@ -239,6 +356,5 @@ public class OrdersAdminPanel extends javax.swing.JPanel {
     private javax.swing.JPanel insertUpdatePanel;
     private javax.swing.JScrollPane scrollPanel;
     private javax.swing.JButton showButton;
-    private javax.swing.JButton updateButton;
     // End of variables declaration//GEN-END:variables
 }

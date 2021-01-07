@@ -221,13 +221,15 @@ public class ProductsAdminPanel extends javax.swing.JPanel {
 
                     String nume_produs_mod = numeProdusTextField.getText();
                     String tip_produs_mod = productTypeCB.getSelectedItem().toString();
-                    String tip_aliment_mod = productTypeCB.getSelectedItem().toString();
+                    String tip_aliment_mod = foodTypeCB.getSelectedItem().toString();
                     String pret_mod = priceTextField.getText();
                     String stare_mod = stateCB.getSelectedItem().toString();
                     String detalii_suplimentare_mod = detaliiSuplimentareTextField.getText();
 
                     try {
 
+                        conn.createStatement().execute("SAVEPOINT sp");
+                        
                         PreparedStatement prepSelectSt = conn.prepareStatement("SELECT * FROM Produse WHERE nr_produs = ?");
                         prepSelectSt.setShort(1, Short.parseShort(nr_produs));
                         ResultSet resultSelectSet = prepSelectSt.executeQuery();
@@ -286,6 +288,11 @@ public class ProductsAdminPanel extends javax.swing.JPanel {
                         conn.createStatement().execute("commit");
                     } catch (SQLException ex) {
 
+                        try {
+                            conn.createStatement().execute("ROLLBACK TO sp");
+                        } catch (SQLException ex1) {
+                            Logger.getLogger(ProductsAdminPanel.class.getName()).log(Level.SEVERE, null, ex1);
+                        }
                         //JOptionPane.showMessageDialog(this, ex.getMessage());
                         Logger.getLogger(CategoriesAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -313,9 +320,11 @@ public class ProductsAdminPanel extends javax.swing.JPanel {
                         prepSt.setString(1, nr_produs);
                         prepSt.execute();
 
+                        conn.createStatement().execute("commit");
+                        
                         tblModel.removeRow(dataTable.convertRowIndexToModel(dataTable.getSelectedRow()));
 
-                        conn.createStatement().execute("commit");
+                        
                     } catch (SQLException ex) {
                         JOptionPane.showMessageDialog(this, ex.getMessage());
                     }
@@ -340,7 +349,7 @@ public class ProductsAdminPanel extends javax.swing.JPanel {
         fillComboBoxes();
 
         try {
-            ResultSet rs = appWindow.getDataBaseConnection().getConnection().createStatement().executeQuery("SELECT nr_produs, nume_produs, tip_produs, pret, stare, data_crearii, detalii_suplimentare_produs, tipuri_aliment_id_tip FROM Produse");
+            ResultSet rs = appWindow.getDataBaseConnection().getConnection().createStatement().executeQuery("SELECT nr_produs, nume_produs, tip_produs, pret, stare, data_crearii, detalii_suplimentare_produs, tipuri_aliment_id_tip FROM Produse ORDER BY nr_produs");
 
             DefaultTableModel tblModel = (DefaultTableModel) dataTable.getModel();
             tblModel.setRowCount(0);
@@ -400,7 +409,6 @@ public class ProductsAdminPanel extends javax.swing.JPanel {
         productTypeCB = new javax.swing.JComboBox<>();
         foodTypeCB = new javax.swing.JComboBox<>();
         stateCB = new javax.swing.JComboBox<>();
-        stockCheckButton = new javax.swing.JCheckBox();
         tipProdusLabel = new javax.swing.JLabel();
         tipAlimentLabel = new javax.swing.JLabel();
         stareLabel = new javax.swing.JLabel();
@@ -496,8 +504,6 @@ public class ProductsAdminPanel extends javax.swing.JPanel {
         deleteBoxesButton.setText("Sterge casetele");
         deleteBoxesButton.setActionCommand("ButoaneProduseAdmin");
 
-        stockCheckButton.setText("Adaugare stoc individual");
-
         tipProdusLabel.setText("tip_produs:");
 
         tipAlimentLabel.setText("tip_aliment:");
@@ -517,11 +523,18 @@ public class ProductsAdminPanel extends javax.swing.JPanel {
                 .addGap(78, 78, 78)
                 .addGroup(insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(insertUpdatePanelLayout.createSequentialGroup()
-                        .addComponent(stockCheckButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 103, Short.MAX_VALUE)
                         .addComponent(tipProdusLabel)
+                        .addGap(1, 1, 1)
+                        .addComponent(productTypeCB, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(tipAlimentLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(productTypeCB, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(foodTypeCB, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(stareLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(stateCB, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(insertUpdatePanelLayout.createSequentialGroup()
                         .addGroup(insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(detaliiSuplimentareLabel)
@@ -531,27 +544,16 @@ public class ProductsAdminPanel extends javax.swing.JPanel {
                         .addGroup(insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(priceTextField)
                             .addComponent(detaliiSuplimentareTextField)
-                            .addComponent(numeProdusTextField))))
-                .addGroup(insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(insertUpdatePanelLayout.createSequentialGroup()
-                        .addGap(147, 147, 147)
+                            .addComponent(numeProdusTextField))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(insertButton, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(insertUpdatePanelLayout.createSequentialGroup()
                                 .addGap(1, 1, 1)
-                                .addComponent(deleteBoxesButton, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, insertUpdatePanelLayout.createSequentialGroup()
-                        .addGap(15, 15, 15)
-                        .addComponent(tipAlimentLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(deleteType, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
-                            .addComponent(foodTypeCB, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(stareLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(stateCB, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(87, 87, 87))
+                                .addGroup(insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(deleteType, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(deleteBoxesButton, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE))))
+                        .addGap(87, 87, 87))))
         );
         insertUpdatePanelLayout.setVerticalGroup(
             insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -574,19 +576,17 @@ public class ProductsAdminPanel extends javax.swing.JPanel {
                         .addGroup(insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(detaliiSuplimentareTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(detaliiSuplimentareLabel))))
-                .addGap(35, 35, 35)
+                .addGap(33, 33, 33)
                 .addGroup(insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(stateCB, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(stareLabel))
+                        .addComponent(stareLabel)
+                        .addComponent(deleteType, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(insertUpdatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(stockCheckButton)
                         .addComponent(productTypeCB, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(foodTypeCB, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(tipProdusLabel)
                         .addComponent(tipAlimentLabel)))
-                .addGap(18, 18, 18)
-                .addComponent(deleteType, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -608,7 +608,7 @@ public class ProductsAdminPanel extends javax.swing.JPanel {
                 .addGroup(bottomPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(insertUpdatePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(bottomPanelLayout.createSequentialGroup()
-                        .addComponent(buttonsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 355, Short.MAX_VALUE)
+                        .addComponent(buttonsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE)
                         .addContainerGap())))
         );
 
@@ -627,7 +627,7 @@ public class ProductsAdminPanel extends javax.swing.JPanel {
             .addComponent(scrollPanel)
             .addComponent(bottomPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 67, Short.MAX_VALUE)
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(filterLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(filterTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 1045, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -709,7 +709,6 @@ public class ProductsAdminPanel extends javax.swing.JPanel {
     private javax.swing.JButton showButton;
     private javax.swing.JLabel stareLabel;
     private javax.swing.JComboBox<String> stateCB;
-    private javax.swing.JCheckBox stockCheckButton;
     private javax.swing.JLabel tipAlimentLabel;
     private javax.swing.JLabel tipProdusLabel;
     private javax.swing.JButton updateButton;

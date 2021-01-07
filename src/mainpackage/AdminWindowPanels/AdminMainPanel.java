@@ -91,6 +91,7 @@ public class AdminMainPanel extends javax.swing.JPanel {
         ordersAdminButton = new javax.swing.JButton();
         productsOrdersButton = new javax.swing.JButton();
         productStocksButton = new javax.swing.JButton();
+        delogareButton = new javax.swing.JButton();
         rightSideAdminPanel = new javax.swing.JPanel();
         defaultPanel = new javax.swing.JPanel();
 
@@ -335,6 +336,11 @@ public class AdminMainPanel extends javax.swing.JPanel {
 
         ingredientsAdminButton.setText("Ingrediente");
         ingredientsAdminButton.setActionCommand("ButonMeniuAdmin");
+        ingredientsAdminButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ingredientsAdminButtonActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 5;
@@ -373,6 +379,11 @@ public class AdminMainPanel extends javax.swing.JPanel {
 
         productTypeAdminButton.setText("Tipuri aliment");
         productTypeAdminButton.setActionCommand("ButonMeniuAdmin");
+        productTypeAdminButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                productTypeAdminButtonActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 7;
@@ -406,6 +417,11 @@ public class AdminMainPanel extends javax.swing.JPanel {
 
         productStocksButton.setText("Stocuri produs");
         productStocksButton.setActionCommand("ButonMeniuAdmin");
+        productStocksButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                productStocksButtonActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
@@ -414,6 +430,21 @@ public class AdminMainPanel extends javax.swing.JPanel {
         gridBagConstraints.ipady = 49;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
         leftSideAdminPanel.add(productStocksButton, gridBagConstraints);
+
+        delogareButton.setText("Delogare");
+        delogareButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                delogareButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 10;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 45;
+        gridBagConstraints.ipady = 49;
+        gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
+        leftSideAdminPanel.add(delogareButton, gridBagConstraints);
 
         adminMenuPanel.setLeftComponent(leftSideAdminPanel);
 
@@ -427,7 +458,7 @@ public class AdminMainPanel extends javax.swing.JPanel {
         );
         defaultPanelLayout.setVerticalGroup(
             defaultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 856, Short.MAX_VALUE)
+            .addGap(0, 859, Short.MAX_VALUE)
         );
 
         rightSideAdminPanel.add(defaultPanel, "card2");
@@ -454,7 +485,7 @@ public class AdminMainPanel extends javax.swing.JPanel {
         rightSideAdminPanel.add(productStockPanel, "Stocuri produs");
 
         productTypeAdminPanel = new ProductTypeAdminPanel(this.appWindow);
-        rightSideAdminPanel.add(productTypeAdminPanel, "Tipuri produs");
+        rightSideAdminPanel.add(productTypeAdminPanel, "Tipuri aliment");
 
         productsAdminPanel = new ProductsAdminPanel(this.appWindow);
         rightSideAdminPanel.add(productsAdminPanel, "Produse");
@@ -475,8 +506,24 @@ public class AdminMainPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_categoriesProductsAdminButtonActionPerformed
 
     private void productsAdminButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productsAdminButtonActionPerformed
-        productsAdminPanel.fillComboBoxes();
+       // productsAdminPanel.fillComboBoxes();
     }//GEN-LAST:event_productsAdminButtonActionPerformed
+
+    private void ingredientsAdminButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ingredientsAdminButtonActionPerformed
+        //ingredientsAdminPanel.fillComboBoxes();
+    }//GEN-LAST:event_ingredientsAdminButtonActionPerformed
+
+    private void productTypeAdminButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productTypeAdminButtonActionPerformed
+        
+    }//GEN-LAST:event_productTypeAdminButtonActionPerformed
+
+    private void productStocksButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productStocksButtonActionPerformed
+
+    }//GEN-LAST:event_productStocksButtonActionPerformed
+
+    private void delogareButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delogareButtonActionPerformed
+        // TO DO
+    }//GEN-LAST:event_delogareButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -489,6 +536,7 @@ public class AdminMainPanel extends javax.swing.JPanel {
     private javax.swing.JPanel createAccountPanel;
     private javax.swing.JButton createNewAccountButton;
     private javax.swing.JPanel defaultPanel;
+    private javax.swing.JButton delogareButton;
     private javax.swing.JLabel idAdminCALabel;
     private javax.swing.JTextField idAdminCATextField;
     private javax.swing.JLabel idAdminLabel;

@@ -9,11 +9,9 @@ package mainpackage.AdminWindowPanels;
  *
  * @author cosmi
  */
-
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.sql.*;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -39,6 +37,304 @@ public class RecipesAdminPanel extends javax.swing.JPanel {
     public RecipesAdminPanel(ApplicationWindow appWindow) {
         this.appWindow = appWindow;
         initComponents();
+        initFilter();
+
+        initActionListeners();
+    }
+
+    private void initFilter() {
+        tr = new TableRowSorter<>((DefaultTableModel) dataTable.getModel());
+        dataTable.setRowSorter(tr);
+
+        sortKeys = new ArrayList<>();
+        for (int i = 0; i < dataTable.getColumnCount(); ++i) {
+            sortKeys.add(new RowSorter.SortKey(i, SortOrder.UNSORTED));
+        }
+    }
+
+    public void fillComboBoxes() {
+
+        int idx = (numeProdusCB.getItemCount() == -1) ? -1 : numeProdusCB.getSelectedIndex();
+        int idx2 = (numeIngredientCB.getItemCount() == -1) ? -1 : numeIngredientCB.getSelectedIndex();
+
+        numeProdusCB.removeAllItems();
+        numeIngredientCB.removeAllItems();
+
+        try {
+            ResultSet rs = appWindow.getDataBaseConnection().getConnection().createStatement().executeQuery("SELECT nume_produs FROM Produse");
+
+            while (rs.next()) {
+                numeProdusCB.addItem(rs.getString(1));
+            }
+
+            ResultSet rs2 = appWindow.getDataBaseConnection().getConnection().createStatement().executeQuery("SELECT nume_ingredient, producator FROM Ingrediente");
+
+            while (rs2.next()) {
+                if (rs2.getString(2) == null) {
+                    numeIngredientCB.addItem(rs2.getString(1) + " | X");
+                } else {
+                    numeIngredientCB.addItem(rs2.getString(1) + " | " + rs2.getString(2));
+                }
+
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(CategoriesAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        numeProdusCB.setSelectedIndex((numeProdusCB.getItemCount() == 0) ? -1 : (idx == -1) ? 0 : idx);
+        numeIngredientCB.setSelectedIndex((numeIngredientCB.getItemCount() == 0) ? -1 : (idx2 == -1) ? 0 : idx2);
+
+    }
+
+    private void initActionListeners() {
+        insertButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+        showButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+        deleteButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+        deleteBoxesButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+        updateButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+        showButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+    }
+
+    public void startFilter() {
+        tr.setRowFilter(RowFilter.regexFilter(filterTextField.getText()));
+    }
+
+    public void startAction(ActionEvent e) {
+        JButton tmpEventButton = (JButton) e.getSource();
+
+        Connection conn = appWindow.getDataBaseConnection().getConnection();
+
+        DefaultTableModel tblModel;
+        String nume_produs;
+        String nume_ingredient;
+        String producator;
+        String cantitate_ingredient;
+
+        switch (tmpEventButton.getText()) {
+            /////////////// INSERARE ///////////////
+            case "Inserare":
+
+                try {
+
+                    nume_produs = numeProdusCB.getSelectedItem().toString();
+                    nume_ingredient = numeIngredientCB.getSelectedItem().toString();
+
+                    ResultSet rs = conn.createStatement().executeQuery("SELECT COUNT(*) FROM Retete");
+                    rs.next();
+                    int nr = rs.getInt(1);
+
+                    if (nr != 0 && dataTable.getModel().getRowCount() == 0) {
+                        JOptionPane.showMessageDialog(this, "Mai intai faceti un refresh la baza de date.");
+                        break;
+                    }
+
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage());
+                }
+
+                if (cantitateIngredientTF.getText().equals("")) {
+                    JOptionPane.showMessageDialog(this, "Casetele sunt goale.");
+                    break;
+                }
+
+                tr.setSortKeys(sortKeys);
+
+                tblModel = (DefaultTableModel) this.dataTable.getModel();
+
+                nume_produs = numeProdusCB.getSelectedItem().toString();
+                nume_ingredient = numeIngredientCB.getSelectedItem().toString().split(" | ", 0)[0];
+                producator = numeIngredientCB.getSelectedItem().toString().split(" | ", 0)[2];
+                cantitate_ingredient = cantitateIngredientTF.getText();
+
+                try {
+
+                    PreparedStatement prepSt;
+
+                    if (producator.equals("X")) {
+                        prepSt = conn.prepareStatement("INSERT INTO Retete (Produse_nr_produs, Ingrediente_id_ingredient, cantitate_ingredient) VALUES((SELECT nr_produs FROM Produse WHERE nume_produs = ?), (SELECT id_ingredient FROM Ingrediente WHERE nume_ingredient = ? and producator IS NULL), ?)");
+                        prepSt.setFloat(3, Float.parseFloat(cantitate_ingredient));
+                    } else {
+                        prepSt = conn.prepareStatement("INSERT INTO Retete (Produse_nr_produs, Ingrediente_id_ingredient, cantitate_ingredient) VALUES((SELECT nr_produs FROM Produse WHERE nume_produs = ?), (SELECT id_ingredient FROM Ingrediente WHERE nume_ingredient = ? and producator = ?), ?)");
+                        prepSt.setString(3, producator);
+                        prepSt.setFloat(4, Float.parseFloat(cantitate_ingredient));
+                    }
+
+                    prepSt.setString(1, nume_produs);
+                    prepSt.setString(2, nume_ingredient);
+                    
+                    prepSt.execute();
+
+                    Object tfData[] = {nume_produs, nume_ingredient, producator, Float.parseFloat(cantitate_ingredient)};
+                    tblModel.addRow(tfData);
+
+                    conn.createStatement().execute("commit");
+                } catch (SQLException ex) {
+                    //JOptionPane.showMessageDialog(this, ex.getMessage());
+                    Logger.getLogger(MenusAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                Refresh();
+                break;
+
+            /////////////// STERGEREA CASTETELOR TEXT FIELD ///////////////
+            case "Sterge casetele":
+                cantitateIngredientTF.setText("");
+                numeProdusCB.setSelectedIndex((numeProdusCB.getItemCount() == 0) ? -1 : 0);
+                numeIngredientCB.setSelectedIndex((numeProdusCB.getItemCount() == 0) ? -1 : 0);
+                break;
+
+            /////////////// MODIFICAREA IN BAZA DE DATE ///////////////
+            case "Modificare":
+
+                tblModel = (DefaultTableModel) dataTable.getModel();
+
+                if (dataTable.getRowCount() == 0) {
+                    JOptionPane.showMessageDialog(this, "Tabelul este gol.");
+                } else if (dataTable.getSelectedRowCount() == 1) {
+
+                    nume_produs = numeProdusCB.getSelectedItem().toString();
+                    nume_ingredient = numeIngredientCB.getSelectedItem().toString().split(" | ", 0)[0];
+                    producator = numeIngredientCB.getSelectedItem().toString().split(" | ", 0)[2];
+                    cantitate_ingredient = cantitateIngredientTF.getText();
+
+                    try {
+
+                        PreparedStatement prepSelectSt;
+
+                        if (producator.equals("X")) {
+                            prepSelectSt = conn.prepareStatement("SELECT produse_nr_produs, ingrediente_id_ingredient, cantitate_ingredient FROM Retete WHERE produse_nr_produs = (SELECT nr_produs FROM Produse WHERE nume_produs = ?) AND ingrediente_id_ingredient = (SELECT id_ingredient FROM ingrediente WHERE nume_ingredient = ? AND producator IS NULL)");
+                        } else {
+                            prepSelectSt = conn.prepareStatement("SELECT produse_nr_produs, ingrediente_id_ingredient, cantitate_ingredient FROM Retete WHERE produse_nr_produs = (SELECT nr_produs FROM Produse WHERE nume_produs = ?) AND ingrediente_id_ingredient = (SELECT id_ingredient FROM ingrediente WHERE nume_ingredient = ? AND producator = ?)");
+                            prepSelectSt.setString(3, producator);
+                        }
+
+                        prepSelectSt.setString(1, nume_produs);
+                        prepSelectSt.setString(2, nume_ingredient);
+                        ResultSet resultSelectSet = prepSelectSt.executeQuery();
+                        resultSelectSet.next();
+
+                        if (Float.parseFloat(cantitate_ingredient) != resultSelectSet.getFloat("cantitate_ingredient")) {
+
+                            PreparedStatement prepUpdateSt2;
+
+                            if (producator.equals("X")) {
+                                prepUpdateSt2 = conn.prepareStatement("UPDATE Retete SET cantitate_ingredient = ? WHERE produse_nr_produs = (SELECT nr_produs FROM Produse WHERE nume_produs = ?) AND ingrediente_id_ingredient = (SELECT id_ingredient FROM ingrediente WHERE nume_ingredient = ? AND producator IS NULL)");
+                            } else {
+                                prepUpdateSt2 = conn.prepareStatement("UPDATE Retete SET cantitate_ingredient = ? WHERE produse_nr_produs = (SELECT nr_produs FROM Produse WHERE nume_produs = ?) AND ingrediente_id_ingredient = (SELECT id_ingredient FROM ingrediente WHERE nume_ingredient = ? AND producator = ?)");
+                                prepSelectSt.setString(4, producator);
+                            }
+
+                            prepUpdateSt2.setFloat(1, Float.parseFloat(cantitate_ingredient));
+                            prepUpdateSt2.setString(2, nume_produs);
+                            prepUpdateSt2.setString(3, nume_ingredient);
+                            prepUpdateSt2.execute();
+                        }
+
+                        tblModel.setValueAt(nume_produs, dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 0);
+                        tblModel.setValueAt(nume_ingredient, dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 1);
+                        tblModel.setValueAt(producator, dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 2);
+                        tblModel.setValueAt(Float.parseFloat(cantitate_ingredient), dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 3);
+
+                        conn.createStatement().execute("commit");
+                    } catch (SQLException ex) {
+
+                        JOptionPane.showMessageDialog(this, ex.getMessage());
+                        Logger.getLogger(CategoriesAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                } else {
+                    JOptionPane.showMessageDialog(this, "Selecteaza un singur rand pentru a modifica.");
+
+                }
+                Refresh();
+                break;
+
+            /////////////// STERGEREA DIN BAZA DE DATE ///////////////
+            case "Sterge":
+
+                tblModel = (DefaultTableModel) dataTable.getModel();
+
+                if (dataTable.getRowCount() == 0) {
+                    JOptionPane.showMessageDialog(this, "Tabelul este gol.");
+                } else if (dataTable.getSelectedRowCount() == 1) {
+
+                    nume_produs = tblModel.getValueAt(dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 0).toString();
+                    nume_ingredient = tblModel.getValueAt(dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 1).toString();
+                    producator = (dataTable.getValueAt(dataTable.getSelectedRow(), 2) == null) ? "X" : dataTable.getValueAt(dataTable.getSelectedRow(), 2).toString();
+
+                    try {
+                        PreparedStatement prepSt;
+
+                        if (producator.equals("X")) {
+                            prepSt = conn.prepareStatement("DELETE FROM Retete WHERE produse_nr_produs = (SELECT nr_produs FROM Produse WHERE nume_produs = ?) AND ingrediente_id_ingredient = (SELECT id_ingredient FROM ingrediente WHERE nume_ingredient = ? AND producator IS NULL)");
+                        } else {
+                            prepSt = conn.prepareStatement("DELETE FROM Retete WHERE produse_nr_produs = (SELECT nr_produs FROM Produse WHERE nume_produs = ?) AND ingrediente_id_ingredient = (SELECT id_ingredient FROM ingrediente WHERE nume_ingredient = ? AND producator = ?)");
+                            prepSt.setString(3, producator);
+                        }
+
+                        prepSt.setString(1, nume_produs);
+                        prepSt.setString(2, nume_ingredient);
+                        prepSt.execute();
+
+                        conn.createStatement().execute("commit");
+                    } catch (SQLException ex) {
+                        JOptionPane.showMessageDialog(this, ex.getMessage());
+                    }
+
+                    tblModel.removeRow(dataTable.convertRowIndexToModel(dataTable.getSelectedRow()));
+
+                } else {
+                    JOptionPane.showMessageDialog(this, "Selecteaza un singur rand pentru a sterge.");
+                }
+                break;
+
+            /////////////// AFISARE/REFRESH JTABLE ///////////////
+            case "Refresh":
+                Refresh();
+                break;
+
+        }
+    }
+
+    private void Refresh() {
+        filterTextField.setText("");
+        startFilter();
+        tr.setSortKeys(sortKeys);
+        fillComboBoxes();
+
+        try {
+            ResultSet rs = appWindow.getDataBaseConnection().getConnection().createStatement().executeQuery("SELECT * FROM Retete");
+
+            DefaultTableModel tblModel = (DefaultTableModel) dataTable.getModel();
+            tblModel.setRowCount(0);
+
+            while (rs.next()) {
+                String nume_produs = rs.getString(1);
+                String nume_ingredient = rs.getString(2);
+                String producator;
+                Float cantitate_ingredient = rs.getFloat(3);
+
+                PreparedStatement ps = appWindow.getDataBaseConnection().getConnection().prepareStatement("SELECT nume_produs FROM Produse WHERE nr_produs = ?");
+                ps.setShort(1, Short.valueOf(nume_produs));
+                ResultSet rs2 = ps.executeQuery();
+                rs2.next();
+                nume_produs = rs2.getString(1);
+
+                PreparedStatement ps2 = appWindow.getDataBaseConnection().getConnection().prepareStatement("SELECT nume_ingredient, producator FROM Ingrediente WHERE id_ingredient = ?");
+                ps2.setShort(1, Short.valueOf(nume_ingredient));
+                ResultSet rs3 = ps2.executeQuery();
+                rs3.next();
+                nume_ingredient = rs3.getString("nume_ingredient");
+                producator = rs3.getString("producator");
+
+                Object tblData[] = {nume_produs, nume_ingredient, producator, cantitate_ingredient};
+                tblModel = (DefaultTableModel) this.dataTable.getModel();
+                tblModel.addRow(tblData);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(MenusAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -77,14 +373,14 @@ public class RecipesAdminPanel extends javax.swing.JPanel {
 
             },
             new String [] {
-                "nume_produs", "nume_ingredient", "cantitate_ingredient"
+                "nume_produs", "nume_ingredient", "producator", "cantitate_ingredient"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.Float.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Float.class
             };
             boolean[] canEdit = new boolean [] {
-                false, true, true
+                false, true, false, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -122,7 +418,7 @@ public class RecipesAdminPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(13, 12, 13, 14);
         buttonsPanel.add(deleteButton, gridBagConstraints);
 
-        showButton.setText("Afisare/Refresh");
+        showButton.setText("Refresh");
         showButton.setActionCommand("ButoaneReteteAdmin");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -258,21 +554,39 @@ public class RecipesAdminPanel extends javax.swing.JPanel {
 
     private void dataTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dataTableMouseClicked
 
-        String nume_meniu = dataTable.getValueAt(dataTable.getSelectedRow(), 1).toString();
-        String detalii_suplimentare_meniu = (dataTable.getValueAt(dataTable.getSelectedRow(), 2) == null) ? "" : dataTable.getValueAt(dataTable.getSelectedRow(), 2).toString();
+        String nume_produs = dataTable.getValueAt(dataTable.getSelectedRow(), 0).toString();
+        String nume_ingredient = dataTable.getValueAt(dataTable.getSelectedRow(), 1).toString();
+        String producator = (dataTable.getValueAt(dataTable.getSelectedRow(), 2) == null) ? "" : dataTable.getValueAt(dataTable.getSelectedRow(), 2).toString();
+        String cantitate_ingredient = dataTable.getValueAt(dataTable.getSelectedRow(), 3).toString();
 
-        numeMeniuTextField.setText(nume_meniu);
-        detaliiSuplimentareTextField.setText(detalii_suplimentare_meniu);
+        numeProdusCB.setSelectedItem(nume_produs);
+
+        if (producator.equals("")) {
+            numeIngredientCB.setSelectedItem(nume_ingredient + " | X");
+        } else {
+            numeIngredientCB.setSelectedItem(nume_ingredient + " | " + producator);
+        }
+
+        cantitateIngredientTF.setText(cantitate_ingredient);
     }//GEN-LAST:event_dataTableMouseClicked
 
     private void dataTableKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dataTableKeyReleased
 
         if (evt.getKeyCode() == KeyEvent.VK_UP || evt.getKeyCode() == KeyEvent.VK_DOWN) {
-            String nume_meniu = dataTable.getValueAt(dataTable.getSelectedRow(), 1).toString();
-            String detalii_suplimentare_meniu = (dataTable.getValueAt(dataTable.getSelectedRow(), 2) == null) ? "" : dataTable.getValueAt(dataTable.getSelectedRow(), 2).toString();
+            String nume_produs = dataTable.getValueAt(dataTable.getSelectedRow(), 0).toString();
+            String nume_ingredient = dataTable.getValueAt(dataTable.getSelectedRow(), 1).toString();
+            String producator = (dataTable.getValueAt(dataTable.getSelectedRow(), 2) == null) ? "" : dataTable.getValueAt(dataTable.getSelectedRow(), 2).toString();
+            String cantitate_ingredient = dataTable.getValueAt(dataTable.getSelectedRow(), 3).toString();
 
-            numeMeniuTextField.setText(nume_meniu);
-            detaliiSuplimentareTextField.setText(detalii_suplimentare_meniu);
+            numeProdusCB.setSelectedItem(nume_produs);
+
+            if (producator.equals("")) {
+                numeIngredientCB.setSelectedItem(nume_ingredient + " | X");
+            } else {
+                numeIngredientCB.setSelectedItem(nume_ingredient + " | " + producator);
+            }
+
+            cantitateIngredientTF.setText(cantitate_ingredient);
         }
     }//GEN-LAST:event_dataTableKeyReleased
 

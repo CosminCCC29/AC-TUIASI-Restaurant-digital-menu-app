@@ -9,7 +9,6 @@ package mainpackage.AdminWindowPanels;
  *
  * @author cosmi
  */
-
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.sql.*;
@@ -39,6 +38,199 @@ public class ProductTypeAdminPanel extends javax.swing.JPanel {
     public ProductTypeAdminPanel(ApplicationWindow appWindow) {
         this.appWindow = appWindow;
         initComponents();
+        initFilter();
+
+        initActionListeners();
+    }
+
+    private void initActionListeners() {
+        insertButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+        showButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+        deleteButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+        deleteBoxesButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+        updateButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+        showButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+    }
+
+    private void initFilter() {
+        tr = new TableRowSorter<>((DefaultTableModel) dataTable.getModel());
+        dataTable.setRowSorter(tr);
+
+        sortKeys = new ArrayList<>();
+        for (int i = 0; i < dataTable.getColumnCount(); ++i) {
+            sortKeys.add(new RowSorter.SortKey(i, SortOrder.UNSORTED));
+        }
+    }
+
+    public void startFilter() {
+        tr.setRowFilter(RowFilter.regexFilter(filterTextField.getText()));
+    }
+
+    public void startAction(ActionEvent e) {
+        JButton tmpEventButton = (JButton) e.getSource();
+
+        Connection conn = appWindow.getDataBaseConnection().getConnection();
+
+        DefaultTableModel tblModel;
+        String id_tip;
+        String nume_tip;
+
+        switch (tmpEventButton.getText()) {
+            /////////////// INSERARE ///////////////
+            case "Inserare":
+
+                try {
+
+                    ResultSet rs = conn.createStatement().executeQuery("SELECT COUNT(*) FROM tipuri_aliment");
+                    rs.next();
+                    int nr = rs.getInt(1);
+
+                    if (nr != 0 && dataTable.getModel().getRowCount() == 0) {
+                        JOptionPane.showMessageDialog(this, "Mai intai faceti un refresh la baza de date.");
+                        break;
+                    }
+
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage());
+                }
+
+                if (numeTipTextField.getText().equals("")) {
+                    JOptionPane.showMessageDialog(this, "Casetele sunt goale.");
+                    break;
+                }
+
+                tr.setSortKeys(sortKeys);
+
+                tblModel = (DefaultTableModel) this.dataTable.getModel();
+
+                nume_tip = numeTipTextField.getText();
+
+                ////////////////////// Modificare baza de date //////////////////////
+                try {
+                    PreparedStatement prepSt = conn.prepareStatement("INSERT INTO tipuri_aliment(nume_tip) VALUES(?)");
+                    prepSt.setString(1, nume_tip);
+                    prepSt.execute();
+
+                    ResultSet rs = conn.createStatement().executeQuery("SELECT MAX(nr_categorie) FROM Categorii");
+                    rs.next();
+                    id_tip = rs.getString(1);
+                    Object tfData[] = {Short.parseShort(id_tip), nume_tip};
+                    tblModel.addRow(tfData);
+
+                    conn.createStatement().execute("commit");
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage());
+                }
+                Refresh();
+                break;
+
+            /////////////// STERGEREA CASTETELOR TEXT FIELD ///////////////
+            case "Sterge casetele":
+                numeTipTextField.setText("");
+                break;
+
+            /////////////// MODIFICAREA IN BAZA DE DATE ///////////////
+            case "Modificare":
+
+                tblModel = (DefaultTableModel) dataTable.getModel();
+
+                if (dataTable.getRowCount() == 0) {
+                    JOptionPane.showMessageDialog(this, "Tabelul este gol.");
+                } else if (dataTable.getSelectedRowCount() == 1) {
+
+                    id_tip = tblModel.getValueAt(dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 0).toString();
+                    nume_tip = numeTipTextField.getText();
+
+                    try {
+
+                        PreparedStatement prepSelectSt = conn.prepareStatement("SELECT nume_tip FROM tipuri_aliment WHERE id_tip = ?");
+                        prepSelectSt.setShort(1, Short.parseShort(id_tip));
+                        ResultSet resultSelectSet = prepSelectSt.executeQuery();
+                        resultSelectSet.next();
+
+                        if (!nume_tip.equals(resultSelectSet.getString("nume_tip"))) {
+                            PreparedStatement prepUpdateSt2 = conn.prepareStatement("UPDATE tipuri_aliment SET nume_tip = ? WHERE id_tip = ?");
+                            prepUpdateSt2.setString(1, nume_tip);
+                            prepUpdateSt2.setShort(2, Short.parseShort(id_tip));
+                            prepUpdateSt2.execute();
+                        }
+
+                        tblModel.setValueAt(Short.parseShort(id_tip), dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 0);
+                        tblModel.setValueAt(nume_tip, dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 1);
+
+                        conn.createStatement().execute("commit");
+                    } catch (SQLException ex) {
+
+                        JOptionPane.showMessageDialog(this, ex.getMessage());
+                        // Logger.getLogger(CategoriesAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                } else {
+                    JOptionPane.showMessageDialog(this, "Selecteaza un singur rand pentru a modifica.");
+
+                }
+                Refresh();
+                break;
+
+            /////////////// STERGEREA DIN BAZA DE DATE ///////////////
+            case "Sterge":
+
+                tblModel = (DefaultTableModel) dataTable.getModel();
+
+                if (dataTable.getRowCount() == 0) {
+                    JOptionPane.showMessageDialog(this, "Tabelul este gol.");
+                } else if (dataTable.getSelectedRowCount() == 1) {
+
+                    id_tip = tblModel.getValueAt(dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 0).toString();
+
+                    try {
+                        PreparedStatement prepSt = conn.prepareStatement("DELETE FROM tipuri_aliment WHERE id_tip = ?");
+                        prepSt.setString(1, id_tip);
+                        prepSt.execute();
+
+                        conn.createStatement().execute("commit");
+                    } catch (SQLException ex) {
+                        JOptionPane.showMessageDialog(this, ex.getMessage());
+                    }
+
+                    tblModel.removeRow(dataTable.convertRowIndexToModel(dataTable.getSelectedRow()));
+
+                } else {
+                    JOptionPane.showMessageDialog(this, "Selecteaza un singur rand pentru a sterge.");
+                }
+                break;
+
+            /////////////// AFISARE/REFRESH JTABLE ///////////////
+            case "Refresh":
+                Refresh();
+                break;
+
+        }
+    }
+
+    private void Refresh() {
+        filterTextField.setText("");
+        startFilter();
+        tr.setSortKeys(sortKeys);
+
+        try {
+            ResultSet rs = appWindow.getDataBaseConnection().getConnection().createStatement().executeQuery("SELECT * FROM tipuri_aliment");
+
+            DefaultTableModel tblModel = (DefaultTableModel) dataTable.getModel();
+            tblModel.setRowCount(0);
+
+            while (rs.next()) {
+                String id_tip = rs.getString(1);
+                String nume_tip = rs.getString(2);
+
+                Object tblData[] = {Short.parseShort(id_tip), nume_tip};
+                tblModel = (DefaultTableModel) this.dataTable.getModel();
+                tblModel.addRow(tblData);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(MenusAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -118,7 +310,7 @@ public class ProductTypeAdminPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(13, 12, 13, 14);
         buttonsPanel.add(deleteButton, gridBagConstraints);
 
-        showButton.setText("Afisare/Refresh");
+        showButton.setText("Refresh");
         showButton.setActionCommand("ButoaneTipuriProdusAdmin");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -238,21 +430,17 @@ public class ProductTypeAdminPanel extends javax.swing.JPanel {
 
     private void dataTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dataTableMouseClicked
 
-        String nume_meniu = dataTable.getValueAt(dataTable.getSelectedRow(), 1).toString();
-        String detalii_suplimentare_meniu = (dataTable.getValueAt(dataTable.getSelectedRow(), 2) == null) ? "" : dataTable.getValueAt(dataTable.getSelectedRow(), 2).toString();
+        String nume_tip = dataTable.getValueAt(dataTable.getSelectedRow(), 1).toString();
 
-        numeTipTextField.setText(nume_meniu);
-        detaliiSuplimentareTextField.setText(detalii_suplimentare_meniu);
+        numeTipTextField.setText(nume_tip);
     }//GEN-LAST:event_dataTableMouseClicked
 
     private void dataTableKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dataTableKeyReleased
 
         if (evt.getKeyCode() == KeyEvent.VK_UP || evt.getKeyCode() == KeyEvent.VK_DOWN) {
-            String nume_meniu = dataTable.getValueAt(dataTable.getSelectedRow(), 1).toString();
-            String detalii_suplimentare_meniu = (dataTable.getValueAt(dataTable.getSelectedRow(), 2) == null) ? "" : dataTable.getValueAt(dataTable.getSelectedRow(), 2).toString();
+            String nume_tip = dataTable.getValueAt(dataTable.getSelectedRow(), 1).toString();
 
-            numeTipTextField.setText(nume_meniu);
-            detaliiSuplimentareTextField.setText(detalii_suplimentare_meniu);
+            numeTipTextField.setText(nume_tip);
         }
     }//GEN-LAST:event_dataTableKeyReleased
 

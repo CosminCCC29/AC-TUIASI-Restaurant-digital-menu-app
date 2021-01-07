@@ -11,11 +11,11 @@ INSERT INTO Administratori(nume_prenume_cont, parola_cont) VALUES('Alin Popescu'
 
 -- Inserare in tabela meniuri
 
-INSERT INTO Meniuri(nume_meniu, Administratori_id_admin) VALUES('Meniu an 2019', 1);
-INSERT INTO Meniuri(nume_meniu, Administratori_id_admin) VALUES('Meniu an 2018', 2);
-INSERT INTO Meniuri(nume_meniu, Administratori_id_admin) VALUES('Meniu an 2017', 3);
-INSERT INTO Meniuri(nume_meniu, Administratori_id_admin) VALUES('Meniu an 2016', 4);
-INSERT INTO Meniuri(nume_meniu, Administratori_id_admin) VALUES('Meniu an 2015', 5);
+INSERT INTO Meniuri(nume_meniu) VALUES('Meniu an 2019');
+INSERT INTO Meniuri(nume_meniu) VALUES('Meniu an 2018');
+INSERT INTO Meniuri(nume_meniu) VALUES('Meniu an 2017');
+INSERT INTO Meniuri(nume_meniu) VALUES('Meniu an 2016');
+INSERT INTO Meniuri(nume_meniu) VALUES('Meniu an 2015');
 
 ------------------------------------------ MENIUL 2019 ------------------------------------------
 

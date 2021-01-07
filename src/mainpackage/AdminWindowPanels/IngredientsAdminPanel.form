@@ -57,9 +57,9 @@
               <Table columnCount="5" rowCount="0">
                 <Column editable="false" title="id_ingredient" type="java.lang.Short"/>
                 <Column editable="false" title="nume_ingredient" type="java.lang.String"/>
+                <Column editable="false" title="tip_aliment" type="java.lang.String"/>
                 <Column editable="false" title="stoc_ingredient" type="java.lang.Float"/>
                 <Column editable="false" title="producator" type="java.lang.String"/>
-                <Column editable="false" title="data_creare" type="java.lang.String"/>
               </Table>
             </Property>
             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -123,7 +123,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="insertUpdatePanel" alignment="0" max="32767" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="buttonsPanel" pref="340" max="32767" attributes="0"/>
+                          <Component id="buttonsPanel" pref="355" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -143,13 +143,13 @@
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-                  <GridBagConstraints gridX="-1" gridY="-1" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="10" weightX="0.0" weightY="0.0"/>
+                  <GridBagConstraints gridX="0" gridY="1" gridWidth="1" gridHeight="1" fill="1" ipadX="63" ipadY="48" insetsTop="13" insetsLeft="12" insetsBottom="13" insetsRight="14" anchor="10" weightX="0.0" weightY="0.0"/>
                 </Constraint>
               </Constraints>
             </Component>
             <Component class="javax.swing.JButton" name="showButton">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Afisare/Refresh"/>
+                <Property name="text" type="java.lang.String" value="Refresh"/>
                 <Property name="actionCommand" type="java.lang.String" value="ButoaneIngredienteAdmin"/>
               </Properties>
               <Constraints>
@@ -179,33 +179,29 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="78" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="numeIngredientLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="tipAlimentLabel" alignment="0" max="32767" attributes="0"/>
-                              <Component id="stocIngredientLabel" alignment="0" max="32767" attributes="0"/>
-                          </Group>
-                      </Group>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="detaliiSuplimentareTextField" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="numeMeniuTextField" alignment="0" max="32767" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="numeIngredientLabel" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                  <Component id="stocIngredientTextField" alignment="0" pref="353" max="32767" attributes="0"/>
+                                  <Component id="producatorTextField" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="numeIngredientTextField" max="32767" attributes="0"/>
                               </Group>
+                              <EmptySpace type="separate" max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="insertButton" min="-2" pref="197" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
-                                      <Component id="deleteBoxesButton" min="-2" pref="197" max="-2" attributes="0"/>
-                                  </Group>
+                                  <Component id="insertButton" min="-2" pref="197" max="-2" attributes="0"/>
+                                  <Component id="deleteBoxesButton" min="-2" pref="197" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="87" max="-2" attributes="0"/>
                           </Group>
-                          <Group type="102" attributes="0">
-                              <Component id="foodTypeCB" min="-2" pref="99" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                  <Component id="stocIngredientLabel1" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="tipAlimentLabel" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="prodIngredientLabel" alignment="0" max="32767" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="foodTypeCB" min="-2" pref="136" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
                           </Group>
                       </Group>
@@ -217,14 +213,19 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="72" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="numeMeniuTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="numeIngredientTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="numeIngredientLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="insertButton" alignment="3" min="-2" pref="61" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="detaliiSuplimentareTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="stocIngredientLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="stocIngredientTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="stocIngredientLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="producatorTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="prodIngredientLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="deleteBoxesButton" alignment="3" min="-2" pref="59" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -232,7 +233,7 @@
                           <Component id="foodTypeCB" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
                           <Component id="tipAlimentLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="94" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -240,17 +241,17 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="numeIngredientLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="nume_ingredient"/>
+                <Property name="text" type="java.lang.String" value="nume_ingredient:"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="stocIngredientLabel">
+            <Component class="javax.swing.JLabel" name="prodIngredientLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="stoc_ingredient"/>
+                <Property name="text" type="java.lang.String" value="producator:"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="numeMeniuTextField">
+            <Component class="javax.swing.JTextField" name="numeIngredientTextField">
             </Component>
-            <Component class="javax.swing.JTextField" name="detaliiSuplimentareTextField">
+            <Component class="javax.swing.JTextField" name="producatorTextField">
             </Component>
             <Component class="javax.swing.JButton" name="insertButton">
               <Properties>
@@ -278,6 +279,13 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="tip_aliment"/>
               </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="stocIngredientLabel1">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="stoc_ingredient:"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="stocIngredientTextField">
             </Component>
           </SubComponents>
         </Container>

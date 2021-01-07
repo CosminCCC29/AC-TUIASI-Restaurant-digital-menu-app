@@ -105,7 +105,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="insertUpdatePanel" alignment="0" max="32767" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="buttonsPanel" max="32767" attributes="0"/>
+                          <Component id="buttonsPanel" pref="340" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -118,36 +118,14 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout"/>
           <SubComponents>
-            <Component class="javax.swing.JButton" name="deleteButton">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Sterge"/>
-                <Property name="actionCommand" type="java.lang.String" value="ButoaneProduseComenziAdmin"/>
-              </Properties>
-              <Constraints>
-                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-                  <GridBagConstraints gridX="0" gridY="1" gridWidth="1" gridHeight="1" fill="1" ipadX="63" ipadY="48" insetsTop="13" insetsLeft="12" insetsBottom="13" insetsRight="14" anchor="18" weightX="0.0" weightY="0.0"/>
-                </Constraint>
-              </Constraints>
-            </Component>
             <Component class="javax.swing.JButton" name="showButton">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Afisare/Refresh"/>
+                <Property name="text" type="java.lang.String" value="Refresh"/>
                 <Property name="actionCommand" type="java.lang.String" value="ButoaneProduseComenziAdmin"/>
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
                   <GridBagConstraints gridX="0" gridY="2" gridWidth="1" gridHeight="1" fill="1" ipadX="63" ipadY="48" insetsTop="13" insetsLeft="12" insetsBottom="13" insetsRight="14" anchor="18" weightX="0.0" weightY="0.0"/>
-                </Constraint>
-              </Constraints>
-            </Component>
-            <Component class="javax.swing.JButton" name="updateButton">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Modificare"/>
-                <Property name="actionCommand" type="java.lang.String" value="ButoaneProduseComenziAdmin"/>
-              </Properties>
-              <Constraints>
-                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-                  <GridBagConstraints gridX="0" gridY="0" gridWidth="1" gridHeight="1" fill="1" ipadX="63" ipadY="48" insetsTop="13" insetsLeft="12" insetsBottom="13" insetsRight="14" anchor="18" weightX="0.0" weightY="0.0"/>
                 </Constraint>
               </Constraints>
             </Component>
@@ -160,58 +138,22 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="-2" pref="78" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="nrProduseComandateLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="detaliiSuplimentareLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="idComandaLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Component id="idComandaCB" min="-2" pref="99" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                          </Group>
-                          <Component id="numeProdusTextField" alignment="0" max="32767" attributes="0"/>
-                          <Component id="nrProduseComandateTextField" max="32767" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="deleteBoxesButton" alignment="1" min="-2" pref="197" max="-2" attributes="0"/>
-                          <Component id="insertButton" alignment="1" min="-2" pref="197" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" pref="87" max="-2" attributes="0"/>
+                      <Component id="idComandaLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="75" max="-2" attributes="0"/>
+                      <Component id="idComandaCB" min="-2" pref="99" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="72" max="-2" attributes="0"/>
-                              <Component id="insertButton" min="-2" pref="61" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="64" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="idComandaLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="idComandaCB" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="numeProdusTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="detaliiSuplimentareLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
+                      <EmptySpace min="-2" pref="64" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="nrProduseComandateTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="nrProduseComandateLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="deleteBoxesButton" alignment="3" min="-2" pref="59" max="-2" attributes="0"/>
+                          <Component id="idComandaLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="idComandaCB" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="142" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -220,32 +162,6 @@
             <Component class="javax.swing.JLabel" name="idComandaLabel">
               <Properties>
                 <Property name="text" type="java.lang.String" value="id_comanda:"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="detaliiSuplimentareLabel">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="nume_produs:"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="nrProduseComandateLabel">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="nr_produse_comandate:"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JTextField" name="numeProdusTextField">
-            </Component>
-            <Component class="javax.swing.JTextField" name="nrProduseComandateTextField">
-            </Component>
-            <Component class="javax.swing.JButton" name="insertButton">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Inserare"/>
-                <Property name="actionCommand" type="java.lang.String" value="ButoaneProduseComenziAdmin"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JButton" name="deleteBoxesButton">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Sterge casetele"/>
-                <Property name="actionCommand" type="java.lang.String" value="ButoaneProduseComenziAdmin"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JComboBox" name="idComandaCB">
