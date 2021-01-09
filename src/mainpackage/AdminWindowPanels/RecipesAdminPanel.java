@@ -169,11 +169,11 @@ public class RecipesAdminPanel extends javax.swing.JPanel {
                     tblModel.addRow(tfData);
 
                     conn.createStatement().execute("commit");
+                    JOptionPane.showMessageDialog(this, "Inserare realizata cu succes");
                 } catch (SQLException ex) {
                     //JOptionPane.showMessageDialog(this, ex.getMessage());
                     Logger.getLogger(MenusAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                JOptionPane.showMessageDialog(this, "Inserare realizata cu succes");
                 Refresh();
                 break;
 
@@ -237,6 +237,7 @@ public class RecipesAdminPanel extends javax.swing.JPanel {
                         tblModel.setValueAt(Float.parseFloat(cantitate_ingredient), dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 3);
 
                         conn.createStatement().execute("commit");
+                        JOptionPane.showMessageDialog(this, "Modificare realizata cu succes");
                     } catch (SQLException ex) {
 
                         JOptionPane.showMessageDialog(this, ex.getMessage());
@@ -247,7 +248,6 @@ public class RecipesAdminPanel extends javax.swing.JPanel {
                     JOptionPane.showMessageDialog(this, "Selecteaza un singur rand pentru a modifica.");
 
                 }
-                JOptionPane.showMessageDialog(this, "Modificare realizata cu succes");
                 Refresh();
                 break;
 

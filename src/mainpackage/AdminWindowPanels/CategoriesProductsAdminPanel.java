@@ -154,10 +154,10 @@ public class CategoriesProductsAdminPanel extends javax.swing.JPanel {
                     tblModel.addRow(tfData);
 
                     conn.createStatement().execute("commit");
+                    JOptionPane.showMessageDialog(this, "Inserare efectuata cu succes");
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage());
                 }
-                JOptionPane.showMessageDialog(this, "Inserare efectuata cu succes");
                 Refresh();
                 break;
 

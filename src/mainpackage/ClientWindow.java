@@ -537,14 +537,22 @@ public class ClientWindow extends javax.swing.JFrame {
 
         Component[] components = tmpJButton.getParent().getComponents();
 
+        for (Component compo : components)
+        {
+            System.out.println(compo);
+        }
+        
+        
         //DEPLASARE PRIN COMPONENTELE PRODUSULUI MEU
         JPanel panouJPanel = new JPanel();
         panouJPanel = (JPanel) components[3];
         components = panouJPanel.getComponents();
 
+        
         //DEPLASARE PRIN ELEMENTELE DIN PANELUL CARE FACE PARTE DIN PRODUSUL MEU
-        JTextField textField = new JTextField();
+        JTextField textField = new JTextField();      
         textField = (JTextField) components[1];
+        
         int ct = Integer.parseInt(textField.getText());
         int ok;
         int ctok;

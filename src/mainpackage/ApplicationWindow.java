@@ -18,7 +18,7 @@ public final class ApplicationWindow extends javax.swing.JFrame {
 
     public ApplicationWindow() {
 
-        dataBaseConnection = new DataBaseConnection();
+        dataBaseConnection = new DataBaseConnection("bd-dc.cs.tuiasi.ro","1539","orcl","bd137","bd137");
         appActionListener = new AppActionListener(this);
 
         adminWindow = null;

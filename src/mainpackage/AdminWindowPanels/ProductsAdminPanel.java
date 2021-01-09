@@ -167,10 +167,10 @@ public class ProductsAdminPanel extends javax.swing.JPanel {
                     tblModel.addRow(tfData);
 
                     conn.createStatement().execute("commit");
+                    JOptionPane.showMessageDialog(this, "Inserare realizata cu succes");
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage());
                 }
-                JOptionPane.showMessageDialog(this, "Inserare realizata cu succes");
                 Refresh();
                 break;
 
@@ -288,6 +288,7 @@ public class ProductsAdminPanel extends javax.swing.JPanel {
                         tblModel.setValueAt(detalii_suplimentare_mod, dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 6);
 
                         conn.createStatement().execute("commit");
+                        JOptionPane.showMessageDialog(this, "Modificare realizata cu succes");
                     } catch (SQLException ex) {
 
                         try {
@@ -303,7 +304,6 @@ public class ProductsAdminPanel extends javax.swing.JPanel {
                     JOptionPane.showMessageDialog(this, "Selecteaza un singur rand pentru a modifica.");
 
                 }
-                JOptionPane.showMessageDialog(this, "Modificare realizata cu succes");
                 Refresh();
                 break;
 
