@@ -127,6 +127,7 @@ public class ButtonClickListener implements ActionListener {
                 break;
             case "finalize":
                 appWindow.clientWindow.finalizeOrder(e);
+                appWindow.getClientWindow().refreshStocuri();
                 System.out.println("Comanda inregistrata cu succes");
                 break;
             case "Add":
@@ -143,6 +144,11 @@ public class ButtonClickListener implements ActionListener {
                 appWindow.clientWindow.emptyOrderBag();
                 appWindow.clientWindow.vizualizeOrder(e);
                 break;
+                
+            case "Refresh stocuri":
+                appWindow.getClientWindow().refreshStocuri();
+                break;
+            
         }
 
     }
