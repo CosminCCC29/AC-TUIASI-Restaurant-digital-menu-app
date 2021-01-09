@@ -128,11 +128,8 @@ public class ButtonClickListener implements ActionListener {
                 break;
             case "finalize":
                 appWindow.clientWindow.finalizeOrder(e);
-<<<<<<< HEAD
-=======
                 appWindow.getClientWindow().refreshStocuri();
                 System.out.println("Comanda inregistrata cu succes");
->>>>>>> 9216c2c148f1724d3542ed42c9a43b1e5a6c7d28
                 break;
             case "Add":
                 appWindow.clientWindow.addProducts(e);
@@ -148,17 +145,14 @@ public class ButtonClickListener implements ActionListener {
                 appWindow.clientWindow.emptyOrderBag();
                 appWindow.clientWindow.vizualizeOrder(e);
                 break;
-<<<<<<< HEAD
             case "Delogare":
                 System.out.println("ceva text de test");
                 break;
-=======
                 
             case "Refresh stocuri":
                 appWindow.getClientWindow().refreshStocuri();
                 break;
             
->>>>>>> 9216c2c148f1724d3542ed42c9a43b1e5a6c7d28
         }
 
     }

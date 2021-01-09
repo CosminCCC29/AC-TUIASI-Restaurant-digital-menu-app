@@ -388,12 +388,9 @@ public class ClientWindow extends javax.swing.JFrame {
             }
 
             ResultSet rs = selectProduct.executeQuery();
-<<<<<<< HEAD
             JOptionPane.showMessageDialog(this, "Comanda inregistrata cu succes");
             
-=======
 
->>>>>>> 9216c2c148f1724d3542ed42c9a43b1e5a6c7d28
         } catch (SQLException ex) {
             Logger.getLogger(ClientWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
