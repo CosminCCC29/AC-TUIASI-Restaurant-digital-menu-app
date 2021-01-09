@@ -226,14 +226,14 @@ public class ClientWindow extends javax.swing.JFrame {
             button2.setText("Refresh stocuri");
             java.awt.GridBagConstraints gridBagConstraints2;
             gridBagConstraints2 = new GridBagConstraints();
-            gridBagConstraints.fill = GridBagConstraints.BOTH;
-            gridBagConstraints.gridx = 0;
-            gridBagConstraints.gridy = ct++;
-            gridBagConstraints.ipadx = 32;
-            gridBagConstraints.ipady = 27;
-            CtgPanel.add(button2, gridBagConstraints);
-            button.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
-            button.setActionCommand("Refresh stocuri");
+            gridBagConstraints2.fill = GridBagConstraints.BOTH;
+            gridBagConstraints2.gridx = 0;
+            gridBagConstraints2.gridy = ct++;
+            gridBagConstraints2.ipadx = 32;
+            gridBagConstraints2.ipady = 27;
+            CtgPanel.add(button2, gridBagConstraints2);
+            button2.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
+            button2.setActionCommand("Refresh stocuri");
 
             //////////////////////////////////////////
         } catch (SQLException ex) {
@@ -392,9 +392,13 @@ public class ClientWindow extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(ClientWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        emptyOrderBag();
+        vizualizeOrder();
+        
     }
 
-    public void vizualizeOrder(ActionEvent e) {
+    public void vizualizeOrder() {
         int costComanda = 0;
         int par = 1;
         JPanel commandPanel = new JPanel(new BorderLayout());
@@ -534,12 +538,17 @@ public class ClientWindow extends javax.swing.JFrame {
         JButton tmpJButton = (JButton) e.getSource();
 
         Component[] components = tmpJButton.getParent().getComponents();
-
+        
         //DEPLASARE PRIN COMPONENTELE PRODUSULUI MEU
         JPanel panouJPanel = new JPanel();
-        panouJPanel = (JPanel) components[3];
-        components = panouJPanel.getComponents();
+        panouJPanel = (JPanel) components[3]; // Panou din SUD
 
+        components = panouJPanel.getComponents();
+        
+        panouJPanel = (JPanel) components[0]; // Panou din STANGA
+        
+        components = panouJPanel.getComponents();
+        
         //DEPLASARE PRIN ELEMENTELE DIN PANELUL CARE FACE PARTE DIN PRODUSUL MEU
         JTextField textField = new JTextField();
         textField = (JTextField) components[1];

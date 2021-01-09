@@ -123,7 +123,7 @@ public class ButtonClickListener implements ActionListener {
                 appWindow.clientWindow.BackFunction();
                 break;
             case "vizualize":
-                appWindow.clientWindow.vizualizeOrder(e);
+                appWindow.clientWindow.vizualizeOrder();
                 break;
             case "finalize":
                 appWindow.clientWindow.finalizeOrder(e);
@@ -142,7 +142,7 @@ public class ButtonClickListener implements ActionListener {
             case "emptyOrder":
                 System.out.println("Am golit cosul de comanda");
                 appWindow.clientWindow.emptyOrderBag();
-                appWindow.clientWindow.vizualizeOrder(e);
+                appWindow.clientWindow.vizualizeOrder();
                 break;
                 
             case "Refresh stocuri":
