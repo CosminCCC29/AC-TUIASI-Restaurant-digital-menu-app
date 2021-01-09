@@ -200,7 +200,7 @@ public class ClientWindow extends javax.swing.JFrame {
                     dreapta.add(jLabel, BorderLayout.WEST);
                     dreapta.add(nr_produseTF, BorderLayout.EAST);
 
-                    nr_produse_ramase.add(new Pair<>(nr_produseTF, nr_produse_disponibile));
+                    nr_produse_ramase.add(new Pair<>(nr_produseTF, nume_produs));
 
                     sud.add(dreapta, BorderLayout.EAST);
 
