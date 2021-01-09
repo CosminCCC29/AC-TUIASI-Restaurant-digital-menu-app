@@ -170,6 +170,7 @@ public class ProductsAdminPanel extends javax.swing.JPanel {
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage());
                 }
+                JOptionPane.showMessageDialog(this, "Inserare realizata cu succes");
                 Refresh();
                 break;
 
@@ -197,6 +198,7 @@ public class ProductsAdminPanel extends javax.swing.JPanel {
                         prepUpdateSt2.execute();
                         
                         tblModel.setValueAt("", dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 3);
+                        JOptionPane.showMessageDialog(this, "Stergere tip_aliment realizata cu succes");
                     } catch (SQLException ex) {
                         Logger.getLogger(ProductsAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -301,6 +303,7 @@ public class ProductsAdminPanel extends javax.swing.JPanel {
                     JOptionPane.showMessageDialog(this, "Selecteaza un singur rand pentru a modifica.");
 
                 }
+                JOptionPane.showMessageDialog(this, "Modificare realizata cu succes");
                 Refresh();
                 break;
 
@@ -323,6 +326,7 @@ public class ProductsAdminPanel extends javax.swing.JPanel {
                         conn.createStatement().execute("commit");
                         
                         tblModel.removeRow(dataTable.convertRowIndexToModel(dataTable.getSelectedRow()));
+                        JOptionPane.showMessageDialog(this, "Stergere realizata cu succes");
 
                         
                     } catch (SQLException ex) {

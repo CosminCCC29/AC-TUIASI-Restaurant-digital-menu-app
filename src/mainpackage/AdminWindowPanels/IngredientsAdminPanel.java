@@ -153,6 +153,7 @@ public class IngredientsAdminPanel extends javax.swing.JPanel {
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage());
                 }
+                JOptionPane.showMessageDialog(this, "Ingredient inserat cu succes");
                 Refresh();
                 break;
 
@@ -231,6 +232,7 @@ public class IngredientsAdminPanel extends javax.swing.JPanel {
                     JOptionPane.showMessageDialog(this, "Selecteaza un singur rand pentru a modifica.");
 
                 }
+                JOptionPane.showMessageDialog(this, "Ingredient modificat cu succes");
                 Refresh();
                 break;
 
@@ -253,6 +255,7 @@ public class IngredientsAdminPanel extends javax.swing.JPanel {
                         conn.createStatement().execute("commit");
 
                         tblModel.removeRow(dataTable.convertRowIndexToModel(dataTable.getSelectedRow()));
+                        JOptionPane.showMessageDialog(this, "Ingredient inlaturat cu succes");
                     } catch (SQLException ex) {
                         JOptionPane.showMessageDialog(this, ex.getMessage());
                     }

@@ -156,6 +156,7 @@ public class CategoriesAdminPanel extends javax.swing.JPanel {
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage());
                 }
+                JOptionPane.showMessageDialog(this, "Categorie adaugata cu succes");
                 Refresh();
                 break;
 
@@ -235,6 +236,7 @@ public class CategoriesAdminPanel extends javax.swing.JPanel {
                     JOptionPane.showMessageDialog(this, "Selecteaza un singur rand pentru a modifica.");
 
                 }
+                JOptionPane.showMessageDialog(this, "Categorie modificata cu succes");
                 Refresh();
                 break;
 
@@ -262,6 +264,7 @@ public class CategoriesAdminPanel extends javax.swing.JPanel {
                     }
 
                     tblModel.removeRow(dataTable.convertRowIndexToModel(dataTable.getSelectedRow()));
+                    JOptionPane.showMessageDialog(this, "Categorie inlaturata cu succes");
 
                 } else {
                     JOptionPane.showMessageDialog(this, "Selecteaza un singur rand pentru a sterge.");

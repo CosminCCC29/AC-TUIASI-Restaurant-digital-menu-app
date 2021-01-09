@@ -144,6 +144,7 @@ public class OrdersAdminPanel extends javax.swing.JPanel {
 
                         tblModel.removeRow(dataTable.convertRowIndexToModel(dataTable.getSelectedRow()));
                         conn.createStatement().execute("commit");
+                        JOptionPane.showMessageDialog(this, "Comanda inlaturata cu succes");
                     } catch (SQLException ex) {
                         JOptionPane.showMessageDialog(this, ex.getMessage());
                     }

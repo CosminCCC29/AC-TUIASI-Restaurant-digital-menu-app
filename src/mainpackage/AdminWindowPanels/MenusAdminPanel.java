@@ -159,6 +159,7 @@ public class MenusAdminPanel extends javax.swing.JPanel {
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage());
                 }
+                JOptionPane.showMessageDialog(this, "Meniu inserat cu succes");
                 Refresh();
                 break;
 
@@ -218,6 +219,7 @@ public class MenusAdminPanel extends javax.swing.JPanel {
                     JOptionPane.showMessageDialog(this, "Selecteaza un singur rand pentru a modifica.");
 
                 }
+                JOptionPane.showMessageDialog(this, "Meniu modificat cu succes");
                 Refresh();
                 break;
 
@@ -240,6 +242,7 @@ public class MenusAdminPanel extends javax.swing.JPanel {
                         tblModel.removeRow(dataTable.convertRowIndexToModel(dataTable.getSelectedRow()));
 
                         conn.createStatement().execute("commit");
+                        JOptionPane.showMessageDialog(this, "Meniu inlaturata cu succes");
                     } catch (SQLException ex) {
                         JOptionPane.showMessageDialog(this, ex.getMessage());
                     }

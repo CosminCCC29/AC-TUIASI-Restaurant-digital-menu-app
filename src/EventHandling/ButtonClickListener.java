@@ -8,6 +8,7 @@ package EventHandling;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JOptionPane;
 import mainpackage.ApplicationWindow;
 import mainpackage.ClientWindow;
 
@@ -127,7 +128,6 @@ public class ButtonClickListener implements ActionListener {
                 break;
             case "finalize":
                 appWindow.clientWindow.finalizeOrder(e);
-                System.out.println("Comanda inregistrata cu succes");
                 break;
             case "Add":
                 appWindow.clientWindow.addProducts(e);
@@ -142,6 +142,9 @@ public class ButtonClickListener implements ActionListener {
                 System.out.println("Am golit cosul de comanda");
                 appWindow.clientWindow.emptyOrderBag();
                 appWindow.clientWindow.vizualizeOrder(e);
+                break;
+            case "Delogare":
+                System.out.println("ceva text de test");
                 break;
         }
 
