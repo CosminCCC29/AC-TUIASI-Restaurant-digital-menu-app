@@ -153,10 +153,10 @@ public class CategoriesAdminPanel extends javax.swing.JPanel {
                     tblModel.addRow(tfData);
 
                     conn.createStatement().execute("commit");
+                    JOptionPane.showMessageDialog(this, "Categorie adaugata cu succes");
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage());
                 }
-                JOptionPane.showMessageDialog(this, "Categorie adaugata cu succes");
                 Refresh();
                 break;
 
@@ -217,6 +217,7 @@ public class CategoriesAdminPanel extends javax.swing.JPanel {
                         tblModel.setValueAt(nume_meniu, dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 4);
 
                         conn.createStatement().execute("commit");
+                        JOptionPane.showMessageDialog(this, "Categorie modificata cu succes");
                     } catch (SQLException ex) {
 
                         try {
@@ -236,7 +237,6 @@ public class CategoriesAdminPanel extends javax.swing.JPanel {
                     JOptionPane.showMessageDialog(this, "Selecteaza un singur rand pentru a modifica.");
 
                 }
-                JOptionPane.showMessageDialog(this, "Categorie modificata cu succes");
                 Refresh();
                 break;
 
@@ -259,12 +259,12 @@ public class CategoriesAdminPanel extends javax.swing.JPanel {
                         prepSt.execute();
 
                         conn.createStatement().execute("commit");
+                        JOptionPane.showMessageDialog(this, "Categorie inlaturata cu succes");
                     } catch (SQLException ex) {
                         JOptionPane.showMessageDialog(this, ex.getMessage());
                     }
 
                     tblModel.removeRow(dataTable.convertRowIndexToModel(dataTable.getSelectedRow()));
-                    JOptionPane.showMessageDialog(this, "Categorie inlaturata cu succes");
 
                 } else {
                     JOptionPane.showMessageDialog(this, "Selecteaza un singur rand pentru a sterge.");

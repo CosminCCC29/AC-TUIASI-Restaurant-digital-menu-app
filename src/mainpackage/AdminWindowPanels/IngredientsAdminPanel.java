@@ -150,10 +150,10 @@ public class IngredientsAdminPanel extends javax.swing.JPanel {
                     tblModel.addRow(tfData);
 
                     conn.createStatement().execute("commit");
+                    JOptionPane.showMessageDialog(this, "Ingredient inserat cu succes");
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage());
                 }
-                JOptionPane.showMessageDialog(this, "Ingredient inserat cu succes");
                 Refresh();
                 break;
 
@@ -222,6 +222,7 @@ public class IngredientsAdminPanel extends javax.swing.JPanel {
                         tblModel.setValueAt(producator, dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 4);
 
                         conn.createStatement().execute("commit");
+                        JOptionPane.showMessageDialog(this, "Ingredient modificat cu succes");
                     } catch (SQLException ex) {
 
                         JOptionPane.showMessageDialog(this, ex.getMessage());
@@ -232,7 +233,6 @@ public class IngredientsAdminPanel extends javax.swing.JPanel {
                     JOptionPane.showMessageDialog(this, "Selecteaza un singur rand pentru a modifica.");
 
                 }
-                JOptionPane.showMessageDialog(this, "Ingredient modificat cu succes");
                 Refresh();
                 break;
 

@@ -118,10 +118,10 @@ public class ProductTypeAdminPanel extends javax.swing.JPanel {
                     tblModel.addRow(tfData);
 
                     conn.createStatement().execute("commit");
+                    JOptionPane.showMessageDialog(this, "Inserare realizata cu succes");
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage());
                 }
-                JOptionPane.showMessageDialog(this, "Inserare realizata cu succes");
                 Refresh();
                 break;
 
@@ -160,6 +160,7 @@ public class ProductTypeAdminPanel extends javax.swing.JPanel {
                         tblModel.setValueAt(nume_tip, dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 1);
 
                         conn.createStatement().execute("commit");
+                        JOptionPane.showMessageDialog(this, "Modificare realizata cu succes");
                     } catch (SQLException ex) {
 
                         JOptionPane.showMessageDialog(this, ex.getMessage());
@@ -170,7 +171,6 @@ public class ProductTypeAdminPanel extends javax.swing.JPanel {
                     JOptionPane.showMessageDialog(this, "Selecteaza un singur rand pentru a modifica.");
 
                 }
-                JOptionPane.showMessageDialog(this, "Modificare realizata cu succes");
                 Refresh();
                 break;
 
@@ -191,12 +191,12 @@ public class ProductTypeAdminPanel extends javax.swing.JPanel {
                         prepSt.execute();
 
                         conn.createStatement().execute("commit");
+                        JOptionPane.showMessageDialog(this, "Stergere realizata cu succes");
                     } catch (SQLException ex) {
                         JOptionPane.showMessageDialog(this, ex.getMessage());
                     }
 
                     tblModel.removeRow(dataTable.convertRowIndexToModel(dataTable.getSelectedRow()));
-                    JOptionPane.showMessageDialog(this, "Stergere realizata cu succes");
 
                 } else {
                     JOptionPane.showMessageDialog(this, "Selecteaza un singur rand pentru a sterge.");

@@ -145,14 +145,14 @@ public class ButtonClickListener implements ActionListener {
                 appWindow.clientWindow.emptyOrderBag();
                 appWindow.clientWindow.vizualizeOrder();
                 break;
+            case "Delogare":
+                System.out.println("ceva text de test");
+                break;
                 
             case "Refresh stocuri":
                 appWindow.getClientWindow().refreshStocuri();
                 break;
             
-            case "Delogare":
-                System.out.println("ceva text de test");
-                break;
         }
 
     }

@@ -388,9 +388,9 @@ public class ClientWindow extends javax.swing.JFrame {
             }
 
             ResultSet rs = selectProduct.executeQuery();
-
             JOptionPane.showMessageDialog(this, "Comanda inregistrata cu succes");
             
+
         } catch (SQLException ex) {
             Logger.getLogger(ClientWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -552,8 +552,9 @@ public class ClientWindow extends javax.swing.JFrame {
         components = panouJPanel.getComponents();
         
         //DEPLASARE PRIN ELEMENTELE DIN PANELUL CARE FACE PARTE DIN PRODUSUL MEU
-        JTextField textField = new JTextField();
+        JTextField textField = new JTextField();      
         textField = (JTextField) components[1];
+        
         int ct = Integer.parseInt(textField.getText());
         int ok;
         int ctok;
