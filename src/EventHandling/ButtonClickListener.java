@@ -8,6 +8,7 @@ package EventHandling;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JOptionPane;
 import mainpackage.ApplicationWindow;
 import mainpackage.ClientWindow;
 
@@ -149,6 +150,9 @@ public class ButtonClickListener implements ActionListener {
                 appWindow.getClientWindow().refreshStocuri();
                 break;
             
+            case "Delogare":
+                System.out.println("ceva text de test");
+                break;
         }
 
     }

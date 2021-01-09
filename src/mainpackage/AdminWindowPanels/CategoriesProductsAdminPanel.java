@@ -157,6 +157,7 @@ public class CategoriesProductsAdminPanel extends javax.swing.JPanel {
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage());
                 }
+                JOptionPane.showMessageDialog(this, "Inserare efectuata cu succes");
                 Refresh();
                 break;
 
@@ -183,6 +184,7 @@ public class CategoriesProductsAdminPanel extends javax.swing.JPanel {
                         tblModel.removeRow(dataTable.convertRowIndexToModel(dataTable.getSelectedRow()));
                         
                         conn.createStatement().execute("commit");
+                        JOptionPane.showMessageDialog(this, "Stergere efectuata cu succes");
                     } catch (SQLException ex) {
                          JOptionPane.showMessageDialog(this, ex.getMessage());
                     }

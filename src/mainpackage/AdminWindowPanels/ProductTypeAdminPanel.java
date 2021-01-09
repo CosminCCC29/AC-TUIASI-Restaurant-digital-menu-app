@@ -121,6 +121,7 @@ public class ProductTypeAdminPanel extends javax.swing.JPanel {
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage());
                 }
+                JOptionPane.showMessageDialog(this, "Inserare realizata cu succes");
                 Refresh();
                 break;
 
@@ -169,6 +170,7 @@ public class ProductTypeAdminPanel extends javax.swing.JPanel {
                     JOptionPane.showMessageDialog(this, "Selecteaza un singur rand pentru a modifica.");
 
                 }
+                JOptionPane.showMessageDialog(this, "Modificare realizata cu succes");
                 Refresh();
                 break;
 
@@ -194,6 +196,7 @@ public class ProductTypeAdminPanel extends javax.swing.JPanel {
                     }
 
                     tblModel.removeRow(dataTable.convertRowIndexToModel(dataTable.getSelectedRow()));
+                    JOptionPane.showMessageDialog(this, "Stergere realizata cu succes");
 
                 } else {
                     JOptionPane.showMessageDialog(this, "Selecteaza un singur rand pentru a sterge.");

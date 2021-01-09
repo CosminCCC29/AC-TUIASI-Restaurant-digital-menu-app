@@ -169,6 +169,12 @@ public final class ApplicationWindow extends javax.swing.JFrame {
             clientWindow.setVisible(true);
 
     }
+    
+    public void renewAdminWindow()
+    {
+        adminWindow = new AdminWindow(this);
+        adminWindow.setVisible(true);
+    }
 
     public AppActionListener getAppActionListener() {
         return appActionListener;

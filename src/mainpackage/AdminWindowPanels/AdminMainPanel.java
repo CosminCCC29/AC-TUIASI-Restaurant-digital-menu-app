@@ -5,6 +5,8 @@
  */
 package mainpackage.AdminWindowPanels;
 
+import java.awt.CardLayout;
+import java.awt.event.WindowEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -526,6 +528,20 @@ public class AdminMainPanel extends javax.swing.JPanel {
 
     private void delogareButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delogareButtonActionPerformed
         // TO DO
+        ///Daca incerc sa setez o comanda pe buton si sa fac alta functie care sa faca delogarea, nu face nimic din ce ii dai in case, nici macar un print
+        //delogareButton.setActionCommand("Delogare");
+        
+        //Incercare 1
+        /*CardLayout cardLayout;
+        cardLayout = (CardLayout) appWindow.getAdminWindow().adminMainPanel.getLayout();
+        cardLayout.show(appWindow.getAdminWindow().adminMainPanel, "card2");
+        */
+        
+        //Incercare 2 -- aici merge da nu sterge fereastra din spate
+        /*System.out.println("Delogare111");
+        appWindow.setVisible(false);
+        appWindow.dispose();
+        appWindow.renewAdminWindow();*/
     }//GEN-LAST:event_delogareButtonActionPerformed
 
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed

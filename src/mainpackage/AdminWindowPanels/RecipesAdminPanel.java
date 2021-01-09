@@ -173,6 +173,7 @@ public class RecipesAdminPanel extends javax.swing.JPanel {
                     //JOptionPane.showMessageDialog(this, ex.getMessage());
                     Logger.getLogger(MenusAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                JOptionPane.showMessageDialog(this, "Inserare realizata cu succes");
                 Refresh();
                 break;
 
@@ -246,6 +247,7 @@ public class RecipesAdminPanel extends javax.swing.JPanel {
                     JOptionPane.showMessageDialog(this, "Selecteaza un singur rand pentru a modifica.");
 
                 }
+                JOptionPane.showMessageDialog(this, "Modificare realizata cu succes");
                 Refresh();
                 break;
 
@@ -282,6 +284,7 @@ public class RecipesAdminPanel extends javax.swing.JPanel {
                     }
 
                     tblModel.removeRow(dataTable.convertRowIndexToModel(dataTable.getSelectedRow()));
+                    JOptionPane.showMessageDialog(this, "Stergere realizata cu succes");
 
                 } else {
                     JOptionPane.showMessageDialog(this, "Selecteaza un singur rand pentru a sterge.");
