@@ -75,7 +75,7 @@ public class ProductStockPanel extends javax.swing.JPanel {
             }
 
         } catch (SQLException ex) {
-            Logger.getLogger(CategoriesAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "Eroare necunoscuta.\nRedeschideti aplicatia.");
         }
 
         numeProdusCB.setSelectedIndex((numeProdusCB.getItemCount() == 0) ? -1 : (idx == -1) ? 0 : idx);
@@ -290,9 +290,10 @@ public class ProductStockPanel extends javax.swing.JPanel {
                 Object tblData[] = {nume_produs, Short.parseShort(stoc_produs)};
                 tblModel.addRow(tblData);
             }
+            rs.close();
 
         } catch (SQLException ex) {
-            Logger.getLogger(MenusAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "Eroare necunoscuta.\nRedeschideti aplicatia.");
         }
     }
 

@@ -83,14 +83,16 @@ public class ProductsAdminPanel extends javax.swing.JPanel {
             while (rs2.next()) {
                 foodTypeCB.addItem(rs2.getString(1));
             }
+            rs2.close();
 
             stateCB.addItem("ACTIV");
             stateCB.addItem("INACTIV");
 
         } catch (SQLException ex) {
-            Logger.getLogger(CategoriesAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "Eroare necunoscuta.\nRedeschideti aplicatia.");
         }
 
+        
         productTypeCB.setSelectedIndex((productTypeCB.getItemCount() == 0) ? -1 : (idx == -1) ? 0 : idx);
         foodTypeCB.setSelectedIndex((foodTypeCB.getItemCount() == 0) ? -1 : (idx2 == -1) ? 0 : idx2);
         stateCB.setSelectedIndex((stateCB.getItemCount() == 0) ? -1 : (idx3 == -1) ? 0 : idx3);
@@ -408,17 +410,20 @@ public class ProductsAdminPanel extends javax.swing.JPanel {
                         try (ResultSet rs2 = ps.executeQuery()) {
                             rs2.next();
                             tip_aliment = rs2.getString(1);
+                            rs2.close();
                         }
                     }
+                    
                     
                     Object tblData[] = {Short.parseShort(nr_produs), nume_produs, tip_produs, tip_aliment, Float.parseFloat(pret), stare, detalii_suplimentare, data_crearii};
                     tblModel = (DefaultTableModel) this.dataTable.getModel();
                     tblModel.addRow(tblData);
                 }
+                rs.close();
             }
 
         } catch (SQLException ex) {
-            Logger.getLogger(MenusAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "Eroare necunoscuta.\nRedeschideti aplicatia.");
         }
     }
 

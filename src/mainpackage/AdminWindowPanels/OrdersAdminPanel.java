@@ -221,9 +221,10 @@ public class OrdersAdminPanel extends javax.swing.JPanel {
                 tblModel = (DefaultTableModel) this.dataTable.getModel();
                 tblModel.addRow(tblData);
             }
+            rs.close();
 
         } catch (SQLException ex) {
-            Logger.getLogger(MenusAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "Eroare necunoscuta.\nRedeschideti aplicatia.");
         }
     }
 

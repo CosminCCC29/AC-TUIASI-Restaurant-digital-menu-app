@@ -74,9 +74,10 @@ public class CategoriesAdminPanel extends javax.swing.JPanel {
             while (rs.next()) {
                 selectMenuCB.addItem(rs.getString(1));
             }
+            rs.close();
 
         } catch (SQLException ex) {
-            Logger.getLogger(CategoriesAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "Eroare necunoscuta.\nRedeschideti aplicatia.");
         }
 
         selectMenuCB.setSelectedIndex((selectMenuCB.getItemCount() == 0) ? -1 : (idx == -1) ? 0 : idx);
@@ -321,9 +322,11 @@ public class CategoriesAdminPanel extends javax.swing.JPanel {
                 tblModel = (DefaultTableModel) this.dataTable.getModel();
                 tblModel.addRow(tblData);
             }
+            rs.close();
+            ps.close();
 
         } catch (SQLException ex) {
-            Logger.getLogger(MenusAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "Eroare necunoscuta.\nRedeschideti aplicatia.");
         }
     }
 

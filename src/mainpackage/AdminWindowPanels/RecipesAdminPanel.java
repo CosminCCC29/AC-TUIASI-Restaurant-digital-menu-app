@@ -79,7 +79,7 @@ public class RecipesAdminPanel extends javax.swing.JPanel {
             }
 
         } catch (SQLException ex) {
-            Logger.getLogger(CategoriesAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "Eroare necunoscuta.\nRedeschideti aplicatia.");
         }
 
         numeProdusCB.setSelectedIndex((numeProdusCB.getItemCount() == 0) ? -1 : (idx == -1) ? 0 : idx);
@@ -373,7 +373,7 @@ public class RecipesAdminPanel extends javax.swing.JPanel {
             rs.close();
 
         } catch (SQLException ex) {
-            Logger.getLogger(MenusAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "Eroare necunoscuta.\nRedeschideti aplicatia.");
         }
     }
 

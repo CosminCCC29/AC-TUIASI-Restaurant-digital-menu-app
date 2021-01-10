@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
@@ -220,7 +221,7 @@ public class ProductsOrdersAdminPanel extends javax.swing.JPanel {
             }
 
         } catch (SQLException ex) {
-            Logger.getLogger(CategoriesAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "Eroare necunoscuta.\nRedeschideti aplicatia.");
         }
 
         idComandaCB.setSelectedIndex((idComandaCB.getItemCount() == 0) ? -1 : (idx == -1) ? 0 : idx);
@@ -287,9 +288,10 @@ public class ProductsOrdersAdminPanel extends javax.swing.JPanel {
                     tblModel = (DefaultTableModel) this.dataTable.getModel();
                     tblModel.addRow(tblData);
                 }
+                rs.close();
 
             } catch (SQLException ex) {
-                Logger.getLogger(MenusAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this, "Eroare necunoscuta.\nRedeschideti aplicatia.");
             }
         }
     }

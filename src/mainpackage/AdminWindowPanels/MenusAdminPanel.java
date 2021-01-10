@@ -48,7 +48,7 @@ public class MenusAdminPanel extends javax.swing.JPanel {
 
         initActionListeners();
 
-        if (appWindow.getCurrentMenu().equals("")) {
+        if (appWindow.getCurrentMenu() == null || appWindow.getCurrentMenu().equals("")) {
             currMenuTextField.setText("Nu este setat.");
         }
 
@@ -322,9 +322,11 @@ public class MenusAdminPanel extends javax.swing.JPanel {
                 tblModel = (DefaultTableModel) this.dataTable.getModel();
                 tblModel.addRow(tblData);
             }
+            st.close();
+            rs.close();
 
         } catch (SQLException ex) {
-            Logger.getLogger(MenusAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "Eroare necunoscuta.\nRedeschideti aplicatia.");
         }
     }
 

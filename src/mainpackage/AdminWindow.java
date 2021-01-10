@@ -1,9 +1,7 @@
 package mainpackage;
 
-import java.awt.BorderLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import mainpackage.AdminWindowPanels.AdminMainPanel;
 
 public class AdminWindow extends javax.swing.JFrame {
 

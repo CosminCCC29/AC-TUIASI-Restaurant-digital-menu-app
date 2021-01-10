@@ -75,7 +75,7 @@ public class IngredientsAdminPanel extends javax.swing.JPanel {
             }
 
         } catch (SQLException ex) {
-            Logger.getLogger(CategoriesAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "Eroare necunoscuta.\nRedeschideti aplicatia.");
         }
 
         foodTypeCB.setSelectedIndex((foodTypeCB.getItemCount() == 0) ? -1 : (idx == -1) ? 0 : idx);
@@ -341,9 +341,10 @@ public class IngredientsAdminPanel extends javax.swing.JPanel {
                 Object tblData[] = {Short.parseShort(id_ingredient), nume_ingredient, tip_aliment, Float.parseFloat(stoc_ingredient), producator};
                 tblModel.addRow(tblData);
             }
-
+            
+            rs.close();
         } catch (SQLException ex) {
-            Logger.getLogger(MenusAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "Eroare necunoscuta.\nRedeschideti aplicatia.");
         }
     }
 
