@@ -3,11 +3,11 @@
 
 -- Inserare in tabela administratori
 
-INSERT INTO Administratori(nume_prenume_cont, parola_cont) VALUES('Cojocaru Constantin-Cosmin', '134679');
-INSERT INTO Administratori(nume_prenume_cont, parola_cont) VALUES('Budeanu Radu-Andrei', 'parola123');
-INSERT INTO Administratori(nume_prenume_cont, parola_cont) VALUES('Alexandru Gabriel', '123parola123');
-INSERT INTO Administratori(nume_prenume_cont, parola_cont) VALUES('Ionut Popescu', '123456789');
-INSERT INTO Administratori(nume_prenume_cont, parola_cont) VALUES('Alin Popescu', 'parolasigura1');
+-- INSERT INTO Administratori(nume_prenume_cont, parola_cont) VALUES('Cojocaru Constantin-Cosmin', '134679');
+-- INSERT INTO Administratori(nume_prenume_cont, parola_cont) VALUES('Budeanu Radu-Andrei', 'parola123');
+-- INSERT INTO Administratori(nume_prenume_cont, parola_cont) VALUES('Alexandru Gabriel', '123parola123');
+-- INSERT INTO Administratori(nume_prenume_cont, parola_cont) VALUES('Ionut Popescu', '123456789');
+-- INSERT INTO Administratori(nume_prenume_cont, parola_cont) VALUES('Alin Popescu', 'parolasigura1');
 
 -- Inserare in tabela meniuri
 
