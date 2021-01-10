@@ -12,7 +12,6 @@ package mainpackage.AdminWindowPanels;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.sql.*;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -113,7 +112,18 @@ public class ProductStockPanel extends javax.swing.JPanel {
                     }
 
                 } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage());
+                    if (ex.getMessage().contains("ORA-00001")) {
+                        JOptionPane.showMessageDialog(this, "Stoc deja existent.");
+                    } else if (ex.getMessage().contains("ORA-02290")) {
+                        JOptionPane.showMessageDialog(this, "Stocul trebuie sa fie pozitiv.");
+                    } else if (ex.getMessage().contains("ORA-01438")) {
+                        JOptionPane.showMessageDialog(this, "Numarul stocului prea mare. Introduceti un numar de forma ???");
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Eroare necunoscuta");
+                    }
+
+                } catch (NumberFormatException ex2) {
+                    JOptionPane.showMessageDialog(this, "Stocul produselor trebuie sa contina doar cifre.");
                 }
 
                 if (stocProdusTextField.getText().equals("")) {
@@ -140,7 +150,18 @@ public class ProductStockPanel extends javax.swing.JPanel {
                     conn.createStatement().execute("commit");
                     JOptionPane.showMessageDialog(this, "Inserare realizata cu succes");
                 } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage());
+                    if (ex.getMessage().contains("ORA-00001")) {
+                        JOptionPane.showMessageDialog(this, "Stoc deja existent.");
+                    } else if (ex.getMessage().contains("ORA-02290")) {
+                        JOptionPane.showMessageDialog(this, "Stocul trebuie sa fie pozitiv.");
+                    } else if (ex.getMessage().contains("ORA-01438")) {
+                        JOptionPane.showMessageDialog(this, "Numarul stocului prea mare. Introduceti un numar de forma ???");
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Eroare necunoscuta");
+                    }
+
+                } catch (NumberFormatException ex2) {
+                    JOptionPane.showMessageDialog(this, "Stocul produselor trebuie sa contina doar cifre.");
                 }
                 Refresh();
                 break;
@@ -169,7 +190,7 @@ public class ProductStockPanel extends javax.swing.JPanel {
                         prepSelectSt.setString(1, nume_produs);
                         ResultSet resultSelectSet = prepSelectSt.executeQuery();
                         resultSelectSet.next();
-                        
+
                         String str = resultSelectSet.getString(1);
 
                         if (!stoc_produs.equals(resultSelectSet.getString(1))) {
@@ -186,8 +207,18 @@ public class ProductStockPanel extends javax.swing.JPanel {
                         JOptionPane.showMessageDialog(this, "Modificare realizata cu succes");
                     } catch (SQLException ex) {
 
-                        JOptionPane.showMessageDialog(this, ex.getMessage());
-                        // Logger.getLogger(CategoriesAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        if (ex.getMessage().contains("ORA-00001")) {
+                            JOptionPane.showMessageDialog(this, "Stoc deja existent.");
+                        } else if (ex.getMessage().contains("ORA-02290")) {
+                            JOptionPane.showMessageDialog(this, "Stocul trebuie sa fie pozitiv.");
+                        } else if (ex.getMessage().contains("ORA-01438")) {
+                            JOptionPane.showMessageDialog(this, "Numarul stocului prea mare. Introduceti un numar de forma ???");
+                        } else {
+                            JOptionPane.showMessageDialog(this, "Eroare necunoscuta");
+                        }
+
+                    } catch (NumberFormatException ex2) {
+                        JOptionPane.showMessageDialog(this, "Stocul produselor trebuie sa contina doar cifre.");
                     }
 
                 } else {

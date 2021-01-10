@@ -91,7 +91,13 @@ public class ProductTypeAdminPanel extends javax.swing.JPanel {
                     }
 
                 } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage());
+                    if (ex.getMessage().contains("ORA-00001")) {
+                        JOptionPane.showMessageDialog(this, "Tip aliment deja existent.");
+                    } else if (ex.getMessage().contains("ORA-02290")) {
+                        JOptionPane.showMessageDialog(this, "Tipul alimentelor trebuia sa contina un cuvânt sau maxim 2 cuvinte delimitate prin '-'.");
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Eroare necunoscuta");
+                    }
                 }
 
                 if (numeTipTextField.getText().equals("")) {
@@ -111,7 +117,7 @@ public class ProductTypeAdminPanel extends javax.swing.JPanel {
                     prepSt.setString(1, nume_tip);
                     prepSt.execute();
 
-                    ResultSet rs = conn.createStatement().executeQuery("SELECT MAX(nr_categorie) FROM Categorii");
+                    ResultSet rs = conn.createStatement().executeQuery("SELECT MAX(id_tip) FROM tipuri_aliment");
                     rs.next();
                     id_tip = rs.getString(1);
                     Object tfData[] = {Short.parseShort(id_tip), nume_tip};
@@ -120,7 +126,13 @@ public class ProductTypeAdminPanel extends javax.swing.JPanel {
                     conn.createStatement().execute("commit");
                     JOptionPane.showMessageDialog(this, "Inserare realizata cu succes");
                 } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage());
+                    if (ex.getMessage().contains("ORA-00001")) {
+                        JOptionPane.showMessageDialog(this, "Tip aliment deja existent.");
+                    } else if (ex.getMessage().contains("ORA-02290")) {
+                        JOptionPane.showMessageDialog(this, "Tipul alimentelor trebuia sa contina un cuvânt sau maxim 2 cuvinte delimitate prin '-'.");
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Eroare necunoscuta");
+                    }
                 }
                 Refresh();
                 break;
@@ -163,10 +175,14 @@ public class ProductTypeAdminPanel extends javax.swing.JPanel {
                         JOptionPane.showMessageDialog(this, "Modificare realizata cu succes");
                     } catch (SQLException ex) {
 
-                        JOptionPane.showMessageDialog(this, ex.getMessage());
-                        // Logger.getLogger(CategoriesAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        if (ex.getMessage().contains("ORA-00001")) {
+                            JOptionPane.showMessageDialog(this, "Tip aliment deja existent.");
+                        } else if (ex.getMessage().contains("ORA-02290")) {
+                            JOptionPane.showMessageDialog(this, "Tipul alimentelor trebuia sa contina un cuvânt sau maxim 2 cuvinte delimitate prin '-'.");
+                        } else {
+                            JOptionPane.showMessageDialog(this, "Eroare necunoscuta");
+                        }
                     }
-
                 } else {
                     JOptionPane.showMessageDialog(this, "Selecteaza un singur rand pentru a modifica.");
 

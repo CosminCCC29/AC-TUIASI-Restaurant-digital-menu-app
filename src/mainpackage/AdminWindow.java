@@ -35,6 +35,8 @@ public class AdminWindow extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Fereastra Admin");
+        setPreferredSize(new java.awt.Dimension(1440, 900));
+        setSize(new java.awt.Dimension(0, 0));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

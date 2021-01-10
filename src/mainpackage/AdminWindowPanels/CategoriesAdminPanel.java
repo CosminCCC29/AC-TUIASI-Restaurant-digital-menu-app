@@ -79,7 +79,7 @@ public class CategoriesAdminPanel extends javax.swing.JPanel {
             Logger.getLogger(CategoriesAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        selectMenuCB.setSelectedIndex((selectMenuCB.getItemCount() == 0) ? -1 : (idx == -1)? 0 : idx);
+        selectMenuCB.setSelectedIndex((selectMenuCB.getItemCount() == 0) ? -1 : (idx == -1) ? 0 : idx);
 
     }
 
@@ -118,7 +118,13 @@ public class CategoriesAdminPanel extends javax.swing.JPanel {
                     }
 
                 } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage());
+                    if (ex.getMessage().contains("ORA-00001")) {
+                        JOptionPane.showMessageDialog(this, "Categorie deja existenta");
+                    } else if (ex.getMessage().contains("ORA-02290")) {
+                        JOptionPane.showMessageDialog(this, "Categoriile trebuie sa contina doar cuvinte, primul cuvânt începând cu majusculă, opțional delimitate prin ‘-‘");
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Eroare necunoscuta");
+                    }
                 }
 
                 if (numeCategorieTextField.getText().equals("") && detaliiSuplimentareTextField.getText().equals("")) {
@@ -182,8 +188,13 @@ public class CategoriesAdminPanel extends javax.swing.JPanel {
                     nume_meniu = selectMenuCB.getSelectedItem().toString();
                     data_crearii = tblModel.getValueAt(dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 3).toString();
 
-                    try {
+                    Savepoint sp = null;
 
+                    try {
+                        
+                        conn.setAutoCommit(false);
+                        sp = conn.setSavepoint("sp");
+                        
                         PreparedStatement prepSelectSt = conn.prepareStatement("SELECT c.nume_categorie, c.detalii_suplimentare_categorie, m.nume_meniu FROM Categorii c, Meniuri m WHERE c.nr_categorie = ? AND m.nr_meniu = c.Meniuri_nr_meniu");
                         prepSelectSt.setShort(1, Short.parseShort(nr_categorie));
                         ResultSet resultSelectSet = prepSelectSt.executeQuery();
@@ -217,20 +228,26 @@ public class CategoriesAdminPanel extends javax.swing.JPanel {
                         tblModel.setValueAt(nume_meniu, dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 4);
 
                         conn.createStatement().execute("commit");
+                        if(!conn.getAutoCommit()) conn.setAutoCommit(true);
                         JOptionPane.showMessageDialog(this, "Categorie modificata cu succes");
                     } catch (SQLException ex) {
 
+                        
                         try {
-                            PreparedStatement prepUpdateSt2 = conn.prepareStatement("UPDATE Categorii SET Meniuri_nr_meniu = (SELECT nr_meniu FROM Meniuri WHERE nume_meniu = ?) WHERE nr_categorie = ?");
-                            prepUpdateSt2.setString(1, tblModel.getValueAt(dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 4).toString());
-                            prepUpdateSt2.setShort(2, Short.parseShort(nr_categorie));
-                            prepUpdateSt2.execute();
+                            conn.rollback(sp);
+                            conn.setAutoCommit(true);
                         } catch (SQLException ex1) {
-                            Logger.getLogger(CategoriesAdminPanel.class.getName()).log(Level.SEVERE, null, ex1);
+                            Logger.getLogger(IngredientsAdminPanel.class.getName()).log(Level.SEVERE, null, ex1);
+                        }
+                        
+                        if (ex.getMessage().contains("ORA-00001")) {
+                            JOptionPane.showMessageDialog(this, "Categorie deja existenta");
+                        } else if (ex.getMessage().contains("ORA-02290")) {
+                            JOptionPane.showMessageDialog(this, "Categoriile trebuie sa contina doar cuvinte, primul cuvânt începând cu majusculă, opțional delimitate prin ‘-‘");
+                        } else {
+                            JOptionPane.showMessageDialog(this, "Eroare necunoscuta");
                         }
 
-                        JOptionPane.showMessageDialog(this, ex.getMessage());
-                        // Logger.getLogger(CategoriesAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
                     }
 
                 } else {
@@ -240,8 +257,6 @@ public class CategoriesAdminPanel extends javax.swing.JPanel {
                 Refresh();
                 break;
 
-            
-                
             /////////////// STERGEREA DIN BAZA DE DATE ///////////////
             case "Sterge":
 

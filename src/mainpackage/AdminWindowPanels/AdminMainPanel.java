@@ -5,6 +5,9 @@
  */
 package mainpackage.AdminWindowPanels;
 
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Dimension;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,8 +15,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import mainpackage.ApplicationWindow;
+import org.netbeans.lib.awtextra.AbsoluteLayout;
 
 /**
  *
@@ -24,19 +29,39 @@ public class AdminMainPanel extends javax.swing.JPanel {
     /**
      * Creates new form NewJPanel
      */
-    
     private final ApplicationWindow appWindow;
-    
+    private final int CAESARCIPHERSHIFT = 25;
+
     public AdminMainPanel(ApplicationWindow appWindow) {
-        
+
         this.appWindow = appWindow;
         initComponents();
         initActionListeners();
         
+        JLabel jLabel1 = new JLabel("");
+        jLabel1.setFont(new java.awt.Font("Yu Gothic UI", java.awt.Font.BOLD, 36));
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+
+        javax.swing.GroupLayout defaultPanelLayout = new javax.swing.GroupLayout(defaultPanel);
+        defaultPanel.setLayout(defaultPanelLayout);
+        defaultPanelLayout.setHorizontalGroup(
+            defaultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(defaultPanelLayout.createSequentialGroup()
+                .addGap(251, 251, 251)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 8006, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(290, Short.MAX_VALUE))
+        );
+        defaultPanelLayout.setVerticalGroup(
+            defaultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(defaultPanelLayout.createSequentialGroup()
+                .addGap(294, 294, 294)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(325, Short.MAX_VALUE))
+        );
+        
     }
 
-    private void initActionListeners()
-    {        
+    private void initActionListeners() {
         loginButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
         backCAButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
         createNewAccountButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
@@ -46,15 +71,15 @@ public class AdminMainPanel extends javax.swing.JPanel {
         productsAdminButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
         ingredientsAdminButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
         categoriesProductsAdminButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
-        
+
         recipesAdminButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
         productTypeAdminButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
         ordersAdminButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
         productsOrdersButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
         productStocksButton.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
-        
+
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -76,6 +101,7 @@ public class AdminMainPanel extends javax.swing.JPanel {
         parolaContLabel = new javax.swing.JLabel();
         loginButton = new javax.swing.JButton();
         createNewAccountButton = new javax.swing.JButton();
+        forgotPasswordButton = new javax.swing.JButton();
         createAccountPanel = new javax.swing.JPanel();
         numeContCALabel = new javax.swing.JLabel();
         parolaContCAtLabel = new javax.swing.JLabel();
@@ -129,6 +155,7 @@ public class AdminMainPanel extends javax.swing.JPanel {
 
         loginButton.setFont(new java.awt.Font("Segoe UI Historic", 0, 11)); // NOI18N
         loginButton.setText("Logare");
+        loginButton.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         loginButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 loginButtonActionPerformed(evt);
@@ -137,6 +164,16 @@ public class AdminMainPanel extends javax.swing.JPanel {
 
         createNewAccountButton.setFont(new java.awt.Font("Segoe UI Historic", 0, 11)); // NOI18N
         createNewAccountButton.setText("Creare cont nou");
+        createNewAccountButton.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        forgotPasswordButton.setFont(new java.awt.Font("Segoe UI Historic", 0, 11)); // NOI18N
+        forgotPasswordButton.setText("Am uitat datele de logare");
+        forgotPasswordButton.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        forgotPasswordButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                forgotPasswordButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout adminLoginPanelLayout = new javax.swing.GroupLayout(adminLoginPanel);
         adminLoginPanel.setLayout(adminLoginPanelLayout);
@@ -144,7 +181,7 @@ public class AdminMainPanel extends javax.swing.JPanel {
             adminLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, adminLoginPanelLayout.createSequentialGroup()
                 .addContainerGap(174, Short.MAX_VALUE)
-                .addGroup(adminLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(adminLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(adminLoginPanelLayout.createSequentialGroup()
                         .addGroup(adminLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(numeContLabel)
@@ -159,7 +196,8 @@ public class AdminMainPanel extends javax.swing.JPanel {
                         .addGap(35, 35, 35)
                         .addGroup(adminLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(createNewAccountButton, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(loginButton, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(loginButton, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(forgotPasswordButton, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE))
                 .addGap(224, 224, 224))
         );
         adminLoginPanelLayout.setVerticalGroup(
@@ -183,7 +221,9 @@ public class AdminMainPanel extends javax.swing.JPanel {
                 .addComponent(loginButton, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(createNewAccountButton, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(148, 148, 148))
+                .addGap(18, 18, 18)
+                .addComponent(forgotPasswordButton, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(82, 82, 82))
         );
 
         loginPanels.add(adminLoginPanel, "card1");
@@ -207,9 +247,11 @@ public class AdminMainPanel extends javax.swing.JPanel {
 
         backCAButton.setFont(new java.awt.Font("Segoe UI Historic", 0, 11)); // NOI18N
         backCAButton.setText("Înapoi");
+        backCAButton.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         createAccountButton.setFont(new java.awt.Font("Segoe UI Historic", 0, 11)); // NOI18N
         createAccountButton.setText("Creare cont");
+        createAccountButton.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         createAccountButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 createAccountButtonActionPerformed(evt);
@@ -296,6 +338,7 @@ public class AdminMainPanel extends javax.swing.JPanel {
 
         menusAdminButton.setText("Meniuri");
         menusAdminButton.setActionCommand("ButonMeniuAdmin");
+        menusAdminButton.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -307,6 +350,7 @@ public class AdminMainPanel extends javax.swing.JPanel {
 
         categoriesAdminButton.setText("Categorii");
         categoriesAdminButton.setActionCommand("ButonMeniuAdmin");
+        categoriesAdminButton.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         categoriesAdminButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 categoriesAdminButtonActionPerformed(evt);
@@ -323,6 +367,7 @@ public class AdminMainPanel extends javax.swing.JPanel {
 
         productsAdminButton.setText("Produse");
         productsAdminButton.setActionCommand("ButonMeniuAdmin");
+        productsAdminButton.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         productsAdminButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 productsAdminButtonActionPerformed(evt);
@@ -339,6 +384,7 @@ public class AdminMainPanel extends javax.swing.JPanel {
 
         ingredientsAdminButton.setText("Ingrediente");
         ingredientsAdminButton.setActionCommand("ButonMeniuAdmin");
+        ingredientsAdminButton.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         ingredientsAdminButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ingredientsAdminButtonActionPerformed(evt);
@@ -355,6 +401,7 @@ public class AdminMainPanel extends javax.swing.JPanel {
 
         categoriesProductsAdminButton.setText("Categorii <-> Produse");
         categoriesProductsAdminButton.setActionCommand("ButonMeniuAdmin");
+        categoriesProductsAdminButton.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         categoriesProductsAdminButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 categoriesProductsAdminButtonActionPerformed(evt);
@@ -371,6 +418,7 @@ public class AdminMainPanel extends javax.swing.JPanel {
 
         recipesAdminButton.setText("Retete");
         recipesAdminButton.setActionCommand("ButonMeniuAdmin");
+        recipesAdminButton.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 6;
@@ -382,6 +430,7 @@ public class AdminMainPanel extends javax.swing.JPanel {
 
         productTypeAdminButton.setText("Tipuri aliment");
         productTypeAdminButton.setActionCommand("ButonMeniuAdmin");
+        productTypeAdminButton.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         productTypeAdminButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 productTypeAdminButtonActionPerformed(evt);
@@ -398,6 +447,7 @@ public class AdminMainPanel extends javax.swing.JPanel {
 
         ordersAdminButton.setText("Comenzi");
         ordersAdminButton.setActionCommand("ButonMeniuAdmin");
+        ordersAdminButton.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 9;
@@ -409,6 +459,12 @@ public class AdminMainPanel extends javax.swing.JPanel {
 
         productsOrdersButton.setText("Produse <-> Comenzi");
         productsOrdersButton.setActionCommand("ButonMeniuAdmin");
+        productsOrdersButton.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        productsOrdersButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                productsOrdersButtonActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 8;
@@ -420,6 +476,7 @@ public class AdminMainPanel extends javax.swing.JPanel {
 
         productStocksButton.setText("Stocuri produs");
         productStocksButton.setActionCommand("ButonMeniuAdmin");
+        productStocksButton.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         productStocksButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 productStocksButtonActionPerformed(evt);
@@ -435,6 +492,7 @@ public class AdminMainPanel extends javax.swing.JPanel {
         leftSideAdminPanel.add(productStocksButton, gridBagConstraints);
 
         delogareButton.setText("Delogare");
+        delogareButton.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         delogareButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 delogareButtonActionPerformed(evt);
@@ -509,7 +567,7 @@ public class AdminMainPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_categoriesProductsAdminButtonActionPerformed
 
     private void productsAdminButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productsAdminButtonActionPerformed
-       // productsAdminPanel.fillComboBoxes();
+        // productsAdminPanel.fillComboBoxes();
     }//GEN-LAST:event_productsAdminButtonActionPerformed
 
     private void ingredientsAdminButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ingredientsAdminButtonActionPerformed
@@ -517,7 +575,7 @@ public class AdminMainPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_ingredientsAdminButtonActionPerformed
 
     private void productTypeAdminButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productTypeAdminButtonActionPerformed
-        
+
     }//GEN-LAST:event_productTypeAdminButtonActionPerformed
 
     private void productStocksButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productStocksButtonActionPerformed
@@ -525,25 +583,14 @@ public class AdminMainPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_productStocksButtonActionPerformed
 
     private void delogareButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delogareButtonActionPerformed
-        // TO DO
-        ///Daca incerc sa setez o comanda pe buton si sa fac alta functie care sa faca delogarea, nu face nimic din ce ii dai in case, nici macar un print
-        //delogareButton.setActionCommand("Delogare");
-        
-        //Incercare 1
-        /*CardLayout cardLayout;
+
+        CardLayout cardLayout;
         cardLayout = (CardLayout) appWindow.getAdminWindow().adminMainPanel.getLayout();
-        cardLayout.show(appWindow.getAdminWindow().adminMainPanel, "card2");
-        */
-        
-        //Incercare 2 -- aici merge da nu sterge fereastra din spate
-        /*System.out.println("Delogare111");
-        appWindow.setVisible(false);
-        appWindow.dispose();
-        appWindow.renewAdminWindow();*/
+        cardLayout.show(appWindow.getAdminWindow().adminMainPanel, "card1");
     }//GEN-LAST:event_delogareButtonActionPerformed
 
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
-        
+
     }//GEN-LAST:event_loginButtonActionPerformed
 
     private void createAccountButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createAccountButtonActionPerformed
@@ -551,8 +598,40 @@ public class AdminMainPanel extends javax.swing.JPanel {
         createAccountButton.setActionCommand("Creare cont");
     }//GEN-LAST:event_createAccountButtonActionPerformed
 
-    public int personalCheckFunction(int check)
-    {
+    private void forgotPasswordButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_forgotPasswordButtonActionPerformed
+        String result = JOptionPane.showInputDialog(this, "Introduceti ID-ul dvs.:");
+        if (result == null) {
+            return;
+        }
+
+        try {
+            PreparedStatement ps = appWindow.getDataBaseConnection().getConnection().prepareStatement("SELECT nume_prenume_cont, parola_cont FROM Administratori WHERE id_admin = ?");
+            ps.setShort(1, Short.parseShort(result));
+
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            String nume = rs.getString(1);
+            String parola = rs.getString(2);
+
+            try {
+                JOptionPane.showMessageDialog(this, "Numele contului dvs. este: " + nume + "\n" + "Parola dvs. este: " + caesarCipher(parola, -CAESARCIPHERSHIFT));
+            } catch (Exception ex) {
+                Logger.getLogger(AdminMainPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        } catch (java.lang.NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Cont inexistent.");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Cont inexistent.");
+        }
+
+    }//GEN-LAST:event_forgotPasswordButtonActionPerformed
+
+    private void productsOrdersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productsOrdersButtonActionPerformed
+        productsOrdersAdminPanel.fillComboBoxes();
+    }//GEN-LAST:event_productsOrdersButtonActionPerformed
+
+    public int personalCheckFunction(int check) {
         try {
             // TODO add your handling code here:
             Connection conn = appWindow.getDataBaseConnection().getConnection();
@@ -560,28 +639,40 @@ public class AdminMainPanel extends javax.swing.JPanel {
             String temp1 = idAdminTextField.getText();
             String temp2 = numeContTextField.getText();
             String temp3 = parolaContTextField.getText();
-            ResultSet rs = st.executeQuery("SELECT COUNT(*) FROM Administratori WHERE id_admin = '"+ temp1 +"' AND nume_prenume_cont= '"+temp2 +"' AND parola_cont='"+temp3+"'");
-            while(rs.next())
-            {
+            ResultSet rs = st.executeQuery("SELECT COUNT(*) FROM Administratori WHERE id_admin = '" + temp1 + "' AND nume_prenume_cont= '" + temp2 + "' AND parola_cont='" + caesarCipher(temp3, CAESARCIPHERSHIFT) + "'");
+            while (rs.next()) {
                 String checkString = rs.getString(1);
-                if(checkString.equals("1"))
-                {
+                if (checkString.equals("1")) {
                     check = 1;
-                }
-                else
-                {
+                    
+                    JLabel JL = (JLabel)defaultPanel.getComponent(0);
+                    JL.setText("Bine ați venit, "+numeContTextField.getText()+"!");
+                    
+                    idAdminTextField.setText("");
+                    numeContTextField.setText("");
+                    parolaContTextField.setText("");
+
+                    numeContCATextField.setText("");
+                    parolaContCATextField.setText("");
+                    repParolaContCATextField1.setText("");
+
+                    CardLayout cardLayout = (CardLayout) appWindow.getAdminWindow().adminMainPanel.rightSideAdminPanel.getLayout();
+                    cardLayout.show(appWindow.getAdminWindow().adminMainPanel.rightSideAdminPanel, "card2"); // CARD-UL DEFAULT
+
+                } else {
                     check = 0;
                     JOptionPane.showMessageDialog(this, "Unul din campurile introduse este incorect");
                 }
             }
         } catch (SQLException ex) {
             Logger.getLogger(AdminMainPanel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
         }
         return check;
     }
-    
-    public void newAccount()
-    {
+
+    public void newAccount() {
         try {
             // TODO add your handling code here:
             Connection conn = appWindow.getDataBaseConnection().getConnection();
@@ -590,21 +681,45 @@ public class AdminMainPanel extends javax.swing.JPanel {
             String temp3 = repParolaContCATextField1.getText();
             PreparedStatement st = conn.prepareStatement("INSERT INTO Administratori(nume_prenume_cont, parola_cont) VALUES(? , ?)");
             st.setString(1, temp1);
-            st.setString(2, temp2);
-            if(temp2.equals(temp3))
-            {
+            st.setString(2, caesarCipher(temp2, CAESARCIPHERSHIFT));
+            if (temp2.equals(temp3)) {
                 ResultSet rs2 = st.executeQuery();
                 System.out.println("Cont creat cu succes");
                 ResultSet rs = conn.createStatement().executeQuery("SELECT MAX(id_admin) FROM Administratori");
                 rs.next();
-                JOptionPane.showMessageDialog(this, "Id-ul dumneavoastra este:"+rs.getString(1));
-            }
-            else{
+                JOptionPane.showMessageDialog(this, "Id-ul dumneavoastra este:" + rs.getString(1));
+            } else {
                 JOptionPane.showMessageDialog(this, "Reintroducere parola incorecta");
             }
         } catch (SQLException ex) {
             Logger.getLogger(AdminMainPanel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
         }
+
+        idAdminTextField.setText("");
+        numeContTextField.setText("");
+        parolaContTextField.setText("");
+
+        numeContCATextField.setText("");
+        parolaContCATextField.setText("");
+        repParolaContCATextField1.setText("");
+    }
+
+    public static String caesarCipher(String text, int shift) throws Exception {
+        StringBuffer result = new StringBuffer();
+
+        for (int i = 0; i < text.length(); i++) {
+
+            if (text.charAt(i) < 33 || text.charAt(i) > 126) {
+                throw new Exception("Parola nu trebuie sa contina caractere albe.");
+            }
+
+            char ch = (char) (((int) text.charAt(i) + shift - 33) % 94 + 33);
+            result.append(ch);
+        }
+
+        return result.toString();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -618,8 +733,7 @@ public class AdminMainPanel extends javax.swing.JPanel {
     private javax.swing.JButton createNewAccountButton;
     private javax.swing.JPanel defaultPanel;
     private javax.swing.JButton delogareButton;
-    private javax.swing.JLabel idAdminCALabel;
-    private javax.swing.JTextField idAdminCATextField;
+    private javax.swing.JButton forgotPasswordButton;
     private javax.swing.JLabel idAdminLabel;
     private javax.swing.JTextField idAdminTextField;
     private javax.swing.JButton ingredientsAdminButton;

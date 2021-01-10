@@ -64,6 +64,7 @@ public class ButtonClickListener implements ActionListener {
                 {
                     cardLayout = (CardLayout) appWindow.getAdminWindow().adminMainPanel.getLayout();
                     cardLayout.show(appWindow.getAdminWindow().adminMainPanel, "card2");
+                    
                 }
                 break;
 
