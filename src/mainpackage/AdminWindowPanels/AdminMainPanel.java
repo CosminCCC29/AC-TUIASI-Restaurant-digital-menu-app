@@ -5,9 +5,7 @@
  */
 package mainpackage.AdminWindowPanels;
 
-import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.Dimension;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,7 +16,6 @@ import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import mainpackage.ApplicationWindow;
-import org.netbeans.lib.awtextra.AbsoluteLayout;
 
 /**
  *
@@ -47,8 +44,8 @@ public class AdminMainPanel extends javax.swing.JPanel {
         defaultPanelLayout.setHorizontalGroup(
             defaultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(defaultPanelLayout.createSequentialGroup()
-                .addGap(251, 251, 251)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 8006, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(200, 200, 200)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 800, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(290, Short.MAX_VALUE))
         );
         defaultPanelLayout.setVerticalGroup(
@@ -692,9 +689,11 @@ public class AdminMainPanel extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(this, "Reintroducere parola incorecta");
             }
         } catch (SQLException ex) {
-            Logger.getLogger(AdminMainPanel.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "Nume sau parola incorecta.\nFormatul numelui trebuie sa fie [Nume][Prenume]-[Optional Altprenume], toate incepand cu majuscule.\nParola nu trebuie sa contina caractere albe.");
+            return;
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
+            return;
         }
 
         idAdminTextField.setText("");

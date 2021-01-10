@@ -153,7 +153,7 @@ public class ProductsAdminPanel extends javax.swing.JPanel {
                     PreparedStatement prepSt = conn.prepareStatement("INSERT INTO Produse(nume_produs, tip_produs, pret, tipuri_aliment_id_tip, stare, detalii_suplimentare_produs) VALUES(?, ?, ?, (SELECT id_tip FROM tipuri_aliment WHERE nume_tip = ?), ?, ?)");
                     prepSt.setString(1, nume_produs);
                     prepSt.setString(2, tip_produs);
-                    prepSt.setString(3, pret);
+                    prepSt.setFloat(3, Float.parseFloat(pret));
                     prepSt.setString(4, tip_aliment);
                     prepSt.setString(5, stare);
                     prepSt.setString(6, detalii_suplimentare);
@@ -163,7 +163,7 @@ public class ProductsAdminPanel extends javax.swing.JPanel {
                     rs.next();
                     nr_produs = rs.getString(1);
 
-                    Object tfData[] = {Short.parseShort(nr_produs), nume_produs, tip_produs, tip_aliment, Short.parseShort(pret), stare, detalii_suplimentare, currentDate};
+                    Object tfData[] = {Short.parseShort(nr_produs), nume_produs, tip_produs, tip_aliment, Float.parseFloat(pret), stare, detalii_suplimentare, currentDate};
                     tblModel.addRow(tfData);
 
                     conn.createStatement().execute("commit");
@@ -265,14 +265,14 @@ public class ProductsAdminPanel extends javax.swing.JPanel {
                             prepUpdateSt2.execute();
                         }
 
-                        if (!pret_mod.equals(resultSelectSet.getString(5))) {
+                        if (Float.parseFloat(pret_mod) != resultSelectSet.getFloat(4)) {
                             PreparedStatement prepUpdateSt2 = conn.prepareStatement("UPDATE Produse SET pret = ? WHERE nr_produs = ?");
-                            prepUpdateSt2.setShort(1, Short.parseShort(pret_mod));
+                            prepUpdateSt2.setFloat(1, Float.parseFloat(pret_mod));
                             prepUpdateSt2.setShort(2, Short.parseShort(nr_produs));
                             prepUpdateSt2.execute();
                         }
 
-                        if (!stare_mod.equals(resultSelectSet.getString(6))) {
+                        if (!stare_mod.equals(resultSelectSet.getString(5))) {
                             PreparedStatement prepUpdateSt2 = conn.prepareStatement("UPDATE Produse SET stare = ? WHERE nr_produs = ?");
                             prepUpdateSt2.setString(1, stare_mod);
                             prepUpdateSt2.setShort(2, Short.parseShort(nr_produs));
@@ -286,7 +286,7 @@ public class ProductsAdminPanel extends javax.swing.JPanel {
                             prepUpdateSt2.execute();
                         }
 
-                        if (!tip_aliment_mod.equals(resultSelectSet.getString(4))) {
+                        if (!tip_aliment_mod.equals(resultSelectSet.getString(8))) {
                             PreparedStatement prepUpdateSt2 = conn.prepareStatement("UPDATE Produse SET tipuri_aliment_id_tip = (SELECT id_tip FROM tipuri_aliment WHERE nume_tip = ?) WHERE nr_produs = ?");
                             prepUpdateSt2.setString(1, tip_aliment_mod);
                             prepUpdateSt2.setShort(2, Short.parseShort(nr_produs));
@@ -297,7 +297,7 @@ public class ProductsAdminPanel extends javax.swing.JPanel {
                         tblModel.setValueAt(nume_produs_mod, dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 1);
                         tblModel.setValueAt(tip_produs_mod, dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 2);
                         tblModel.setValueAt(tip_aliment_mod, dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 3);
-                        tblModel.setValueAt(pret_mod, dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 4);
+                        tblModel.setValueAt(Float.parseFloat(pret_mod), dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 4);
                         tblModel.setValueAt(stare_mod, dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 5);
                         tblModel.setValueAt(detalii_suplimentare_mod, dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 6);
 
@@ -357,7 +357,15 @@ public class ProductsAdminPanel extends javax.swing.JPanel {
 
                         
                     } catch (SQLException ex) {
-                        JOptionPane.showMessageDialog(this, ex.getMessage());
+                        
+                        if(ex.getMessage().contains("ORA-02292"))
+                        {
+                            JOptionPane.showMessageDialog(this, "Nu puteti sterge un produs existent intr-o comanda.");
+                        }
+                        else
+                        {
+                            JOptionPane.showMessageDialog(this, ex.getMessage());
+                        }
                     }
 
                 } else {
@@ -380,32 +388,33 @@ public class ProductsAdminPanel extends javax.swing.JPanel {
         fillComboBoxes();
 
         try {
-            ResultSet rs = appWindow.getDataBaseConnection().getConnection().createStatement().executeQuery("SELECT nr_produs, nume_produs, tip_produs, pret, stare, data_crearii, detalii_suplimentare_produs, tipuri_aliment_id_tip FROM Produse ORDER BY nr_produs");
-
-            DefaultTableModel tblModel = (DefaultTableModel) dataTable.getModel();
-            tblModel.setRowCount(0);
-
-            while (rs.next()) {
-                String nr_produs = rs.getString(1);
-                String nume_produs = rs.getString(2);
-                String tip_produs = rs.getString(3);
-                String pret = rs.getString(4);
-                String stare = rs.getString(5);
-                String data_crearii = rs.getDate(6).toString();
-                String detalii_suplimentare = rs.getString(7);
-                String tip_aliment = rs.getString(8);
-
-                if (tip_aliment != null) {
-                    PreparedStatement ps = appWindow.getDataBaseConnection().getConnection().prepareStatement("SELECT nume_tip FROM tipuri_aliment WHERE id_tip = ?");
-                    ps.setShort(1, Short.valueOf(tip_aliment));
-                    ResultSet rs2 = ps.executeQuery();
-                    rs2.next();
-                    tip_aliment = rs2.getString(1);
+            try (ResultSet rs = appWindow.getDataBaseConnection().getConnection().createStatement().executeQuery("SELECT nr_produs, nume_produs, tip_produs, pret, stare, data_crearii, detalii_suplimentare_produs, tipuri_aliment_id_tip FROM Produse ORDER BY nr_produs")) {
+                DefaultTableModel tblModel = (DefaultTableModel) dataTable.getModel();
+                tblModel.setRowCount(0);
+                
+                while (rs.next()) {
+                    String nr_produs = rs.getString(1);
+                    String nume_produs = rs.getString(2);
+                    String tip_produs = rs.getString(3);
+                    String pret = rs.getString(4);
+                    String stare = rs.getString(5);
+                    String data_crearii = rs.getDate(6).toString();
+                    String detalii_suplimentare = rs.getString(7);
+                    String tip_aliment = rs.getString(8);
+                    
+                    if (tip_aliment != null) {
+                        PreparedStatement ps = appWindow.getDataBaseConnection().getConnection().prepareStatement("SELECT nume_tip FROM tipuri_aliment WHERE id_tip = ?");
+                        ps.setShort(1, Short.valueOf(tip_aliment));
+                        try (ResultSet rs2 = ps.executeQuery()) {
+                            rs2.next();
+                            tip_aliment = rs2.getString(1);
+                        }
+                    }
+                    
+                    Object tblData[] = {Short.parseShort(nr_produs), nume_produs, tip_produs, tip_aliment, Float.parseFloat(pret), stare, detalii_suplimentare, data_crearii};
+                    tblModel = (DefaultTableModel) this.dataTable.getModel();
+                    tblModel.addRow(tblData);
                 }
-
-                Object tblData[] = {Short.parseShort(nr_produs), nume_produs, tip_produs, tip_aliment, pret, stare, detalii_suplimentare, data_crearii};
-                tblModel = (DefaultTableModel) this.dataTable.getModel();
-                tblModel.addRow(tblData);
             }
 
         } catch (SQLException ex) {

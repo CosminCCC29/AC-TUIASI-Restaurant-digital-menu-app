@@ -6,9 +6,7 @@
 package mainpackage.AdminWindowPanels;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.sql.*;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -219,7 +217,7 @@ public class OrdersAdminPanel extends javax.swing.JPanel {
                 detalii_suplimentare = rs.getString(4);
                 data_si_ora_comanda = rs.getString(5);
 
-                Object tblData[] = {Integer.parseInt(id_comanda), Integer.parseInt(total_plata), Short.parseShort(nr_masa), detalii_suplimentare, data_si_ora_comanda};
+                Object tblData[] = {Integer.parseInt(id_comanda), Float.parseFloat(total_plata), Short.parseShort(nr_masa), detalii_suplimentare, data_si_ora_comanda};
                 tblModel = (DefaultTableModel) this.dataTable.getModel();
                 tblModel.addRow(tblData);
             }

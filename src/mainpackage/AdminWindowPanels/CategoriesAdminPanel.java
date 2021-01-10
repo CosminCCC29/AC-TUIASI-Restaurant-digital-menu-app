@@ -303,7 +303,7 @@ public class CategoriesAdminPanel extends javax.swing.JPanel {
         String nume_meniu = selectMenuCB.getSelectedItem().toString();
 
         try {
-            PreparedStatement ps = appWindow.getDataBaseConnection().getConnection().prepareStatement("SELECT c.nr_categorie, c.nume_categorie, c.detalii_suplimentare_categorie, c.data_crearii, m.nume_meniu FROM Categorii c, Meniuri m WHERE m.nr_meniu = c.Meniuri_nr_meniu AND m.nume_meniu = ?");
+            PreparedStatement ps = appWindow.getDataBaseConnection().getConnection().prepareStatement("SELECT c.nr_categorie, c.nume_categorie, c.detalii_suplimentare_categorie, c.data_crearii, m.nume_meniu FROM Categorii c, Meniuri m WHERE m.nr_meniu = c.Meniuri_nr_meniu AND m.nume_meniu = ? ORDER BY c.nr_categorie");
             ps.setString(1, nume_meniu);
             ResultSet rs = ps.executeQuery();
 

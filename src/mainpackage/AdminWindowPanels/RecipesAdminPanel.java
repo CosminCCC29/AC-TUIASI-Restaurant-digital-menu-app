@@ -339,7 +339,7 @@ public class RecipesAdminPanel extends javax.swing.JPanel {
         fillComboBoxes();
 
         try {
-            ResultSet rs = appWindow.getDataBaseConnection().getConnection().createStatement().executeQuery("SELECT * FROM Retete");
+            ResultSet rs = appWindow.getDataBaseConnection().getConnection().createStatement().executeQuery("SELECT * FROM Retete ORDER BY Produse_nr_produs");
 
             DefaultTableModel tblModel = (DefaultTableModel) dataTable.getModel();
             tblModel.setRowCount(0);
@@ -355,6 +355,7 @@ public class RecipesAdminPanel extends javax.swing.JPanel {
                 ResultSet rs2 = ps.executeQuery();
                 rs2.next();
                 nume_produs = rs2.getString(1);
+                rs2.close();
 
                 PreparedStatement ps2 = appWindow.getDataBaseConnection().getConnection().prepareStatement("SELECT nume_ingredient, producator FROM Ingrediente WHERE id_ingredient = ?");
                 ps2.setShort(1, Short.valueOf(nume_ingredient));
@@ -362,11 +363,14 @@ public class RecipesAdminPanel extends javax.swing.JPanel {
                 rs3.next();
                 nume_ingredient = rs3.getString("nume_ingredient");
                 producator = rs3.getString("producator");
+                rs3.close();
 
                 Object tblData[] = {nume_produs, nume_ingredient, producator, cantitate_ingredient};
                 tblModel = (DefaultTableModel) this.dataTable.getModel();
                 tblModel.addRow(tblData);
             }
+            
+            rs.close();
 
         } catch (SQLException ex) {
             Logger.getLogger(MenusAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
