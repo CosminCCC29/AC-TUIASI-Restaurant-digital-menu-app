@@ -12,13 +12,11 @@ package mainpackage.AdminWindowPanels;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.sql.*;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
-import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
@@ -268,7 +266,7 @@ public class ProductsOrdersAdminPanel extends javax.swing.JPanel {
             String id_comanda = id.toString();
             
             try {
-                PreparedStatement ps = appWindow.getDataBaseConnection().getConnection().prepareStatement("SELECT Produse_nr_produs, nr_produse_comandate FROM produse_comenzi WHERE Comenzi_id_comanda = ?");
+                PreparedStatement ps = appWindow.getDataBaseConnection().getConnection().prepareStatement("SELECT Produse_nr_produs, nr_produse_comandate FROM produse_comenzi WHERE Comenzi_id_comanda = ? ORDER BY Produse_nr_produs DESC");
                 ps.setString(1, id_comanda);
                 ResultSet rs = ps.executeQuery();
 

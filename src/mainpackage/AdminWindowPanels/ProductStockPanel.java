@@ -272,7 +272,7 @@ public class ProductStockPanel extends javax.swing.JPanel {
         fillComboBoxes();
 
         try {
-            ResultSet rs = appWindow.getDataBaseConnection().getConnection().createStatement().executeQuery("SELECT * FROM stocuri_produs");
+            ResultSet rs = appWindow.getDataBaseConnection().getConnection().createStatement().executeQuery("SELECT * FROM stocuri_produs ORDER BY Produse_nr_produs");
 
             DefaultTableModel tblModel = (DefaultTableModel) dataTable.getModel();
             tblModel.setRowCount(0);

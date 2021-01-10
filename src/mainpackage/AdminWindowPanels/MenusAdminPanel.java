@@ -7,8 +7,6 @@ package mainpackage.AdminWindowPanels;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -309,7 +307,7 @@ public class MenusAdminPanel extends javax.swing.JPanel {
 
         try {
             Statement st = appWindow.getDataBaseConnection().getConnection().createStatement();
-            ResultSet rs = st.executeQuery("SELECT nr_meniu, nume_meniu, detalii_suplimentare_meniu, data_crearii FROM Meniuri");
+            ResultSet rs = st.executeQuery("SELECT nr_meniu, nume_meniu, detalii_suplimentare_meniu, data_crearii FROM Meniuri ORDER BY nr_meniu");
 
             DefaultTableModel tblModel = (DefaultTableModel) dataTable.getModel();
             tblModel.setRowCount(0);

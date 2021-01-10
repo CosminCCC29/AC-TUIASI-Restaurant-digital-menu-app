@@ -12,7 +12,6 @@ package mainpackage.AdminWindowPanels;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.sql.*;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -233,7 +232,7 @@ public class ProductTypeAdminPanel extends javax.swing.JPanel {
         tr.setSortKeys(sortKeys);
 
         try {
-            ResultSet rs = appWindow.getDataBaseConnection().getConnection().createStatement().executeQuery("SELECT * FROM tipuri_aliment");
+            ResultSet rs = appWindow.getDataBaseConnection().getConnection().createStatement().executeQuery("SELECT * FROM tipuri_aliment ORDER BY id_tip");
 
             DefaultTableModel tblModel = (DefaultTableModel) dataTable.getModel();
             tblModel.setRowCount(0);

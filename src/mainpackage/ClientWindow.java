@@ -423,7 +423,7 @@ public class ClientWindow extends javax.swing.JFrame {
     }
 
     public void vizualizeOrder() {
-        int costComanda = 0;
+        float costComanda = 0;
         int par = 1;
         JPanel commandPanel = new JPanel(new BorderLayout());
 
@@ -461,19 +461,19 @@ public class ClientWindow extends javax.swing.JFrame {
         jScrollPane2.setViewportView(jTextArea1);
 
         for (ArrayList<String> list : produseleMele) {
-            int pret = 0;
+            float pret = 0;
             for (String str : list) {
                 if (par % 3 == 1) {
                     jTextArea1.append(">>> ");
                     jTextArea1.append(str + "              ");
                 }
                 if (par % 3 == 2) {
-                    int i = Integer.parseInt(str);
+                    float i = Float.parseFloat(str);
                     pret = i;
                     jTextArea1.append(str + " lei");
                 }
                 if (par % 3 == 0) {
-                    int i = Integer.parseInt(str);
+                    float i = Float.parseFloat(str);
                     costComanda = costComanda + pret * i;
                     jTextArea1.append("  x  " + str + "\n");
                 }
