@@ -5,6 +5,8 @@
 BEGIN;
 
 DECLARE
+    no_stock EXCEPTION;
+    error_order EXCEPTION;
     produse_comandate produse_comenzi.nr_produse_comandate%TYPE;
     nr_masa_insert Comenzi.nr_masa%TYPE;
     detalii_suplimentare comenzi.detalii_suplimentare_comanda%TYPE;
@@ -36,6 +38,8 @@ BEGIN
             UPDATE stocuri_produs sp
             SET stoc_produs = stoc_produs - produse_comandate
             WHERE sp.Produse_nr_produs = (SELECT nr_produs FROM Produse WHERE nume_produs = 'Ursus 330 ml');
+        ELSE 
+            RAISE no_stock;
         END IF;
     END;
 
@@ -55,6 +59,8 @@ BEGIN
             UPDATE stocuri_produs sp
             SET stoc_produs = stoc_produs - produse_comandate
             WHERE sp.Produse_nr_produs = (SELECT nr_produs FROM Produse WHERE nume_produs = 'Cotlet de porc la gratar');
+        ELSE 
+            RAISE no_stock;
         END IF;
     END;
     
@@ -63,38 +69,57 @@ BEGIN
     EXCEPTION
         WHEN OTHERS THEN
             ROLLBACK TO sp;
-            RAISE;
+            RAISE error_order;
 
 END;
 
 ---------------------- COMANDA 2 ----------------------
 
 DECLARE
+    no_stock EXCEPTION;
+    error_order EXCEPTION;
     produse_comandate produse_comenzi.nr_produse_comandate%TYPE;
+    nr_masa_insert Comenzi.nr_masa%TYPE;
+    detalii_suplimentare comenzi.detalii_suplimentare_comanda%TYPE;
+    
     produs_in_reteta Ingrediente.id_ingredient%TYPE;
     produs_in_stoc stocuri_produs.stoc_produs%TYPE;
 BEGIN
 
-    INSERT INTO Comenzi(id_comanda, data_comanda, nr_masa) VALUES(NULL,SYSDATE,2);
+    SAVEPOINT sp;
 
-    -- Produs comandat: 2 X Supa cu legume
+    nr_masa_insert := 2;
+    detalii_suplimentare := NULL;
+    INSERT INTO Comenzi(id_comanda, data_comanda, nr_masa, detalii_suplimentare_comanda) VALUES(NULL,SYSDATE,nr_masa_insert,detalii_suplimentare);
+
+    -- Produs comandat: 2 X Apa plata 0.5 l
     BEGIN
+        
         produse_comandate := 2;
-        INSERT INTO produse_comenzi(nr_produse_comandate, Produse_nr_produs, Comenzi_id_comanda) VALUES(produse_comandate, (SELECT nr_produs FROM Produse WHERE nume_produs = 'Supa cu legume'), (SELECT MAX(id_comanda) FROM Comenzi));
+        INSERT INTO produse_comenzi(nr_produse_comandate, Produse_nr_produs, Comenzi_id_comanda) VALUES(produse_comandate, (SELECT nr_produs FROM Produse WHERE nume_produs = 'Apa plata 0.5 l'), (SELECT MAX(id_comanda) FROM Comenzi));
 
-        SELECT COUNT(Produse_nr_produs) INTO produs_in_reteta FROM Retete r WHERE r.Produse_nr_produs = (SELECT nr_produs FROM Produse WHERE nume_produs = 'Supa cu legume');
-        SELECT COUNT(Produse_nr_produs) INTO produs_in_stoc FROM stocuri_produs sp WHERE sp.Produse_nr_produs = (SELECT nr_produs FROM Produse WHERE nume_produs = 'Supa cu legume');
+        SELECT COUNT(Produse_nr_produs) INTO produs_in_reteta FROM Retete r WHERE r.Produse_nr_produs = (SELECT nr_produs FROM Produse WHERE nume_produs = 'Apa plata 0.5 l');
+        SELECT COUNT(Produse_nr_produs) INTO produs_in_stoc FROM stocuri_produs sp WHERE sp.Produse_nr_produs = (SELECT nr_produs FROM Produse WHERE nume_produs = 'Apa plata 0.5 l');
 
         IF (produs_in_reteta > 0) THEN
             UPDATE Ingrediente i
-            SET stoc_ingredient = stoc_ingredient - produse_comandate * (SELECT r.cantitate_ingredient FROM Retete r WHERE r.Produse_nr_produs = (SELECT nr_produs FROM Produse WHERE nume_produs = 'Supa cu legume') and r.Ingrediente_id_ingredient = i.id_ingredient)
-            WHERE EXISTS (SELECT 1 FROM Retete r WHERE Produse_nr_produs = (SELECT nr_produs FROM Produse WHERE nume_produs = 'Supa cu legume') and r.Ingrediente_id_ingredient = i.id_ingredient);
+            SET stoc_ingredient = stoc_ingredient - produse_comandate * (SELECT r.cantitate_ingredient FROM Retete r WHERE r.Produse_nr_produs = (SELECT nr_produs FROM Produse WHERE nume_produs = 'Apa plata 0.5 l') and r.Ingrediente_id_ingredient = i.id_ingredient)
+            WHERE EXISTS (SELECT 1 FROM Retete r WHERE Produse_nr_produs = (SELECT nr_produs FROM Produse WHERE nume_produs = 'Apa plata 0.5 l') and r.Ingrediente_id_ingredient = i.id_ingredient);
         ELSIF (produs_in_stoc > 0) THEN
             UPDATE stocuri_produs sp
             SET stoc_produs = stoc_produs - produse_comandate
-            WHERE sp.Produse_nr_produs = (SELECT nr_produs FROM Produse WHERE nume_produs = 'Supa cu legume');
+            WHERE sp.Produse_nr_produs = (SELECT nr_produs FROM Produse WHERE nume_produs = 'Apa plata 0.5 l');
+        ELSE 
+            RAISE no_stock;
         END IF;
     END;
+    
+    COMMIT;
+
+    EXCEPTION
+        WHEN OTHERS THEN
+            ROLLBACK TO sp;
+            RAISE error_order;
 
 END;
 
