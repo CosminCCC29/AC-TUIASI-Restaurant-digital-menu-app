@@ -48,7 +48,7 @@ public class MenusAdminPanel extends javax.swing.JPanel {
 
         initActionListeners();
 
-        if (appWindow.getCurrentMenu().equals("")) {
+       if (appWindow.getCurrentMenu() == null || appWindow.getCurrentMenu().equals(""))  {
             currMenuTextField.setText("Nu este setat.");
         }
 
