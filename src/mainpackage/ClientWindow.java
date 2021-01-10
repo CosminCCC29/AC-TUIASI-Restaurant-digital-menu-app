@@ -10,7 +10,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.util.Pair;
 import javax.swing.*;
-import mainpackage.ClientWindowPanels.BauturiPanel;
 
 public class ClientWindow extends javax.swing.JFrame {
 
@@ -21,7 +20,6 @@ public class ClientWindow extends javax.swing.JFrame {
     private JComboBox tableComboBox = new JComboBox();
     private JComboBox detailsComboBox = new JComboBox();
 
-    BauturiPanel bauturiPanel = new BauturiPanel();
     GridBagLayout layout = new GridBagLayout();
 
     public ClientWindow(ApplicationWindow appWindow) {
