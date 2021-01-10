@@ -65,7 +65,7 @@ public class CategoriesProductsAdminPanel extends javax.swing.JPanel {
         int idx = (numeMeniuCB.getItemCount() == -1) ? -1 : numeMeniuCB.getSelectedIndex();
         int idx2 = (numeCategorieCB.getItemCount() == -1) ? -1 : numeCategorieCB.getSelectedIndex();
         int idx3 = (numeProdusCB.getItemCount() == -1) ? -1 : numeProdusCB.getSelectedIndex();
-        
+
         numeMeniuCB.removeAllItems();
         numeCategorieCB.removeAllItems();
         numeProdusCB.removeAllItems();
@@ -84,24 +84,23 @@ public class CategoriesProductsAdminPanel extends javax.swing.JPanel {
             }
 
             if (numeMeniuCB.getItemCount() != 0) {
-                numeMeniuCB.setSelectedIndex((idx == -1)? 0 : idx);
+                numeMeniuCB.setSelectedIndex((idx == -1) ? 0 : idx);
                 ps.setString(1, numeMeniuCB.getSelectedItem().toString());
-                
+
                 ResultSet rs3 = ps.executeQuery();
-                
+
                 while (rs3.next()) {
                     numeCategorieCB.addItem(rs3.getString(1));
                 }
             }
-            
 
         } catch (SQLException ex) {
             Logger.getLogger(CategoriesAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        numeMeniuCB.setSelectedIndex((numeMeniuCB.getItemCount() == 0) ? -1 : (idx == -1)? 0 : idx);
-        numeCategorieCB.setSelectedIndex((numeCategorieCB.getItemCount() == 0) ? -1 : (idx2 == -1)? 0 : idx2);
-        numeProdusCB.setSelectedIndex((numeMeniuCB.getItemCount() == 0) ? -1 : (idx3 == -1)? 0 : idx3);
+        numeMeniuCB.setSelectedIndex((numeMeniuCB.getItemCount() == 0) ? -1 : (idx == -1) ? 0 : idx);
+        numeCategorieCB.setSelectedIndex((numeCategorieCB.getItemCount() == 0) ? -1 : (idx2 == -1) ? 0 : idx2);
+        numeProdusCB.setSelectedIndex((numeProdusCB.getItemCount() == 0) ? -1 : (idx3 == -1) ? 0 : idx3);
 
     }
 
@@ -156,7 +155,11 @@ public class CategoriesProductsAdminPanel extends javax.swing.JPanel {
                     conn.createStatement().execute("commit");
                     JOptionPane.showMessageDialog(this, "Inserare efectuata cu succes");
                 } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage());
+                    if (ex.getMessage().contains("ORA-00001")) {
+                        JOptionPane.showMessageDialog(this, "Produs deja existent in aceasta categorie");
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Eroare necunoscuta");
+                    }
                 }
                 Refresh();
                 break;
@@ -182,14 +185,12 @@ public class CategoriesProductsAdminPanel extends javax.swing.JPanel {
                         prepSt.execute();
 
                         tblModel.removeRow(dataTable.convertRowIndexToModel(dataTable.getSelectedRow()));
-                        
+
                         conn.createStatement().execute("commit");
                         JOptionPane.showMessageDialog(this, "Stergere efectuata cu succes");
                     } catch (SQLException ex) {
-                         JOptionPane.showMessageDialog(this, ex.getMessage());
+                        JOptionPane.showMessageDialog(this, ex.getMessage());
                     }
-
-                    
 
                 } else {
                     JOptionPane.showMessageDialog(this, "Selecteaza un singur rand pentru a sterge.");

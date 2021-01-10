@@ -6,7 +6,14 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public final class ApplicationWindow extends javax.swing.JFrame {
 
@@ -18,37 +25,67 @@ public final class ApplicationWindow extends javax.swing.JFrame {
 
     public ApplicationWindow() {
 
-        dataBaseConnection = new DataBaseConnection("bd-dc.cs.tuiasi.ro","1539","orcl","bd137","bd137");
+        dataBaseConnection = new DataBaseConnection();
+        //"bd-dc.cs.tuiasi.ro","1539","orcl","bd137","bd137"
         appActionListener = new AppActionListener(this);
 
         adminWindow = null;
         clientWindow = null;
 
-        
-        BufferedReader reader;
-        try {
+        initComponents();
+        initActionListeners();
 
-            reader = new BufferedReader(new FileReader("res/Fisiere text/Meniul curent.txt"));           
-            currentMenu = reader.readLine();
-            System.out.println("Meniul curent este: "+currentMenu);
-            reader.close();
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
+        setareMeniu();
+    }
+
+    private void setareMeniu() {
+        int nr = 0;
+        try {
+            Statement st = dataBaseConnection.getConnection().createStatement();
+            ResultSet rs = st.executeQuery("SELECT COUNT(*) FROM Meniuri");
+            rs.next();
+            nr = rs.getInt(1);
+            rs.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(ApplicationWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-       this.addWindowListener(new WindowAdapter()
-        {
+
+        if (nr == 0) {
+
+            try {
+
+                try (Writer fileWriter = new FileWriter("res/Fisiere text/Meniul curent.txt", false)) {
+                    fileWriter.write("");
+                    setCurrentMenu("");
+                    System.out.println("Nu avem meniu setat.");
+                    fileWriter.close();
+                }
+            } catch (IOException ex) {
+                System.out.println(ex.getMessage());
+            }
+
+        } else {
+            BufferedReader reader;
+            try {
+
+                reader = new BufferedReader(new FileReader("res/Fisiere text/Meniul curent.txt"));
+                currentMenu = reader.readLine();
+                System.out.println("Meniul curent este: " + currentMenu);
+                reader.close();
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
+        this.addWindowListener(new WindowAdapter() {
             @Override
-            public void windowClosing(WindowEvent e)
-            {
+            public void windowClosing(WindowEvent e) {
                 System.out.println("AppWindow window closed.");
                 e.getWindow().setVisible(false);
-                e.getWindow().dispose();     
+                e.getWindow().dispose();
             }
         });
 
-        initComponents();
-        initActionListeners();
     }
 
     @SuppressWarnings("unchecked")
@@ -164,14 +201,13 @@ public final class ApplicationWindow extends javax.swing.JFrame {
     }
 
     public void startClientWindow() {
-        
-            clientWindow = new ClientWindow(this);
-            clientWindow.setVisible(true);
+
+        clientWindow = new ClientWindow(this);
+        clientWindow.setVisible(true);
 
     }
-    
-    public void renewAdminWindow()
-    {
+
+    public void renewAdminWindow() {
         adminWindow = new AdminWindow(this);
         adminWindow.setVisible(true);
     }
@@ -183,11 +219,11 @@ public final class ApplicationWindow extends javax.swing.JFrame {
     public DataBaseConnection getDataBaseConnection() {
         return dataBaseConnection;
     }
-    
+
     public void setCurrentMenu(String currentMenu) {
-         this.currentMenu = currentMenu;
+        this.currentMenu = currentMenu;
     }
-    
+
     public String getCurrentMenu() {
         return currentMenu;
     }
@@ -199,7 +235,7 @@ public final class ApplicationWindow extends javax.swing.JFrame {
     public ClientWindow getClientWindow() {
         return clientWindow;
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton adminButton;
     private javax.swing.JButton clientButton;

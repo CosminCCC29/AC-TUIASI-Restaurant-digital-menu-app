@@ -169,8 +169,19 @@ public class ProductsAdminPanel extends javax.swing.JPanel {
                     conn.createStatement().execute("commit");
                     JOptionPane.showMessageDialog(this, "Inserare realizata cu succes");
                 } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage());
-                }
+                    if (ex.getMessage().contains("ORA-00001")) {
+                            JOptionPane.showMessageDialog(this, "Produs deja existent.");
+                        } else if (ex.getMessage().contains("ORA-02290")) {
+                            JOptionPane.showMessageDialog(this, "Numele produselor trebuie sa contina cuvinte sau numere (opțional și în virgula mobilă), primul cuvânt începând cu majusculă, opțional delimitate prin '-'.\nPretul trebuie sa fie pozitiv.");
+                        } else if (ex.getMessage().contains("ORA-01438")) {
+                            JOptionPane.showMessageDialog(this, "Numarul stocului prea mare. Introduceti un numar de forma ???.??");
+                        } else {
+                            JOptionPane.showMessageDialog(this, "Eroare necunoscuta");
+                        }
+
+                    } catch (NumberFormatException ex2) {
+                        JOptionPane.showMessageDialog(this, "Pretul produselor trebuie sa contina doar cifre.");
+                    }
                 Refresh();
                 break;
 
@@ -228,9 +239,12 @@ public class ProductsAdminPanel extends javax.swing.JPanel {
                     String stare_mod = stateCB.getSelectedItem().toString();
                     String detalii_suplimentare_mod = detaliiSuplimentareTextField.getText();
 
-                    try {
+                    Savepoint sp = null;
 
-                        conn.createStatement().execute("SAVEPOINT sp");
+                    try {
+                        
+                        conn.setAutoCommit(false);
+                        sp = conn.setSavepoint("sp");
                         
                         PreparedStatement prepSelectSt = conn.prepareStatement("SELECT * FROM Produse WHERE nr_produs = ?");
                         prepSelectSt.setShort(1, Short.parseShort(nr_produs));
@@ -288,16 +302,29 @@ public class ProductsAdminPanel extends javax.swing.JPanel {
                         tblModel.setValueAt(detalii_suplimentare_mod, dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 6);
 
                         conn.createStatement().execute("commit");
+                        if(!conn.getAutoCommit()) conn.setAutoCommit(true);
                         JOptionPane.showMessageDialog(this, "Modificare realizata cu succes");
                     } catch (SQLException ex) {
 
                         try {
-                            conn.createStatement().execute("ROLLBACK TO sp");
+                            conn.rollback(sp);
+                            conn.setAutoCommit(true);
                         } catch (SQLException ex1) {
-                            Logger.getLogger(ProductsAdminPanel.class.getName()).log(Level.SEVERE, null, ex1);
+                            Logger.getLogger(IngredientsAdminPanel.class.getName()).log(Level.SEVERE, null, ex1);
                         }
-                        //JOptionPane.showMessageDialog(this, ex.getMessage());
-                        Logger.getLogger(CategoriesAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        
+                        if (ex.getMessage().contains("ORA-00001")) {
+                            JOptionPane.showMessageDialog(this, "Produs deja existent.");
+                        } else if (ex.getMessage().contains("ORA-02290")) {
+                            JOptionPane.showMessageDialog(this, "Numele produselor trebuie sa contina cuvinte sau numere (opțional și în virgula mobilă), primul cuvânt începând cu majusculă, opțional delimitate prin '-'.\nPretul trebuie sa fie pozitiv.");
+                        } else if (ex.getMessage().contains("ORA-01438")) {
+                            JOptionPane.showMessageDialog(this, "Numarul stocului prea mare. Introduceti un numar de forma ???.??");
+                        } else {
+                            JOptionPane.showMessageDialog(this, "Eroare necunoscuta");
+                        }
+
+                    } catch (NumberFormatException ex2) {
+                        JOptionPane.showMessageDialog(this, "Pretul produselor trebuie sa contina doar cifre.");
                     }
 
                 } else {
@@ -364,7 +391,7 @@ public class ProductsAdminPanel extends javax.swing.JPanel {
                 String tip_produs = rs.getString(3);
                 String pret = rs.getString(4);
                 String stare = rs.getString(5);
-                String data_crearii = rs.getString(6);
+                String data_crearii = rs.getDate(6).toString();
                 String detalii_suplimentare = rs.getString(7);
                 String tip_aliment = rs.getString(8);
 
@@ -631,7 +658,7 @@ public class ProductsAdminPanel extends javax.swing.JPanel {
             .addComponent(scrollPanel)
             .addComponent(bottomPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
+                .addGap(0, 62, Short.MAX_VALUE)
                 .addComponent(filterLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(filterTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 1045, javax.swing.GroupLayout.PREFERRED_SIZE))

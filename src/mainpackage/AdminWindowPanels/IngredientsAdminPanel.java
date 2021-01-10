@@ -117,7 +117,13 @@ public class IngredientsAdminPanel extends javax.swing.JPanel {
                     }
 
                 } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage());
+                    if (ex.getMessage().contains("ORA-00001")) {
+                        JOptionPane.showMessageDialog(this, "Ingredient deja existent");
+                    } else if (ex.getMessage().contains("ORA-02290")) {
+                        JOptionPane.showMessageDialog(this, "Ingredientele trebuie sa contina cuvinte fără majuscule.");
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Eroare necunoscuta");
+                    }
                 }
 
                 if (numeIngredientTextField.getText().equals("") && stocIngredientTextField.getText().equals("") && producatorTextField.getText().equals("")) {
@@ -134,7 +140,6 @@ public class IngredientsAdminPanel extends javax.swing.JPanel {
                 producator = producatorTextField.getText();
                 tip_aliment = foodTypeCB.getSelectedItem().toString();
 
-                ////////////////////// Modificare baza de date //////////////////////
                 try {
                     PreparedStatement prepSt = conn.prepareStatement("INSERT INTO Ingrediente(nume_ingredient, stoc_ingredient, producator, tipuri_aliment_id_tip) VALUES(?, ?, ?, (SELECT id_tip FROM tipuri_aliment WHERE nume_tip = ?))");
                     prepSt.setString(1, nume_ingredient);
@@ -152,7 +157,18 @@ public class IngredientsAdminPanel extends javax.swing.JPanel {
                     conn.createStatement().execute("commit");
                     JOptionPane.showMessageDialog(this, "Ingredient inserat cu succes");
                 } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage());
+                    if (ex.getMessage().contains("ORA-00001")) {
+                        JOptionPane.showMessageDialog(this, "Ingredient deja existent.");
+                    } else if (ex.getMessage().contains("ORA-02290")) {
+                        JOptionPane.showMessageDialog(this, "Numele ingredientelor trebuie sa contina cuvinte fără majuscule.\nStocul trebuie sa fie pozitiv.");
+                    } else if (ex.getMessage().contains("ORA-01438")) {
+                        JOptionPane.showMessageDialog(this, "Numarul stocului prea mare. Introduceti un numar de forma ???.??");
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Eroare necunoscuta");
+                    }
+
+                } catch (NumberFormatException ex2) {
+                    JOptionPane.showMessageDialog(this, "Stocul ingredientelor trebuie sa contina doar cifre.");
                 }
                 Refresh();
                 break;
@@ -180,8 +196,13 @@ public class IngredientsAdminPanel extends javax.swing.JPanel {
                     producator = producatorTextField.getText();
                     tip_aliment = foodTypeCB.getSelectedItem().toString();
 
-                    try {
+                    Savepoint sp = null;
 
+                    try {
+                        
+                        conn.setAutoCommit(false);
+                        sp = conn.setSavepoint("sp");
+                        
                         PreparedStatement prepSelectSt = conn.prepareStatement("SELECT * FROM Ingrediente WHERE id_ingredient = ?");
                         prepSelectSt.setShort(1, Short.parseShort(id_ingredient));
                         ResultSet resultSelectSet = prepSelectSt.executeQuery();
@@ -222,11 +243,29 @@ public class IngredientsAdminPanel extends javax.swing.JPanel {
                         tblModel.setValueAt(producator, dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 4);
 
                         conn.createStatement().execute("commit");
+                        if(!conn.getAutoCommit()) conn.setAutoCommit(true);
                         JOptionPane.showMessageDialog(this, "Ingredient modificat cu succes");
                     } catch (SQLException ex) {
 
-                        JOptionPane.showMessageDialog(this, ex.getMessage());
-                        // Logger.getLogger(CategoriesAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        try {
+                            conn.rollback(sp);
+                            conn.setAutoCommit(true);
+                        } catch (SQLException ex1) {
+                            Logger.getLogger(IngredientsAdminPanel.class.getName()).log(Level.SEVERE, null, ex1);
+                        }
+
+                        if (ex.getMessage().contains("ORA-00001")) {
+                            JOptionPane.showMessageDialog(this, "Ingredient deja existent.");
+                        } else if (ex.getMessage().contains("ORA-02290")) {
+                            JOptionPane.showMessageDialog(this, "Numele ingredientelor trebuie sa contina cuvinte fără majuscule.\nStocul trebuie sa fie pozitiv.");
+                        } else if (ex.getMessage().contains("ORA-01438")) {
+                            JOptionPane.showMessageDialog(this, "Numarul stocului prea mare. Introduceti un numar de forma ???.??");
+                        } else {
+                            JOptionPane.showMessageDialog(this, "Eroare necunoscuta");
+                        }
+
+                    } catch (NumberFormatException ex2) {
+                        JOptionPane.showMessageDialog(this, "Stocul ingredientelor trebuie sa contina doar cifre.");
                     }
 
                 } else {
@@ -314,7 +353,6 @@ public class IngredientsAdminPanel extends javax.swing.JPanel {
      * WARNING: Do NOT modify this code. The content of this method is always
      * regenerated by the Form Editor.
      */
-
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

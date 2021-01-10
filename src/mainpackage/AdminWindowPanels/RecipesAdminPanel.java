@@ -130,7 +130,18 @@ public class RecipesAdminPanel extends javax.swing.JPanel {
                     }
 
                 } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage());
+                    if (ex.getMessage().contains("ORA-00001")) {
+                        JOptionPane.showMessageDialog(this, "Ingredient deja introdus in reteta.");
+                    } else if (ex.getMessage().contains("ORA-02290")) {
+                        JOptionPane.showMessageDialog(this, "Cantitatea ingredientului trebuie sa fie pozitiva.");
+                    } else if (ex.getMessage().contains("ORA-01438")) {
+                        JOptionPane.showMessageDialog(this, "Cantitate prea mare. Introduceti un numar de forma ??.??");
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Eroare necunoscuta");
+                    }
+
+                } catch (NumberFormatException ex2) {
+                    JOptionPane.showMessageDialog(this, "Cantitate ingredientelor trebuie sa contina doar cifre.");
                 }
 
                 if (cantitateIngredientTF.getText().equals("")) {
@@ -154,6 +165,7 @@ public class RecipesAdminPanel extends javax.swing.JPanel {
                     if (producator.equals("X")) {
                         prepSt = conn.prepareStatement("INSERT INTO Retete (Produse_nr_produs, Ingrediente_id_ingredient, cantitate_ingredient) VALUES((SELECT nr_produs FROM Produse WHERE nume_produs = ?), (SELECT id_ingredient FROM Ingrediente WHERE nume_ingredient = ? and producator IS NULL), ?)");
                         prepSt.setFloat(3, Float.parseFloat(cantitate_ingredient));
+                        producator = "";
                     } else {
                         prepSt = conn.prepareStatement("INSERT INTO Retete (Produse_nr_produs, Ingrediente_id_ingredient, cantitate_ingredient) VALUES((SELECT nr_produs FROM Produse WHERE nume_produs = ?), (SELECT id_ingredient FROM Ingrediente WHERE nume_ingredient = ? and producator = ?), ?)");
                         prepSt.setString(3, producator);
@@ -162,7 +174,7 @@ public class RecipesAdminPanel extends javax.swing.JPanel {
 
                     prepSt.setString(1, nume_produs);
                     prepSt.setString(2, nume_ingredient);
-                    
+
                     prepSt.execute();
 
                     Object tfData[] = {nume_produs, nume_ingredient, producator, Float.parseFloat(cantitate_ingredient)};
@@ -171,8 +183,7 @@ public class RecipesAdminPanel extends javax.swing.JPanel {
                     conn.createStatement().execute("commit");
                     JOptionPane.showMessageDialog(this, "Inserare realizata cu succes");
                 } catch (SQLException ex) {
-                    //JOptionPane.showMessageDialog(this, ex.getMessage());
-                    Logger.getLogger(MenusAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(this, ex.getMessage());
                 }
                 Refresh();
                 break;
@@ -198,7 +209,12 @@ public class RecipesAdminPanel extends javax.swing.JPanel {
                     producator = numeIngredientCB.getSelectedItem().toString().split(" | ", 0)[2];
                     cantitate_ingredient = cantitateIngredientTF.getText();
 
+                    Savepoint sp = null;
+
                     try {
+                        
+                        conn.setAutoCommit(false);
+                        sp = conn.setSavepoint("sp");
 
                         PreparedStatement prepSelectSt;
 
@@ -237,13 +253,30 @@ public class RecipesAdminPanel extends javax.swing.JPanel {
                         tblModel.setValueAt(Float.parseFloat(cantitate_ingredient), dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 3);
 
                         conn.createStatement().execute("commit");
+                        if(!conn.getAutoCommit()) conn.setAutoCommit(true);
                         JOptionPane.showMessageDialog(this, "Modificare realizata cu succes");
                     } catch (SQLException ex) {
 
-                        JOptionPane.showMessageDialog(this, ex.getMessage());
-                        Logger.getLogger(CategoriesAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                        try {
+                            conn.rollback(sp);
+                            conn.setAutoCommit(true);
+                        } catch (SQLException ex1) {
+                            Logger.getLogger(IngredientsAdminPanel.class.getName()).log(Level.SEVERE, null, ex1);
+                        }
+                        
+                        if (ex.getMessage().contains("ORA-00001")) {
+                            JOptionPane.showMessageDialog(this, "Ingredient deja introdus in reteta.");
+                        } else if (ex.getMessage().contains("ORA-02290")) {
+                            JOptionPane.showMessageDialog(this, "Cantitatea ingredientului trebuie sa fie pozitiva.");
+                        } else if (ex.getMessage().contains("ORA-01438")) {
+                            JOptionPane.showMessageDialog(this, "Cantitate prea mare. Introduceti un numar de forma ??.??");
+                        } else {
+                            JOptionPane.showMessageDialog(this, "Eroare necunoscuta");
+                        }
 
+                    } catch (NumberFormatException ex2) {
+                        JOptionPane.showMessageDialog(this, "Cantitate ingredientelor trebuie sa contina doar cifre.");
+                    }
                 } else {
                     JOptionPane.showMessageDialog(this, "Selecteaza un singur rand pentru a modifica.");
 

@@ -70,6 +70,7 @@ public class OrdersAdminPanel extends javax.swing.JPanel {
 
         DefaultTableModel tblModel;
         String id_comanda;
+        String nr_masa;
 
         switch (tmpEventButton.getText()) {
 
@@ -83,6 +84,34 @@ public class OrdersAdminPanel extends javax.swing.JPanel {
                 } else if (dataTable.getSelectedRowCount() == 1) {
 
                     id_comanda = tblModel.getValueAt(dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 0).toString();
+                    nr_masa = tblModel.getValueAt(dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 2).toString();
+
+                    try {
+                        PreparedStatement p = conn.prepareStatement(
+                                "SELECT c.id_comanda\n"
+                                + "FROM Comenzi c, produse_comenzi pc, Produse p\n"
+                                + "WHERE c.id_comanda = pc.Comenzi_id_comanda and c.id_comanda = (SELECT MAX(id_comanda) FROM Comenzi WHERE nr_masa = ?) and pc.Produse_nr_produs = p.nr_produs"
+                        );
+                        
+                        p.setShort(1, Short.parseShort(nr_masa));
+                        ResultSet r = p.executeQuery(); r.next();
+                        int id_c = r.getInt(1);
+                        
+                        if(id_c != Integer.parseInt(id_comanda))
+                        {
+                            throw new Exception("Nu puteti sterge comenzi anterioare.");
+                        }
+                        
+                        
+                    } catch (SQLException ex) {
+                        Logger.getLogger(OrdersAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        break;
+                    }
+                    catch (Exception ex2)
+                    {
+                        JOptionPane.showMessageDialog(this, ex2.getMessage());
+                        break;
+                    }
 
                     try {
 
@@ -106,10 +135,10 @@ public class OrdersAdminPanel extends javax.swing.JPanel {
                                 + "\n";
 
                         while (rs.next()) {
-                           
-                            query   +="    BEGIN\n"
+
+                            query += "    BEGIN\n"
                                     + "\n"
-                                    + "        nr_produs_comanda := "+rs.getString(1)+";\n"
+                                    + "        nr_produs_comanda := " + rs.getString(1) + ";\n"
                                     + "        SELECT nr_produse_comandate INTO produse_comandate FROM produse_comenzi WHERE Comenzi_id_comanda = id_comanda_plasata AND Produse_nr_produs = nr_produs_comanda;\n"
                                     + "\n"
                                     + "        SELECT COUNT(Produse_nr_produs) INTO produs_in_reteta FROM Retete r WHERE r.Produse_nr_produs = nr_produs_comanda;\n"
@@ -127,7 +156,7 @@ public class OrdersAdminPanel extends javax.swing.JPanel {
                                     + "    END;\n";
 
                         }
-                        query  +="    \n"
+                        query += "    \n"
                                 + "    DELETE FROM Comenzi WHERE id_comanda = id_comanda_plasata;\n"
                                 + "    COMMIT;\n"
                                 + "\n"
@@ -137,16 +166,14 @@ public class OrdersAdminPanel extends javax.swing.JPanel {
                                 + "            RAISE;\n"
                                 + "\n"
                                 + "END;";
-                        
-                        
 
                         conn.createStatement().execute(query);
 
                         tblModel.removeRow(dataTable.convertRowIndexToModel(dataTable.getSelectedRow()));
                         conn.createStatement().execute("commit");
-                        JOptionPane.showMessageDialog(this, "Comanda inlaturata cu succes");
+                        JOptionPane.showMessageDialog(this, "Comanda stearsa cu succes");
                     } catch (SQLException ex) {
-                        JOptionPane.showMessageDialog(this, ex.getMessage());
+                        JOptionPane.showMessageDialog(this, "Comanda nu s-a putut sterge: " + ex.getMessage());
                     }
 
                 } else {
@@ -175,7 +202,7 @@ public class OrdersAdminPanel extends javax.swing.JPanel {
 
         try {
             ResultSet rs = appWindow.getDataBaseConnection().getConnection().createStatement().executeQuery(
-                      "SELECT c.id_comanda, SUM(p.pret * pc.nr_produse_comandate) as total_plata, c.nr_masa,  to_char(c.detalii_suplimentare_comanda) as detalii_comanda, (SELECT to_char(c.data_comanda,'DD-MON-YYYY HH24:MI:SS') from dual) as data_si_ora_comanda\n"
+                    "SELECT c.id_comanda, SUM(p.pret * pc.nr_produse_comandate) as total_plata, c.nr_masa,  to_char(c.detalii_suplimentare_comanda) as detalii_comanda, (SELECT to_char(c.data_comanda,'DD-MON-YYYY HH24:MI:SS') from dual) as data_si_ora_comanda\n"
                     + "FROM Comenzi c, produse_comenzi pc, Produse p\n"
                     + "WHERE c.id_comanda = pc.Comenzi_id_comanda and pc.Produse_nr_produs = p.nr_produs\n"
                     + "GROUP BY c.id_comanda, c.nr_masa, to_char(c.detalii_suplimentare_comanda), c.data_comanda\n"

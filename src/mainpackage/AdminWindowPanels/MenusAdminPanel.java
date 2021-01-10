@@ -20,6 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
@@ -44,10 +45,14 @@ public class MenusAdminPanel extends javax.swing.JPanel {
         this.appWindow = appWindow;
         initComponents();
         initFilter();
-        
+
         currMenuTextField.setText(appWindow.getCurrentMenu());
 
         initActionListeners();
+
+        if (appWindow.getCurrentMenu().equals("")) {
+            currMenuTextField.setText("Nu este setat.");
+        }
 
     }
 
@@ -91,7 +96,12 @@ public class MenusAdminPanel extends javax.swing.JPanel {
 
             case "Setare ca meniu curent":
 
-                nume_meniu = dataTable.getModel().getValueAt(dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 1).toString();
+                try {
+                    nume_meniu = dataTable.getModel().getValueAt(dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 1).toString();
+                } catch (java.lang.IndexOutOfBoundsException ex2) {
+                    JOptionPane.showMessageDialog(this, "Nu aveti selectat nici un meniu.");
+                    break;
+                }
 
                 try {
 
@@ -100,6 +110,7 @@ public class MenusAdminPanel extends javax.swing.JPanel {
                         this.appWindow.setCurrentMenu(nume_meniu);
                         currMenuTextField.setText(nume_meniu);
                         System.out.println("Noul meniu curent este: " + nume_meniu);
+                        fileWriter.close();
                     }
                 } catch (IOException ex) {
                     System.out.println(ex.getMessage());
@@ -143,10 +154,9 @@ public class MenusAdminPanel extends javax.swing.JPanel {
 
                 ////////////////////// Modificare baza de date //////////////////////
                 try {
-                    PreparedStatement prepSt = conn.prepareStatement("INSERT INTO Meniuri(nume_meniu, Administratori_id_admin, detalii_suplimentare_meniu) VALUES(?, ?, ?)");
+                    PreparedStatement prepSt = conn.prepareStatement("INSERT INTO Meniuri(nume_meniu, detalii_suplimentare_meniu) VALUES(?, ?)");
                     prepSt.setString(1, nume_meniu);
-                    prepSt.setInt(2, 1);
-                    prepSt.setString(3, detalii_suplimentare_meniu);
+                    prepSt.setString(2, detalii_suplimentare_meniu);
                     prepSt.execute();
 
                     ResultSet rs = conn.createStatement().executeQuery("SELECT MAX(nr_meniu) FROM Meniuri");
@@ -158,7 +168,15 @@ public class MenusAdminPanel extends javax.swing.JPanel {
                     conn.createStatement().execute("commit");
                     JOptionPane.showMessageDialog(this, "Meniu inserat cu succes");
                 } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage());
+
+                    if (ex.getMessage().contains("ORA-00001")) {
+                        JOptionPane.showMessageDialog(this, "Meniu deja existent");
+                    } else if (ex.getMessage().contains("ORA-02290")) {
+                        JOptionPane.showMessageDialog(this, "Meniurile trebuie sa contina cuvinte sau numere, primul cuvânt începând cu majusculă, opțional delimitate prin ‘-‘");
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Eroare necunoscuta");
+                    }
+
                 }
                 Refresh();
                 break;
@@ -183,7 +201,12 @@ public class MenusAdminPanel extends javax.swing.JPanel {
                     detalii_suplimentare_meniu = detaliiSuplimentareTextField.getText();
                     data_crearii = tblModel.getValueAt(dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 3).toString();
 
+                    Savepoint sp = null;
+
                     try {
+
+                        conn.setAutoCommit(false);
+                        sp = conn.setSavepoint("sp");
 
                         PreparedStatement prepSelectSt = conn.prepareStatement("SELECT * FROM Meniuri WHERE nr_meniu = ?");
                         prepSelectSt.setShort(1, Short.parseShort(nr_meniu));
@@ -210,10 +233,26 @@ public class MenusAdminPanel extends javax.swing.JPanel {
                         tblModel.setValueAt(data_crearii, dataTable.convertRowIndexToModel(dataTable.getSelectedRow()), 3);
 
                         conn.createStatement().execute("commit");
+                        if (!conn.getAutoCommit()) {
+                            conn.setAutoCommit(true);
+                        }
                         JOptionPane.showMessageDialog(this, "Meniu modificat cu succes");
                     } catch (SQLException ex) {
 
-                        JOptionPane.showMessageDialog(this, ex.getMessage());
+                        try {
+                            conn.rollback(sp);
+                            conn.setAutoCommit(true);
+                        } catch (SQLException ex1) {
+                            Logger.getLogger(IngredientsAdminPanel.class.getName()).log(Level.SEVERE, null, ex1);
+                        }
+
+                        if (ex.getMessage().contains("ORA-00001")) {
+                            JOptionPane.showMessageDialog(this, "Meniu deja existent");
+                        } else if (ex.getMessage().contains("ORA-02290")) {
+                            JOptionPane.showMessageDialog(this, "Meniurile trebuie sa contina cuvinte sau numere, primul cuvânt începând cu majusculă, opțional delimitate prin ‘-‘");
+                        } else {
+                            JOptionPane.showMessageDialog(this, "Eroare necunoscuta");
+                        }
                     }
 
                 } else {
@@ -242,7 +281,7 @@ public class MenusAdminPanel extends javax.swing.JPanel {
                         tblModel.removeRow(dataTable.convertRowIndexToModel(dataTable.getSelectedRow()));
 
                         conn.createStatement().execute("commit");
-                        JOptionPane.showMessageDialog(this, "Meniu inlaturata cu succes");
+                        JOptionPane.showMessageDialog(this, "Meniu sters cu succes");
                     } catch (SQLException ex) {
                         JOptionPane.showMessageDialog(this, ex.getMessage());
                     }
@@ -529,6 +568,10 @@ public class MenusAdminPanel extends javax.swing.JPanel {
             detaliiSuplimentareTextField.setText(detalii_suplimentare_meniu);
         }
     }//GEN-LAST:event_dataTableKeyReleased
+
+    public JTextField getCurrentMenuTF() {
+        return this.currMenuTextField;
+    }
 
     private void dataTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dataTableMouseClicked
 

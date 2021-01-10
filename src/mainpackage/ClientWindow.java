@@ -15,12 +15,11 @@ public class ClientWindow extends javax.swing.JFrame {
 
     private ApplicationWindow appWindow;
     public ArrayList<ArrayList<String>> produseleMele = new ArrayList<>();
+    public ArrayList<JTextField> quantityTF = new ArrayList<>();
     public ArrayList<Pair<JTextField, String>> nr_produse_ramase = new ArrayList<>();
     public PreparedStatement selectProduct;
     private JComboBox tableComboBox = new JComboBox();
     private JComboBox detailsComboBox = new JComboBox();
-
-    GridBagLayout layout = new GridBagLayout();
 
     public ClientWindow(ApplicationWindow appWindow) {
 
@@ -43,8 +42,9 @@ public class ClientWindow extends javax.swing.JFrame {
             Connection conn = appWindow.getDataBaseConnection().getConnection();
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery("SELECT nume_categorie FROM CATEGORII WHERE Meniuri_nr_meniu = (SELECT nr_meniu FROM Meniuri WHERE nume_meniu = '" + appWindow.getCurrentMenu() + "')");
-            selectProduct = conn.prepareStatement("SELECT p.nume_produs, p.pret FROM Categorii c, Produse p, categorii_produse cp  WHERE c.nume_categorie = ? AND c.Meniuri_nr_meniu = 1 AND p.nr_produs = cp.Produse_nr_produs AND c.nr_categorie = cp.Categorii_nr_categorie");
-
+            selectProduct = conn.prepareStatement("SELECT p.nume_produs, p.pret FROM Categorii c, Produse p, categorii_produse cp  WHERE c.nume_categorie = ? AND c.Meniuri_nr_meniu = (SELECT nr_meniu FROM Meniuri WHERE nume_meniu = ?) AND p.nr_produs = cp.Produse_nr_produs AND c.nr_categorie = cp.Categorii_nr_categorie AND p.stare = 'ACTIV'");
+            selectProduct.setString(2, appWindow.getCurrentMenu());
+                
             while (rs.next()) {
                 //button settings
                 //
@@ -218,7 +218,7 @@ public class ClientWindow extends javax.swing.JFrame {
             CtgPanel.add(button, gridBagConstraints);
             button.addActionListener(appWindow.getAppActionListener().getButtonClickListener());
             button.setActionCommand("vizualize");
-            
+
             //ADAUGARE BUTON PENTRU REFRESH STOC
             javax.swing.JButton button2 = new JButton();
             button2.setText("Refresh stocuri");
@@ -240,6 +240,12 @@ public class ClientWindow extends javax.swing.JFrame {
 
     }
 
+    private void refreshTF() {
+        quantityTF.forEach((jTF) -> {
+            jTF.setText("0");
+        });
+    }
+
     public void refreshStocuri() {
 
         Connection conn = appWindow.getDataBaseConnection().getConnection();
@@ -256,10 +262,16 @@ public class ClientWindow extends javax.swing.JFrame {
                 ResultSet rs_reteta = ps_reteta.executeQuery();
                 rs_reteta.next();
                 int reteta = rs_reteta.getInt(1);
+                ps_reteta.close();
+                
                 ResultSet rs_stoc = ps_stoc.executeQuery();
                 rs_stoc.next();
                 int stoc = rs_stoc.getInt(1);
+                ps_stoc.close();
 
+               
+                
+                
                 PreparedStatement ps;
                 ResultSet rs3;
 
@@ -281,14 +293,20 @@ public class ClientWindow extends javax.swing.JFrame {
                     ps = null;
                     rs3 = null;
                 }
-                
+
                 JTextField TF = (JTextField) pair.getKey();
                 String nr_produse_disponibile = (rs3 != null) ? rs3.getString(1) : "0";
                 TF.setText(nr_produse_disponibile);
 
+                if (rs3 != null) rs3.close();
+                
             }
+
         } catch (SQLException ex) {
-            Logger.getLogger(ClientWindow.class.getName()).log(Level.SEVERE, null, ex);
+
+          Logger.getLogger(ClientWindow.class.getName()).log(Level.SEVERE, null, ex);
+
+            
         }
     }
 
@@ -322,8 +340,10 @@ public class ClientWindow extends javax.swing.JFrame {
         try {
             Connection conn = appWindow.getDataBaseConnection().getConnection();
             int index = 3;
-            String str = "BEGIN\n"
-                    + "DECLARE\n"
+            String str =
+                      "DECLARE\n"
+                    + "    no_stock EXCEPTION;\n"
+                    + "    error_order EXCEPTION;\n"
                     + "    produse_comandate produse_comenzi.nr_produse_comandate%TYPE;\n"
                     + "    nr_masa_insert Comenzi.nr_masa%TYPE;\n"
                     + "    detalii_suplimentare comenzi.detalii_suplimentare_comanda%TYPE;\n"
@@ -355,16 +375,18 @@ public class ClientWindow extends javax.swing.JFrame {
                         + "            UPDATE stocuri_produs sp\n"
                         + "            SET stoc_produs = stoc_produs - produse_comandate\n"
                         + "            WHERE sp.Produse_nr_produs = (SELECT nr_produs FROM Produse WHERE nume_produs = ?);\n"
+                        + "        ELSE \n"
+                        + "            RAISE no_stock;\n"
                         + "        END IF;\n"
                         + "    END;\n";
             }
-            str = str + "END;\n"
-                    + "COMMIT;\n"
+            str +=     
+                      "COMMIT;\n"
                     + "\n"
                     + "    EXCEPTION\n"
                     + "        WHEN OTHERS THEN\n"
                     + "            ROLLBACK TO sp;\n"
-                    + "            RAISE;"
+                    + "            RAISE error_order;"
                     + "END;";
             selectProduct = conn.prepareStatement(str);
             short val = Short.valueOf(String.valueOf(tableComboBox.getSelectedIndex() + 1));
@@ -385,17 +407,19 @@ public class ClientWindow extends javax.swing.JFrame {
                 index += 7;
             }
 
-            ResultSet rs = selectProduct.executeQuery();
+            selectProduct.execute();
             JOptionPane.showMessageDialog(this, "Comanda inregistrata cu succes");
-            
+            emptyOrderBag();
+            vizualizeOrder();
+            refreshTF();
 
         } catch (SQLException ex) {
-            Logger.getLogger(ClientWindow.class.getName()).log(Level.SEVERE, null, ex);
+            if(ex.getMessage().contains("ORA-06550") || ex.getMessage().contains("ORA-06510"))
+                JOptionPane.showMessageDialog(this, "Eroare la gestionarea comenzii.\nStoc indisponibil pentru unul dintre produse.");
+            else
+                JOptionPane.showMessageDialog(this, "Eroare la gestionarea comenzii.");
+                //Logger.getLogger(ClientWindow.class.getName()).log(Level.SEVERE, null, ex); 
         }
-        
-        emptyOrderBag();
-        vizualizeOrder();
-        
     }
 
     public void vizualizeOrder() {
@@ -538,21 +562,22 @@ public class ClientWindow extends javax.swing.JFrame {
         JButton tmpJButton = (JButton) e.getSource();
 
         Component[] components = tmpJButton.getParent().getComponents();
-        
+
         //DEPLASARE PRIN COMPONENTELE PRODUSULUI MEU
         JPanel panouJPanel = new JPanel();
         panouJPanel = (JPanel) components[3]; // Panou din SUD
 
         components = panouJPanel.getComponents();
-        
+
         panouJPanel = (JPanel) components[0]; // Panou din STANGA
-        
+
         components = panouJPanel.getComponents();
-        
+
         //DEPLASARE PRIN ELEMENTELE DIN PANELUL CARE FACE PARTE DIN PRODUSUL MEU
-        JTextField textField = new JTextField();      
+        JTextField textField = new JTextField();
         textField = (JTextField) components[1];
-        
+        quantityTF.add(textField);
+
         int ct = Integer.parseInt(textField.getText());
         int ok;
         int ctok;

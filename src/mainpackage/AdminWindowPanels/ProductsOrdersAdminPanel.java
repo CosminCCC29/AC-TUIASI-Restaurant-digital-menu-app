@@ -261,36 +261,40 @@ public class ProductsOrdersAdminPanel extends javax.swing.JPanel {
         tr.setSortKeys(sortKeys);
         fillComboBoxes();
 
-        String id_comanda = idComandaCB.getSelectedItem().toString();
+        Object id = idComandaCB.getSelectedItem();
 
-        try {
-            PreparedStatement ps = appWindow.getDataBaseConnection().getConnection().prepareStatement("SELECT Produse_nr_produs, nr_produse_comandate FROM produse_comenzi WHERE Comenzi_id_comanda = ?");
-            ps.setString(1, id_comanda);
-            ResultSet rs = ps.executeQuery();
+        if (id != null) {
 
-            DefaultTableModel tblModel = (DefaultTableModel) dataTable.getModel();
-            tblModel.setRowCount(0);
+            String id_comanda = id.toString();
+            
+            try {
+                PreparedStatement ps = appWindow.getDataBaseConnection().getConnection().prepareStatement("SELECT Produse_nr_produs, nr_produse_comandate FROM produse_comenzi WHERE Comenzi_id_comanda = ?");
+                ps.setString(1, id_comanda);
+                ResultSet rs = ps.executeQuery();
 
-            while (rs.next()) {
-                String nume_produs = rs.getString(1);
-                String nr_produse_comandate = rs.getString(2);
+                DefaultTableModel tblModel = (DefaultTableModel) dataTable.getModel();
+                tblModel.setRowCount(0);
 
-                PreparedStatement ps2 = appWindow.getDataBaseConnection().getConnection().prepareStatement("SELECT nume_produs FROM produse where nr_produs = ?");
-                ps2.setShort(1, Short.valueOf(nume_produs));
-                ResultSet rs2 = ps2.executeQuery();
-                rs2.next();
-                nume_produs = rs2.getString(1);
+                while (rs.next()) {
+                    String nume_produs = rs.getString(1);
+                    String nr_produse_comandate = rs.getString(2);
 
-                Object tblData[] = {nume_produs, Integer.parseInt(nr_produse_comandate)};
-                tblModel = (DefaultTableModel) this.dataTable.getModel();
-                tblModel.addRow(tblData);
+                    PreparedStatement ps2 = appWindow.getDataBaseConnection().getConnection().prepareStatement("SELECT nume_produs FROM produse where nr_produs = ?");
+                    ps2.setShort(1, Short.valueOf(nume_produs));
+                    ResultSet rs2 = ps2.executeQuery();
+                    rs2.next();
+                    nume_produs = rs2.getString(1);
+
+                    Object tblData[] = {nume_produs, Integer.parseInt(nr_produse_comandate)};
+                    tblModel = (DefaultTableModel) this.dataTable.getModel();
+                    tblModel.addRow(tblData);
+                }
+
+            } catch (SQLException ex) {
+                Logger.getLogger(MenusAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
-
-        } catch (SQLException ex) {
-            Logger.getLogger(MenusAdminPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
 
     private void dataTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dataTableMouseClicked
 
